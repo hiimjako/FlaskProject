@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  flask-db:
+    container_name: flask-db
+    hostname: flask-db.docker
+    image: postgres:13-alpine
+    ports:
+      - 5432:5432
+    env_file:
+      - .env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - flask-db-data:/var/lib/postgresql/data/pgdata
+#  redis:
+#    flask:
+#      env_file:
+#      - .env
+#      image: python:3.7
+#      working_dir: /mnt
+#      volumes:
+#      - .:/mnt
+#      depends_on:
+#      - db
+#      ports:
+#      - 3000:3000
+#      command: python src/server.py
+
+volumes:
+  flask-db-data:
+    name: flask-db-data

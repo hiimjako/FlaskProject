@@ -8,7 +8,11 @@ app.config.from_object(configDict.get(environ.get('FLASK_CONFIG', default='Devel
 
 db = SQLAlchemy()
 db.init_app(app)
-# db.create_all()
+
+
+# @app.before_first_request
+# def create_tables():
+#     db.create_all()
 
 
 @ app.route('/')
