@@ -20,19 +20,34 @@ class ProductionConfig(Config):
     FLASK_ENV = 'production'
     SQLALCHEMY_DATABASE_URI = 'mysql://user@localhost/foo'
 
+    @classmethod
+    def init_app(cls, app):
+        print('THIS APP IS IN DEBUG MODE. \
+                YOU SHOULD NOT SEE THIS IN PRODUCTION.')
+
 
 class DevelopmentConfig(Config):
     FLASK_ENV = 'development'
     PORT = 10000
     DEBUG = True
 
+    @classmethod
+    def init_app(cls, app):
+        print('THIS APP IS IN DEBUG MODE. \
+                YOU SHOULD NOT SEE THIS IN PRODUCTION.')
+
 
 class TestingConfig(Config):
     TESTING = True
 
+    @classmethod
+    def init_app(cls, app):
+        print('THIS APP IS IN DEBUG MODE. \
+                YOU SHOULD NOT SEE THIS IN PRODUCTION.')
+
 
 configDict = {
-    'DevelopmentConfig': DevelopmentConfig,
-    'ProductionConfig': ProductionConfig,
-    'TestingConfig': TestingConfig,
+    'development': DevelopmentConfig,
+    'production': ProductionConfig,
+    'testing': TestingConfig,
 }
