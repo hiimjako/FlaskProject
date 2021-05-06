@@ -8,18 +8,17 @@ from flask import (
     url_for,
 )
 from flask_login import current_user, login_required
-from flask_rq import get_queue
+# from flask_rq import get_queue
 
-from app import db
-from app.admin.forms import (
+from OpenDrive import db
+from OpenDrive.admin.forms import (
     ChangeAccountTypeForm,
     ChangeUserEmailForm,
     InviteUserForm,
     NewUserForm,
 )
-from app.decorators import admin_required
-from app.email import send_email
-from app.models import EditableHTML, Role, User
+from OpenDrive.decorators import admin_required
+from OpenDrive.models import EditableHTML, Role, User
 
 admin = Blueprint('admin', __name__)
 
@@ -72,14 +71,6 @@ def invite_user():
             user_id=user.id,
             token=token,
             _external=True)
-        get_queue().enqueue(
-            send_email,
-            recipient=user.email,
-            subject='You Are Invited To Join',
-            template='account/email/invite',
-            user=user,
-            invite_link=invite_link,
-        )
         flash('User {} successfully invited'.format(user.full_name()),
               'form-success')
     return render_template('admin/new_user.html', form=form)

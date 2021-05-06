@@ -14,8 +14,8 @@ from wtforms.validators import (
     Length,
 )
 
-from app import db
-from app.models import Role, User
+from OpenDrive import db
+from OpenDrive.models import Role, User
 
 
 class ChangeUserEmailForm(FlaskForm):

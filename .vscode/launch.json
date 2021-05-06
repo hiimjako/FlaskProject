@@ -10,9 +10,9 @@
       "request": "launch",
       "module": "flask",
       "env": {
-        "FLASK_APP": "app.py",
+        "FLASK_APP": "OpenDrive",
         "FLASK_ENV": "development",
-        "FLASK_CONFIG": "DevelopmentConfig"
+        "FLASK_CONFIG": "development"
       },
       "args": [
         "run",

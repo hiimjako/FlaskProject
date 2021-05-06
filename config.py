@@ -1,9 +1,10 @@
 from os import environ, path
+import sys
 
 basedir = path.abspath(path.dirname(__file__))
 
 
-class Config(object):
+class Config:
     DEBUG = False
     TESTING = False
     POSTGRES_USER = environ.get("POSTGRES_USER")
@@ -14,6 +15,10 @@ class Config(object):
     SECRET_KEY = environ.get("SECRET_KEY")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_URL}:{POSTGRES_PORT}/{POSTGRES_DB}'
+
+    @staticmethod
+    def init_app(app):
+        pass
 
 
 class ProductionConfig(Config):
@@ -30,6 +35,7 @@ class DevelopmentConfig(Config):
     FLASK_ENV = 'development'
     PORT = 10000
     DEBUG = True
+    ASSETS_DEBUG = True
 
     @classmethod
     def init_app(cls, app):
@@ -46,7 +52,7 @@ class TestingConfig(Config):
                 YOU SHOULD NOT SEE THIS IN PRODUCTION.')
 
 
-configDict = {
+config = {
     'development': DevelopmentConfig,
     'production': ProductionConfig,
     'testing': TestingConfig,

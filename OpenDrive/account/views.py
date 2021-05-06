@@ -12,10 +12,10 @@ from flask_login import (
     login_user,
     logout_user,
 )
-from flask_rq import get_queue
+# from flask_rq import get_queue
 
-from app import db
-from app.account.forms import (
+from OpenDrive import db
+from OpenDrive.account.forms import (
     ChangeEmailForm,
     ChangePasswordForm,
     CreatePasswordForm,
@@ -24,8 +24,7 @@ from app.account.forms import (
     RequestResetPasswordForm,
     ResetPasswordForm,
 )
-from app.email import send_email
-from app.models import User
+from OpenDrive.models import User
 
 account = Blueprint('account', __name__)
 

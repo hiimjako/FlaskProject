@@ -1,2 +1,2 @@
-from app.main import errors  # noqa
-from app.main.views import main # noqa
+from OpenDrive.main import errors  # noqa
+from OpenDrive.main.views import main  # noqa

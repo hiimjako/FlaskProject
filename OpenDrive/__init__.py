@@ -9,7 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_wtf import CSRFProtect
 
-from app.assets import app_css, app_js, vendor_css, vendor_js
+from OpenDrive.assets import app_css, app_js, vendor_css, vendor_js
 from config import config as Config
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -41,6 +41,7 @@ def create_app(config='development'):
     # Set up extensions
     db.init_app(app)
     login_manager.init_app(app)
+    migrate.init_app(app, db)
     csrf.init_app(app)
     # compress.init_app(app)
     # RQ(app)

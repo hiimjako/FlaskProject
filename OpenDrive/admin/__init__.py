@@ -1,1 +1,1 @@
-from app.admin.views import admin  # noqa
+from OpenDrive.admin.views import admin  # noqa

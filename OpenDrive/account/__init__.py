@@ -1,1 +1,1 @@
-from app.account.views import account # noqa
+from OpenDrive.account.views import account  # noqa

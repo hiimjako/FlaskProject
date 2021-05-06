@@ -10,7 +10,7 @@ from wtforms.fields import (
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import Email, EqualTo, InputRequired, Length
 
-from app.models import User
+from OpenDrive.models import User
 
 
 class LoginForm(FlaskForm):
@@ -47,7 +47,7 @@ class RegistrationForm(FlaskForm):
         if User.query.filter_by(email=field.data).first():
             raise ValidationError('Email already registered. (Did you mean to '
                                   '<a href="{}">log in</a> instead?)'.format(
-                                    url_for('account.login')))
+                                      url_for('account.login')))
 
 
 class RequestResetPasswordForm(FlaskForm):
