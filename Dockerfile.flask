@@ -1,0 +1,14 @@
+# syntax=docker/dockerfile:1
+FROM python:3.9
+WORKDIR /app
+
+RUN apt-get -y update
+RUN apt-get -y install gcc build-essential libpq-dev
+
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
+
+ENV PYTHONIOENCODING=UTF-8
+
+COPY . /app
+ENTRYPOINT ["python3", "-u" ,"manage.py", "runserver"]

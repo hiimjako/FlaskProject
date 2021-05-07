@@ -12,7 +12,15 @@ class Config:
     POSTGRES_URL = environ.get("POSTGRES_URL")
     POSTGRES_PORT = environ.get("POSTGRES_PORT")
     POSTGRES_DB = environ.get("POSTGRES_DB")
+
+    RQ_DEFAULT_HOST = environ.get("RQ_DEFAULT_HOST")
+    RQ_DEFAULT_PORT = environ.get("RQ_DEFAULT_PORT")
+    RQ_DEFAULT_PASSWORD = environ.get("RQ_DEFAULT_PASSWORD")
+    RQ_DEFAULT_DB = 0
+
     SECRET_KEY = environ.get("SECRET_KEY")
+    ADMIN_EMAIL = "moretti919@gmail.com"
+    ADMIN_PASSWORD = "admin"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_URL}:{POSTGRES_PORT}/{POSTGRES_DB}'
 
