@@ -9,11 +9,11 @@ class Config:
     TESTING = False
     POSTGRES_USER = environ.get("POSTGRES_USER")
     POSTGRES_PASSWORD = environ.get("POSTGRES_PASSWORD")
-    POSTGRES_URL = environ.get("POSTGRES_URL")
+    POSTGRES_URL = environ.get("POSTGRES_URL", default='127.0.0.1')
     POSTGRES_PORT = environ.get("POSTGRES_PORT")
     POSTGRES_DB = environ.get("POSTGRES_DB")
 
-    RQ_DEFAULT_HOST = environ.get("RQ_DEFAULT_HOST")
+    RQ_DEFAULT_HOST = environ.get("RQ_DEFAULT_HOST",  default='127.0.0.1')
     RQ_DEFAULT_PORT = environ.get("RQ_DEFAULT_PORT")
     RQ_DEFAULT_PASSWORD = environ.get("RQ_DEFAULT_PASSWORD")
     RQ_DEFAULT_DB = 0

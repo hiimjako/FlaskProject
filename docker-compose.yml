@@ -28,6 +28,7 @@ services:
 
   flask-redis:
     container_name: redis-cache
+    hostname: flask-redis.docker
     build:
       dockerfile: Dockerfile.redis
       context: .

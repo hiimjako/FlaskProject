@@ -10,5 +10,7 @@ RUN pip install -r requirements.txt
 
 ENV PYTHONIOENCODING=UTF-8
 
+CMD [ "mkdir", "/uploads" ]
+
 COPY . /app
 ENTRYPOINT ["python3", "-u" ,"manage.py", "runserver"]

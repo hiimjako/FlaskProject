@@ -24,13 +24,13 @@ itsdangerous==1.1.0
 Jinja2==2.10.1
 jsmin==2.2.2
 jsonpickle==1.2
-Mako==1.1.0
 MarkupSafe==1.1.1
 packaging==19.1
 pipupgrade==1.5.1
 psycopg2==2.8.3
 pyparsing==2.4.2
 python-dateutil==2.8.0
+python-dotenv==0.17.1
 python-editor==1.0.4
 raygun4py==4.3.0
 redis==3.3.8
