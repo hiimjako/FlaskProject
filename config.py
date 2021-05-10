@@ -7,6 +7,10 @@ basedir = path.abspath(path.dirname(__file__))
 class Config:
     DEBUG = False
     TESTING = False
+
+    APP_NAME = "Open drive"
+    APP_URL = ""
+
     POSTGRES_USER = environ.get("POSTGRES_USER")
     POSTGRES_PASSWORD = environ.get("POSTGRES_PASSWORD")
     POSTGRES_URL = environ.get("POSTGRES_URL", default='127.0.0.1')
@@ -41,7 +45,7 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
     FLASK_ENV = 'development'
-    PORT = 10000
+    APP_URL = "http://localhost:5000"
     DEBUG = True
     ASSETS_DEBUG = True
 
