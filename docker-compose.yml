@@ -1,6 +1,18 @@
 version: "3"
 
 services:
+  flask-app:
+    container_name: flask-app
+    build:
+      dockerfile: Dockerfile.flask
+      context: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./:/app
+    env_file:
+      - .env
+
   flask-db:
     container_name: flask-db
     hostname: flask-db.docker
@@ -13,20 +25,17 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
     # volumes:
     # - flask-db-data:/var/lib/postgresql/data/pgdata
-#  redis:
-#    flask:
-#      env_file:
-#      - .env
-#      image: python:3.7
-#      working_dir: /mnt
-#      volumes:
-#      - .:/mnt
-#      depends_on:
-#      - db
-#      ports:
-#      - 3000:3000
-#      command: python src/server.py
 
+  flask-redis:
+    container_name: redis-cache
+    hostname: flask-redis.docker
+    build:
+      dockerfile: Dockerfile.redis
+      context: .
+    ports:
+      - 6379:6379
+    env_file:
+      - .env
 # volumes:
 #   flask-db-data:
 #     name: flask-db-data
