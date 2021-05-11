@@ -32,7 +32,8 @@ class File(db.Model):
     filename = db.Column(db.String(64), index=True)
     # extension = db.Column(Enum(extensionEnum))
     path = db.Column(db.String(255), unique=True)
-    insert_at = db.Column(db.DateTime(timezone=False), server_default=func.now())
+    insert_at = db.Column(db.DateTime(timezone=False),
+                          server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=False), onupdate=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 

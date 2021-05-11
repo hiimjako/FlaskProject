@@ -1,11 +1,12 @@
-from flask import Blueprint, render_template, request, flash, redirect, current_app
+from os.path import join
+from flask import Blueprint, render_template, send_from_directory, current_app
 
 import os
 
 from OpenDrive.models import EditableHTML
 
 from werkzeug.utils import secure_filename
-from flask.helpers import url_for
+from flask.helpers import send_file, url_for
 
 from OpenDrive.drive.forms import (
     UploadNewFile
@@ -38,13 +39,26 @@ def index():
         db.session.add(file)
         db.session.commit()
 
-        return redirect(url_for('drive.index'))
+        # return redirect(url_for('drive.index'))
 
     # Getting all user files
+    files = File.query.filter_by(user_id=current_user.id).all()
+    return render_template('drive/index.html', form=form, files=files)
 
-    # return render_template('drive/upload.html', form=form)
 
-    return render_template('drive/index.html', form=form)
+@drive.route('/file/<int:file_id>', methods=['GET', 'POST'])
+@login_required
+def serve_file(file_id):
+    file = File.query.filter_by(id=file_id).first()
+    path = file.path
+    if os.path.isfile(file.path):
+        path = file.path
+    elif os.path.isfile(os.path.join(current_app.config['UPLOAD_PATH'], file.filename)):
+        path = os.path.join(current_app.config['UPLOAD_PATH'], file.filename)
+    else:
+        return None
+
+    return send_file(path)
 
 
 # @drive.route('/upload', methods=['GET', 'POST'])
