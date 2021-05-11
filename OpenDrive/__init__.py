@@ -76,4 +76,7 @@ def create_app(config='development'):
     from .admin import admin as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
+    from .drive import drive as drive_blueprint
+    app.register_blueprint(drive_blueprint, url_prefix='/drive')
+
     return app

@@ -4,13 +4,16 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature, SignatureExpired
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
+
+from sqlalchemy.sql import func
+
 import os
+import datetime
 
 from .. import db, login_manager
 
 import enum
 
-UPLOAD_FOLDER = '/uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 
@@ -29,13 +32,13 @@ class File(db.Model):
     filename = db.Column(db.String(64), index=True)
     # extension = db.Column(Enum(extensionEnum))
     path = db.Column(db.String(255), unique=True)
-    insert_at = db.Column(db.DateTime(timezone=False))
-    updated_at = db.Column(db.DateTime(timezone=False))
+    insert_at = db.Column(db.DateTime(timezone=False), server_default=func.now())
+    updated_at = db.Column(db.DateTime(timezone=False), onupdate=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self, filename, user_id):
+    def __init__(self, filename, path, user_id):
         self.filename = secure_filename(filename)
-        self.path = f'{UPLOAD_FOLDER}'
+        self.path = path
         self.user_id = user_id
 
     def __repr__(self):

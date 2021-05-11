@@ -1,7 +1,14 @@
-from os import environ, path
+from os import environ, path, path
 import sys
 
 basedir = path.abspath(path.dirname(__file__))
+
+# Try better handling
+if path.exists('.env'):
+    for line in open('.env'):
+        var = line.strip().split('=')
+        if len(var) == 2:
+            environ[var[0]] = var[1].replace("\"", "")
 
 
 class Config:
@@ -10,14 +17,15 @@ class Config:
 
     APP_NAME = "Open drive"
     APP_URL = ""
+    UPLOAD_PATH = "./upload"
 
     POSTGRES_USER = environ.get("POSTGRES_USER")
     POSTGRES_PASSWORD = environ.get("POSTGRES_PASSWORD")
-    POSTGRES_URL = environ.get("POSTGRES_URL", default='127.0.0.1')
-    POSTGRES_PORT = environ.get("POSTGRES_PORT")
+    POSTGRES_URL = '127.0.0.1'  # environ.get("POSTGRES_URL", default='127.0.0.1')
+    POSTGRES_PORT = environ.get("POSTGRES_PORT", default=5432)
     POSTGRES_DB = environ.get("POSTGRES_DB")
 
-    RQ_DEFAULT_HOST = environ.get("RQ_DEFAULT_HOST",  default='127.0.0.1')
+    RQ_DEFAULT_HOST = '127.0.0.1'  # environ.get("RQ_DEFAULT_HOST",  default='127.0.0.1')
     RQ_DEFAULT_PORT = environ.get("RQ_DEFAULT_PORT")
     RQ_DEFAULT_PASSWORD = environ.get("RQ_DEFAULT_PASSWORD")
     RQ_DEFAULT_DB = 0
