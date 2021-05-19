@@ -1,0 +1,34 @@
+// globals
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap");
+
+// Bootstrap globals (look into ./bootstrap-5.0.0/scss/_variables.scss)
+$primary: #49ac98;
+$secondary: #202020;
+
+// real balck #121212
+
+$body-bg: $secondary;
+$body-color: #f8f9fa;
+
+$font-family-sans-serif: "Roboto", sans-serif;
+
+$box-shadow: 0 0.5rem 1rem rgba(#2869aa, 0.15);
+
+// card
+$card-color: #fff;
+$card-bg: #3b3a3a;
+
+// nav
+$navbar-dark-color: $body-color;
+$navbar-dark-active-color: $primary;
+$navbar-dark-hover-color: $primary;
+$navbar-dark-toggler-border-color: $primary;
+
+@import "./bootstrap-5.0.0/scss/bootstrap.scss";
+
+@import "custom/components/navbar";
+@import "custom/pages/drive";
+
+html {
+  font-size: 1.2rem;
+}

@@ -12,9 +12,8 @@ from flask_login import (
     login_user,
     logout_user,
 )
-# from flask_rq import get_queue
 
-from OpenDrive import db
+from OpenDrive import db, rq
 from OpenDrive.account.forms import (
     ChangeEmailForm,
     ChangePasswordForm,
@@ -38,10 +37,10 @@ def login():
         if user is not None and user.password_hash is not None and \
                 user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
-            flash('You are now logged in. Welcome back!', 'success')
+            flash('You are now logged in. Welcome back!', 'bg-primary')
             return redirect(request.args.get('next') or url_for('main.index'))
         else:
-            flash('Invalid email or password.', 'error')
+            flash('Invalid email or password.', 'bg-danger')
     return render_template('account/login.html', form=form)
 
 
@@ -59,7 +58,7 @@ def register():
         db.session.commit()
         token = user.generate_confirmation_token()
         confirm_link = url_for('account.confirm', token=token, _external=True)
-        get_queue().enqueue(
+        rq.get_queue().enqueue(
             send_email,
             recipient=user.email,
             subject='Confirm Your Account',
@@ -76,7 +75,7 @@ def register():
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out.', 'info')
+    flash('You have been logged out.', 'bg-danger')
     return redirect(url_for('main.index'))
 
 
@@ -100,7 +99,7 @@ def reset_password_request():
             token = user.generate_password_reset_token()
             reset_link = url_for(
                 'account.reset_password', token=token, _external=True)
-            get_queue().enqueue(
+            rq.get_queue().enqueue(
                 send_email,
                 recipient=user.email,
                 subject='Reset Your Password',
@@ -163,7 +162,7 @@ def change_email_request():
             token = current_user.generate_email_change_token(new_email)
             change_email_link = url_for(
                 'account.change_email', token=token, _external=True)
-            get_queue().enqueue(
+            rq.get_queue().enqueue(
                 send_email,
                 recipient=new_email,
                 subject='Confirm Your New Email',
@@ -197,7 +196,7 @@ def confirm_request():
     """Respond to new user's request to confirm their account."""
     token = current_user.generate_confirmation_token()
     confirm_link = url_for('account.confirm', token=token, _external=True)
-    get_queue().enqueue(
+    rq.get_queue().enqueue(
         send_email,
         recipient=current_user.email,
         subject='Confirm Your Account',
@@ -262,7 +261,7 @@ def join_from_invite(user_id, token):
             user_id=user_id,
             token=token,
             _external=True)
-        get_queue().enqueue(
+        rq.get_queue().enqueue(
             send_email,
             recipient=new_user.email,
             subject='You Are Invited To Join',

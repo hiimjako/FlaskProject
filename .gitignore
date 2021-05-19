@@ -128,7 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-static/
-
+# mine
 .vscode/
 upload/
+OpenDrive/__pycache__/*

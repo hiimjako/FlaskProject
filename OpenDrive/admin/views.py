@@ -8,7 +8,7 @@ from flask import (
     url_for,
 )
 from flask_login import current_user, login_required
-# from flask_rq import get_queue
+# from flask_rq2  import get_queue
 
 from OpenDrive import db
 from OpenDrive.admin.forms import (

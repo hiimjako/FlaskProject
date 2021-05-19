@@ -22,14 +22,16 @@
 
 
 {% block content %}
-<div class="ui stackable centered grid container">
-  <div class="twelve wide column">
-    <h2 class="ui header">
-      Hello {% if not (current_user.is_authenticated) %} world {% else %} {{ current_user.full_name() }} {% endif %}
-    </h2>
-    <div class="ui two column stackable grid">
-      {{ dashboard_option('Files', 'drive.index', description='View and manage your files', icon='add user icon') }}
+<div class="container">
+  <div class="row row-cols-2">
+    <div class="col">
+      Column
+    </div>
+    <div class="col">
+      Column
     </div>
   </div>
 </div>
 {% endblock %}
+
+<!-- drive.index -->

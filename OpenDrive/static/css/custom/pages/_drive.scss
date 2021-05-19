@@ -1,0 +1,120 @@
+#index-drive {
+  $minHeight: 200px;
+
+  img.drive-image {
+    width: 100%; /* You can set the dimensions to whatever you want */
+    height: $minHeight;
+    object-fit: cover;
+  }
+
+  .card {
+    min-height: $minHeight;
+    position: relative;
+
+    &:hover {
+      i.bi.closing-button {
+        visibility: visible !important;
+      }
+    }
+
+    i.bi {
+      cursor: pointer;
+
+      &.closing-button {
+        visibility: hidden;
+        background-color: $card-bg;
+        position: absolute;
+        top: 2%;
+        right: 1%;
+        font-size: 32px;
+
+        &:hover {
+          color: $primary;
+        }
+      }
+    }
+
+    .card-text {
+      i.bi {
+        font-size: 32px;
+        color: white;
+
+        &.bi-link {
+          &:focus,
+          &:hover {
+            color: $primary;
+            transition: color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+          }
+        }
+
+        &.bi-cloud-arrow-down {
+          &:focus,
+          &:hover {
+            &::before {
+              content: "\f294";
+            }
+
+            color: $primary;
+          }
+        }
+      }
+    }
+
+    .image-placeholder {
+      width: 100%; /* You can set the dimensions to whatever you want */
+      height: $minHeight;
+      font-size: 64px;
+      align-items: center;
+      color: $primary;
+
+      i {
+        cursor: default;
+      }
+    }
+  }
+
+  .upload-button {
+    border-style: dashed;
+    border-color: $primary;
+    cursor: pointer;
+    // border-width: 2px;
+
+    i.bi {
+      font-size: 48px;
+      color: $primary;
+    }
+  }
+
+  #progressBar {
+    display: none;
+    width: 40%;
+    left: 30%;
+    bottom: 3%;
+
+    .progress-bar {
+      color: $secondary;
+    }
+  }
+
+  #dropLayout {
+    position: absolute;
+    border-style: dashed;
+    border-width: 0.8rem;
+    left: 10%;
+    top: 10%;
+    width: 80%;
+    height: 80%;
+    align-items: center;
+    background-color: $secondary;
+    opacity: 0.9;
+    transform: 1s;
+    display: flex;
+    visibility: hidden;
+    z-index: 100;
+
+    i.bi {
+      font-size: 128px;
+      color: $primary;
+    }
+  }
+}

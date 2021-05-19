@@ -11,7 +11,7 @@ from OpenDrive import create_app, db
 from OpenDrive.models import Role, User
 from config import Config
 
-app = create_app(os.getenv('FLASK_CONFIG') or 'development')
+app = create_app(os.getenv('APP_SETTINGS') or 'development')
 manager = Manager(app)
 
 
@@ -66,15 +66,15 @@ def setup_general():
 @manager.command
 def run_worker():
     """Initializes a slim rq task queue."""
-    listen = ['default']
+    listenQueue = ['default', 'cryptography']
     conn = Redis(
-        host=app.config['RQ_DEFAULT_HOST'],
-        port=app.config['RQ_DEFAULT_PORT'],
-        db=0,
-        password=app.config['RQ_DEFAULT_PASSWORD'])
+        host=Config.RQ_DEFAULT_HOST,
+        port=Config.RQ_DEFAULT_PORT,
+        db=Config.RQ_DEFAULT_DB,
+        password=Config.RQ_DEFAULT_PASSWORD)
 
     with Connection(conn):
-        worker = Worker(map(Queue, listen))
+        worker = Worker(map(Queue, listenQueue))
         worker.work()
 
 

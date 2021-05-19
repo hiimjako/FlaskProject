@@ -2,43 +2,68 @@
 {% import 'macros/form_macros.html' as f %}
 {% import 'macros/file_macro.html' as fi %}
 
+<!-- i can also use {{ csrf_token() }} for get token -->
+{%macro javascript() %}
+<script src="{{ url_for('static',filename='js/drive.js') }}"></script>
+{% endmacro %}
+
+{%macro card(id, title='No title', text='No text', img='/static/image/no-img.svg') %}
+<div class="col p-2">
+  <div class="card shadow-lg h-100">
+    <img src="{{ img }}" onerror="handleMissingImage(this)" draggable="false" class="card-img-top drive-image">
+    <div class="d-none image-placeholder justify-content-center align-middle">
+      <i class="bi bi-file-earmark-fill"></i>
+    </div>
+    
+    <div class="card-body">
+      <h5 class="card-title" draggable="false" title={{ title | safe }}>{{ title | safe }}</h5>
+      <div class="card-text float-end">
+        <a href="{{ img ~ '?as_attachment=True'}}" class="px-1"><i class="bi bi-cloud-arrow-down download-button"></i></a>
+        <i class="bi bi-link px-1" data-id={{ id }}></i>
+      </div>
+      <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+    </div>
+    <span>
+      <i class="bi bi-x closing-button rounded-pill" data-id={{ id }} title="delete"></i>
+    </span>
+  </div>
+</div>
+{% endmacro %}
+
+{%macro upload_button(form, method='POST') %}
+<span class="btn btn-secondary rounded-circle btn-lg upload-button position-fixed bottom-0 end-0 m-3">
+  <i class="bi bi-file-earmark-plus-fill"></i>
+</span>
+<form action="" method={{method}} enctype="multipart/form-data">
+  {{ form.file(class="d-none") }}
+  {{ form.hidden_tag() }}
+</form>
+{% endmacro %}
+
+{%macro progressBar() %}
+<div id="progressBar" class="progress position-fixed">
+  <div class="progress-bar bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+</div>
+{% endmacro %}
+
+{%macro onDropLayout() %}
+<div id="dropLayout" class="border-primary justify-content-center align-middle">
+  <i class="bi bi-plus-lg"></i>
+</div>
+{% endmacro %}
 
 {% block content %}
-<div class="ui text container">
-  <h1>Hello {% if not (current_user.is_authenticated) %} world {% else %} {{ current_user.full_name() }} {% endif %},
-  </h1>
-
-  <div class="ui stackable centered grid container">
-    <div class="twelve wide column">
-      <a class="ui basic compact button" href="{{ url_for('admin.index') }}">
-        <i class="caret left icon"></i>
-        Back to dashboard
-      </a>
-      <h2 class="ui header">
-        Add New File
-        <div class="sub header">Create a new file account</div>
-      </h2>
-
-
-      {{ fi.render_files(files) }}
-
-      {% set flashes = {
-      'error': get_flashed_messages(category_filter=['form-error']),
-      'warning': get_flashed_messages(category_filter=['form-check-email']),
-      'info': get_flashed_messages(category_filter=['form-info']),
-      'success': get_flashed_messages(category_filter=['form-success'])
-      } %}
-
-      {{ f.begin_form(form, flashes) }}
-
-      {{ f.render_form_field(form.file) }}
-
-      {{ f.render_form_field(form.submit) }}
-
-      {{ f.end_form() }}
-
+{{ javascript() }}
+<div id="index-drive">
+  <div class="container position-relative g-8">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+      {% for file in files %}
+      {{ card(file.id, file['filename'], file.getImageUrl(), file.getImageUrl()) }}
+      {% endfor %}
     </div>
   </div>
-
+  {{ upload_button(form) }}
+  {{ progressBar() }}
+  {{ onDropLayout() }}
 </div>
 {% endblock %}

@@ -1,0 +1,25 @@
+.component-navbar {
+  .nav-link {
+    i.bi {
+      color: #fff;
+      &.aligned-to-text {
+        font-size: 32px;
+        vertical-align: middle;
+      }
+    }
+
+    &:hover,
+    &:focus {
+      // FIXME: stesso transition time per icona e testo
+      i.bi {
+        color: $primary;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+
+        &.bi-person::before {
+          content: "\f4da";
+          transition: 0s;
+        }
+      }
+    }
+  }
+}

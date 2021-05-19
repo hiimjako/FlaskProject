@@ -1,4 +1,4 @@
-version: "3"
+version: "3.9"
 
 services:
   flask-app:
@@ -23,8 +23,18 @@ services:
       - .env
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
-    # volumes:
-    # - flask-db-data:/var/lib/postgresql/data/pgdata
+    volumes:
+      - flask-db-data:/var/lib/postgresql/data/pgdata
+
+  worker:
+    container_name: flask-worker
+    build:
+      dockerfile: Dockerfile.worker
+      context: .
+    env_file:
+      - .env
+    volumes:
+      - "./:/app"
 
   flask-redis:
     container_name: redis-cache
@@ -36,6 +46,6 @@ services:
       - 6379:6379
     env_file:
       - .env
-# volumes:
-#   flask-db-data:
-#     name: flask-db-data
+volumes:
+  flask-db-data:
+    name: flask-db-data
