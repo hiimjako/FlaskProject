@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask
-from flask_assets import Environment
+# from flask_assets import Environment
 # from flask_compress import Compress
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
@@ -9,7 +9,6 @@ from flask_migrate import Migrate
 from flask_wtf import CSRFProtect
 from OpenDrive.db import db, migrate, rq
 
-from OpenDrive.assets import app_css, app_js, vendor_css, vendor_js
 from config import config as Config
 
 basedir = os.path.abspath(os.path.dirname(__file__))
