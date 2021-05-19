@@ -23,16 +23,17 @@ login_manager.session_protection = 'strong'
 login_manager.login_view = 'account.login'
 
 
-def create_app(config='development'):
+def create_app(config):
     app = Flask(__name__,
                 static_url_path='/static')
 
     config_name = config
+    if config_name is None:
+        config_name = os.environ.get("APP_SETTINGS", default="development")
 
     app.config.from_object(Config[config_name])
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     # not using sqlalchemy event system, hence disabling it
-
     Config[config_name].init_app(app)
 
     # Set up extensions

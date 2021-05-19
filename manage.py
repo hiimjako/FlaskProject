@@ -11,7 +11,7 @@ from OpenDrive import create_app, db
 from OpenDrive.models import Role, User
 from config import Config
 
-app = create_app(os.getenv('APP_SETTINGS') or 'development')
+app = create_app(os.getenv('APP_SETTINGS', default='development'))
 manager = Manager(app)
 
 

@@ -12,6 +12,9 @@ services:
       - ./:/app
     env_file:
       - .env
+    environment: 
+      - APP_SETTINGS=production
+
 
   flask-db:
     container_name: flask-db
