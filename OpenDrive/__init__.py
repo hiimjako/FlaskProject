@@ -27,7 +27,7 @@ def create_app(config):
                 static_url_path='/static')
 
     config_name = config
-    if config_name is None:
+    if not isinstance(config, str):
         config_name = os.environ.get("FLASK_ENV", default="development")
 
     app.config.from_object(Config[config_name])
