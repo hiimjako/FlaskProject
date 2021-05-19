@@ -28,7 +28,7 @@ def create_app(config):
 
     config_name = config
     if config_name is None:
-        config_name = os.environ.get("APP_SETTINGS", default="development")
+        config_name = os.environ.get("FLASK_ENV", default="development")
 
     app.config.from_object(Config[config_name])
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -62,10 +62,12 @@ def create_app(config):
 
     # Configure SSL if platform supports it
     if not app.debug and not app.testing and not app.config['SSL_DISABLE']:
-        from flask_sslify import SSLify
-        SSLify(app)
+        pass
+        # TODO: da abilitare quando avrò i certificati
+        # from flask_sslify import SSLify
+        # SSLify(app)
 
-    # Create app blueprints
+        # Create app blueprints
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 

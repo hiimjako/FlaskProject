@@ -14,6 +14,7 @@ if path.exists(".env"):
 class Config:
     DEBUG = False
     TESTING = False
+    SSL_DISABLE = False
 
     APP_NAME = "Open drive"
     APP_URL = ""
