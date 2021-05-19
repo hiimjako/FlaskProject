@@ -78,4 +78,7 @@ def create_app(config='development'):
     from .drive import drive as drive_blueprint
     app.register_blueprint(drive_blueprint, url_prefix='/drive')
 
+    from .password import password as password_blueprint
+    app.register_blueprint(password_blueprint, url_prefix='/password')
+
     return app
