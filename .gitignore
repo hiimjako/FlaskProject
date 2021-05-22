@@ -132,3 +132,5 @@ dmypy.json
 .vscode/
 upload/
 OpenDrive/__pycache__/*
+OpenDrive/migrations/__pycache__/*
+OpenDrive/migrations/versions/__pycache__/*

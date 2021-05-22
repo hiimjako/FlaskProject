@@ -16,27 +16,27 @@
         <div class="col-4">
         <form action="" method="POST">
             <div class="mb-3">
-                <label for={{ form.role.id }} class="form-label">Role</label>
+                <label for={{ form.role.id }} class="form-label">{{form.role.label}}</label>
                 {{ form.role(class="form-control text-secondary") }}
             </div>
             <div class="mb-3">
-                <label for={{ form.first_name.id }} class="form-label">First name</label>
+                <label for={{ form.first_name.id }} class="form-label">{{ form.first_name.id }}</label>
                 {{ form.first_name(class="form-control text-secondary") }}
             </div>
             <div class="mb-3">
-                <label for={{ form.last_name.id }} class="form-label">Last name</label>
+                <label for={{ form.last_name.id }} class="form-label">{{ form.last_name.id }}</label>
                 {{ form.last_name(class="form-control text-secondary") }}
             </div>
             <div class="mb-3">
-                <label for={{ form.email.id }} class="form-label">Email address</label>
+                <label for={{ form.email.id }} class="form-label">{{ form.email.id }}</label>
                 {{ form.email(class="form-control text-secondary") }}
             </div>
             <div class="mb-3">
-                <label for={{ form.password.id }} class="form-label">Password</label>
+                <label for={{ form.password.id }} class="form-label">{{ form.password.id }}</label>
                 {{ form.password(class="form-control text-secondary") }}
             </div>
             <div class="mb-3">
-                <label for={{ form.password2.id }} class="form-label">Confirm password</label>
+                <label for={{ form.password2.id }} class="form-label">{{ form.password2.id }}</label>
                 {{ form.password2(class="form-control text-secondary") }}
             </div>
             {% if form.password %}

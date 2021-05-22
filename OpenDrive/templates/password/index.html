@@ -5,7 +5,29 @@
 {% block content %}
 <div id="index-password">
   <div class="container position-relative g-8">
+    <form class="row row-cols-1 row-cols-md-2 row-cols-lg-4" action="" method="POST">
+      <div class="col-auto">
+        <label for={{ form.site.id }} class="form-label">{{form.site.label}}</label>
+        {{ form.site(class="form-control text-secondary") }}
+      </div>
+      <div class="col-auto">
+        <label for={{ form.username.id }} class="form-label">{{form.username.label}}</label>
+        {{ form.username(class="form-control text-secondary") }}
+      </div>
+      <div class="col-auto">
+        <label for={{ form.password.id }} class="form-label">{{form.password.label}}</label>
+        {{ form.password(class="form-control text-secondary") }}
+      </div>
+      <div class="col-auto">
+        <label for={{ form.submit.id }} class="form-label">{{form.submit.label}}</label>
+        {{ form.submit(class="form-control btn btn-primary") }}
+      </div>
+      {{ form.hidden_tag() }}
+    </form>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+      {% for p in passwords %}
+      {{ p.username }} {{ p.password }}
+      {% endfor %}
     </div>
   </div>
 </div>
