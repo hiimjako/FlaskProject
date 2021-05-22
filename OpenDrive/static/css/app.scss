@@ -24,6 +24,11 @@ $navbar-dark-active-color: $primary;
 $navbar-dark-hover-color: $primary;
 $navbar-dark-toggler-border-color: $primary;
 
+// table
+// $table-color: #3b3a3a;
+$table-hover-color: $primary;
+$table-striped-bg-factor: 0.2;
+
 @import "./bootstrap-5.0.0/scss/bootstrap.scss";
 
 @import "custom/components/navbar";

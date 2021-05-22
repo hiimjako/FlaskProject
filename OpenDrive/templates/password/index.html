@@ -1,6 +1,4 @@
 {% extends 'layouts/base.html' %}
-{% import 'macros/form_macros.html' as f %}
-{% import 'macros/file_macro.html' as fi %}
 
 {% block content %}
 <div id="index-password">
@@ -24,10 +22,29 @@
       </div>
       {{ form.hidden_tag() }}
     </form>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
-      {% for p in passwords %}
-      {{ p.username }} {{ p.password }}
-      {% endfor %}
+    <div class="row row-cols-1 justify-content-center mt-4">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">{{form.site.label}}</th>
+            <th scope="col">{{form.username.label}}</th>
+            <th scope="col">{{form.password.label}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in passwords %}
+          <tr>
+            <td scope="row">
+              <i class="bi bi-x" data-id={{ p.id }} title="delete"></i>
+            </td>
+            <td data-class="site">{{ p.site }}</td>
+            <td data-class="username">{{ p.username }}</td>
+            <td data-class="password">{{ p.password }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

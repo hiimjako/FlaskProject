@@ -1990,10 +1990,10 @@ progress {
 .table {
   --bs-table-bg: transparent;
   --bs-table-striped-color: #f8f9fa;
-  --bs-table-striped-bg: rgba(0, 0, 0, 0.05);
+  --bs-table-striped-bg: rgba(0, 0, 0, 0.2);
   --bs-table-active-color: #f8f9fa;
   --bs-table-active-bg: rgba(0, 0, 0, 0.1);
-  --bs-table-hover-color: #f8f9fa;
+  --bs-table-hover-color: #49ac98;
   --bs-table-hover-bg: rgba(0, 0, 0, 0.075);
   width: 100%;
   margin-bottom: 1rem;
@@ -2059,7 +2059,7 @@ progress {
 
 .table-primary {
   --bs-table-bg: #dbeeea;
-  --bs-table-striped-bg: #d0e2de;
+  --bs-table-striped-bg: #afbebb;
   --bs-table-striped-color: #000;
   --bs-table-active-bg: #c5d6d3;
   --bs-table-active-color: #000;
@@ -2071,7 +2071,7 @@ progress {
 
 .table-secondary {
   --bs-table-bg: #d2d2d2;
-  --bs-table-striped-bg: #c8c8c8;
+  --bs-table-striped-bg: #a8a8a8;
   --bs-table-striped-color: #000;
   --bs-table-active-bg: #bdbdbd;
   --bs-table-active-color: #000;
@@ -2083,7 +2083,7 @@ progress {
 
 .table-success {
   --bs-table-bg: #d1e7dd;
-  --bs-table-striped-bg: #c7dbd2;
+  --bs-table-striped-bg: #a7b9b1;
   --bs-table-striped-color: #000;
   --bs-table-active-bg: #bcd0c7;
   --bs-table-active-color: #000;
@@ -2095,7 +2095,7 @@ progress {
 
 .table-info {
   --bs-table-bg: #cff4fc;
-  --bs-table-striped-bg: #c5e8ef;
+  --bs-table-striped-bg: #a6c3ca;
   --bs-table-striped-color: #000;
   --bs-table-active-bg: #badce3;
   --bs-table-active-color: #000;
@@ -2107,7 +2107,7 @@ progress {
 
 .table-warning {
   --bs-table-bg: #fff3cd;
-  --bs-table-striped-bg: #f2e7c3;
+  --bs-table-striped-bg: #ccc2a4;
   --bs-table-striped-color: #000;
   --bs-table-active-bg: #e6dbb9;
   --bs-table-active-color: #000;
@@ -2119,7 +2119,7 @@ progress {
 
 .table-danger {
   --bs-table-bg: #f8d7da;
-  --bs-table-striped-bg: #eccccf;
+  --bs-table-striped-bg: #c6acae;
   --bs-table-striped-color: #000;
   --bs-table-active-bg: #dfc2c4;
   --bs-table-active-color: #000;
@@ -2131,7 +2131,7 @@ progress {
 
 .table-light {
   --bs-table-bg: #f8f9fa;
-  --bs-table-striped-bg: #ecedee;
+  --bs-table-striped-bg: #c6c7c8;
   --bs-table-striped-color: #000;
   --bs-table-active-bg: #dfe0e1;
   --bs-table-active-color: #000;
@@ -2143,7 +2143,7 @@ progress {
 
 .table-dark {
   --bs-table-bg: #212529;
-  --bs-table-striped-bg: #2c3034;
+  --bs-table-striped-bg: #4d5154;
   --bs-table-striped-color: #fff;
   --bs-table-active-bg: #373b3e;
   --bs-table-active-color: #fff;
