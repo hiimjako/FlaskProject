@@ -13,6 +13,9 @@
 
         {% include 'partials/_flashes.html' %}
         
+        {% block js_script %}
+        {% endblock %}
+
         {# When extended, the content block contains all the html of the webpage #}
         {% block content %}
         {% endblock %}

@@ -1,5 +1,30 @@
 {% extends 'layouts/base.html' %}
 
+{% block js_script %}
+<script>
+/*$(document).ready(function () {
+  $(".delete-row").click(function () {
+      let id = $(this).attr("data-id");
+      var pswRow = $(this);
+      let csrf_token = $("#csrf_token").val();
+      if (!isNaN(id)) {
+        let request = $.ajax({
+          headers: {
+            "x-csrf-token": csrf_token,
+          },
+          url: `${id}`,
+          method: "DELETE",
+        }).done(function (res) {
+          if (res.status === true) {
+            pswRow.closest('tr').remove();
+          }
+        });
+      }
+    });
+});*/
+</script>
+{% endblock %}
+
 {% block content %}
 <div id="index-password">
   <div class="container position-relative g-8">
@@ -36,7 +61,11 @@
           {% for p in passwords %}
           <tr>
             <td scope="row">
-              <i class="bi bi-x" data-id={{ p.id }} title="delete"></i>
+              <form action="{{ url_for('password.delete_password', id=p.id) }}" method="POST">
+                <label for="mySubmit" class="btn"><i class="bi bi-x delete-row" title="delete"></i></label>
+                <input id="mySubmit" type="submit" class="d-none" />
+                {{ form.hidden_tag() }}
+              </form>
             </td>
             <td data-class="site">{{ p.site }}</td>
             <td data-class="username">{{ p.username }}</td>

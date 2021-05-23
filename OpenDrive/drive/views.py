@@ -50,7 +50,7 @@ def index():
 @login_required
 def serve_file(file_id):
     if request.method == 'GET':
-        file = File.query.filter_by(id=file_id).first()
+        file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
         path = getFilePath(file)
         if path:
             as_attachment = request.args.get('as_attachment')
@@ -59,7 +59,7 @@ def serve_file(file_id):
             return send_file(path)
 
     if request.method == 'DELETE':
-        file = File.query.filter_by(id=file_id).first()
+        file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
         path = getFilePath(file)
 
         if path:

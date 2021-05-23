@@ -11622,6 +11622,14 @@ fieldset:disabled .btn {
   color: #49ac98;
 }
 
+#index-password .delete-row {
+  cursor: pointer;
+}
+
+#index-password .delete-row:hover {
+  color: #49ac98;
+}
+
 html {
   font-size: 1.2rem;
 }
