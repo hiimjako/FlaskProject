@@ -18,12 +18,6 @@ from cryptography.fernet import Fernet
 password = Blueprint('password', __name__)
 
 
-def decrypt(psw):
-    f = Fernet(current_app.config['SALT_ENCRTYPTION'])
-    decrypted_data = f.decrypt(str.encode(psw))
-    return decrypted_data
-
-
 @password.route('/', methods=['GET', 'POST'])
 @login_required
 def index():
