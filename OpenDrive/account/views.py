@@ -43,7 +43,7 @@ def login():
             encryptedPass = symmetricEncrypt(form.password.data)
             flash('You are now logged in. Welcome back!', 'bg-primary')
             response = make_response(redirect(request.args.get('next') or url_for('main.index')))
-            response.set_cookie('hash', encryptedPass)
+            response.set_cookie('hash', encryptedPass, secure=True, httponly=True, samesite="Strict")
             return response
         else:
             flash('Invalid email or password.', 'bg-danger')
