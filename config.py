@@ -21,7 +21,7 @@ class Config:
     APP_URL = ""
     UPLOAD_PATH = path.join(basedir, "upload")
 
-    SALT_ENCRTYPTION = environ.get("SALT_ENCRTYPTION", default="secret")
+    ENCRTYPTION_KEY = environ.get("ENCRTYPTION_KEY", default="secret")
 
     POSTGRES_USER = environ.get("POSTGRES_USER")
     POSTGRES_PASSWORD = environ.get("POSTGRES_PASSWORD")

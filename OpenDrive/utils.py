@@ -29,10 +29,10 @@ def index_for_role(role):
 def symmetricDecrypt(psw: str, key=None):
     if key is None:
         try:
-            key = app.config['SALT_ENCRTYPTION']
+            key = app.config['ENCRTYPTION_KEY']
         except:
             with app.app_context():
-                key = app.config['SALT_ENCRTYPTION']
+                key = app.config['ENCRTYPTION_KEY']
     else:
         keyHex = hashlib.md5(str.encode(key)).hexdigest()
         key = base64.urlsafe_b64encode(keyHex.encode())
@@ -44,10 +44,10 @@ def symmetricDecrypt(psw: str, key=None):
 def symmetricEncrypt(psw: str,  key=None):
     if key is None:
         try:
-            key = app.config['SALT_ENCRTYPTION']
+            key = app.config['ENCRTYPTION_KEY']
         except:
             with app.app_context():
-                key = app.config['SALT_ENCRTYPTION']
+                key = app.config['ENCRTYPTION_KEY']
     else:
         keyHex = hashlib.md5(str.encode(key)).hexdigest()
         key = base64.urlsafe_b64encode(keyHex.encode())
