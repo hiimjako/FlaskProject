@@ -33,9 +33,9 @@ def symmetricDecrypt(psw: str, key=None):
         except:
             with app.app_context():
                 key = app.config['ENCRTYPTION_KEY']
-    else:
-        keyHex = hashlib.md5(str.encode(key)).hexdigest()
-        key = base64.urlsafe_b64encode(keyHex.encode())
+
+    keyHex = hashlib.md5(str.encode(key)).hexdigest()
+    key = base64.urlsafe_b64encode(keyHex.encode())
     f = Fernet(key)
     decrypted_data = f.decrypt(str.encode(psw))
     return decrypted_data.decode("utf-8")
@@ -48,9 +48,9 @@ def symmetricEncrypt(psw: str,  key=None):
         except:
             with app.app_context():
                 key = app.config['ENCRTYPTION_KEY']
-    else:
-        keyHex = hashlib.md5(str.encode(key)).hexdigest()
-        key = base64.urlsafe_b64encode(keyHex.encode())
+
+    keyHex = hashlib.md5(str.encode(key)).hexdigest()
+    key = base64.urlsafe_b64encode(keyHex.encode())
     f = Fernet(key)
     encrypted_data = f.encrypt(str.encode(psw))
     return encrypted_data.decode("utf-8")

@@ -2,8 +2,8 @@
 
 {% block js_script %}
 <script>
-/*$(document).ready(function () {
-  $(".delete-row").click(function () {
+$(document).ready(function () {
+  /*$(".delete-row").click(function () {
       let id = $(this).attr("data-id");
       var pswRow = $(this);
       let csrf_token = $("#csrf_token").val();
@@ -20,8 +20,17 @@
           }
         });
       }
-    });
-});*/
+    });*/
+  $(document).on("click", ".bi-eye-slash", function() {
+    $(this).removeClass("bi-eye-slash").addClass("bi-eye");
+    $(this).closest(".input-group").find("input").attr("type", "password")
+  })
+
+  $(document).on("click", ".bi-eye", function () {
+    $(this).removeClass("bi-eye").addClass("bi-eye-slash");
+    $(this).closest(".input-group").find("input").attr("type", "text")
+  })
+});
 </script>
 {% endblock %}
 
@@ -67,9 +76,18 @@
                 {{ form.hidden_tag() }}
               </form>
             </td>
-            <td data-class="site" title="{{ p.site }}">{{ p.site | safe }}</td>
-            <td data-class="username" title="{{ p.username }}">{{ p.username | safe }}</td>
-            <td data-class="password" title="{{ p.password }}">{{ p.password | safe }}</td>
+            <td data-class="site" title="{{ p.site }}">
+                <input type="text" class="form-control bg-transparent no-border" value="{{ p.site | safe }}" disabled>
+            </td>
+            <td data-class="username" title="{{ p.username }}">
+                <input type="text" class="form-control bg-transparent no-border" value="{{ p.username | safe }}" disabled>
+            </td>
+            <td data-class="password">
+              <div class="input-group">
+                <input type="password" class="form-control bg-transparent no-border" value="{{ p.password | safe }}" aria-label="Username" disabled aria-describedby="password-{{ p.id }}">
+                <span class="input-group-text bg-transparent no-border" id="password-{{ p.id }}"><i class="bi bi-eye" aria-hidden="true"></i></span>
+              </div>
+            </td>
           </tr>
           {% endfor %}
         </tbody>
