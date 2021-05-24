@@ -30,6 +30,13 @@ $(document).ready(function () {
     $(this).removeClass("bi-eye").addClass("bi-eye-slash");
     $(this).closest(".input-group").find("input").attr("type", "text")
   })
+
+  $("#nav-filter").on("keyup", function() {
+    let search = $(this).val().toLocaleLowerCase();
+    $("#password-table tbody tr").filter(function() {
+      $(this).toggle($(this).text().toLocaleLowerCase().indexOf(search) > -1)
+    })
+  })
 });
 </script>
 {% endblock %}
@@ -37,6 +44,43 @@ $(document).ready(function () {
 {% block content %}
 <div id="index-password">
   <div class="container position-relative g-8">
+    <div class="row row-cols-1 justify-content-center mt-4">
+      <table id="password-table" class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">{{form.site.label}}</th>
+            <th scope="col">{{form.username.label}}</th>
+            <th scope="col">{{form.password.label}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in passwords %}
+          <tr>
+            <td class="col-1" scope="row">
+              <form action="{{ url_for('password.delete_password', id=p.id) }}" method="POST">
+                <label for="mySubmit" class="btn"><i class="bi bi-x delete-row" title="delete"></i></label>
+                <input id="mySubmit" type="submit" class="d-none" />
+                {{ form.hidden_tag() }}
+              </form>
+            </td>
+            <td class="align-middle col-4" data-class="site" title="{{ p.site }}">
+                {{ p.site | safe }}
+            </td>
+            <td class="align-middle col-3" data-class="username" title="{{ p.username }}">
+                {{ p.username | safe }}
+            </td>
+            <td data-class="password col-2">
+              <div class="input-group">
+                <input type="password" class="form-control bg-transparent no-border" value="{{ p.password | safe }}" aria-label="Username" disabled aria-describedby="password-{{ p.id }}">
+                <span class="input-group-text bg-transparent no-border" id="password-{{ p.id }}"><i class="bi bi-eye" aria-hidden="true"></i></span>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
     <form class="row row-cols-1 row-cols-md-2 row-cols-lg-4" action="" method="POST">
       <div class="col-auto">
         <label for={{ form.site.id }} class="form-label">{{form.site.label}}</label>
@@ -56,43 +100,6 @@ $(document).ready(function () {
       </div>
       {{ form.hidden_tag() }}
     </form>
-    <div class="row row-cols-1 justify-content-center mt-4">
-      <table class="table table-striped table-hover">
-        <thead>
-          <tr>
-            <th scope="col"></th>
-            <th scope="col">{{form.site.label}}</th>
-            <th scope="col">{{form.username.label}}</th>
-            <th scope="col">{{form.password.label}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for p in passwords %}
-          <tr>
-            <td scope="row">
-              <form action="{{ url_for('password.delete_password', id=p.id) }}" method="POST">
-                <label for="mySubmit" class="btn"><i class="bi bi-x delete-row" title="delete"></i></label>
-                <input id="mySubmit" type="submit" class="d-none" />
-                {{ form.hidden_tag() }}
-              </form>
-            </td>
-            <td data-class="site" title="{{ p.site }}">
-                <input type="text" class="form-control bg-transparent no-border" value="{{ p.site | safe }}" disabled>
-            </td>
-            <td data-class="username" title="{{ p.username }}">
-                <input type="text" class="form-control bg-transparent no-border" value="{{ p.username | safe }}" disabled>
-            </td>
-            <td data-class="password">
-              <div class="input-group">
-                <input type="password" class="form-control bg-transparent no-border" value="{{ p.password | safe }}" aria-label="Username" disabled aria-describedby="password-{{ p.id }}">
-                <span class="input-group-text bg-transparent no-border" id="password-{{ p.id }}"><i class="bi bi-eye" aria-hidden="true"></i></span>
-              </div>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
   </div>
 </div>
 {% endblock %}

@@ -7,7 +7,7 @@
 {% endmacro %}
 
 {%macro card(id, title='No title', text='No text', img='/static/image/no-img.svg') %}
-<div class="col p-2">
+<div class="col p-2 searchable-card">
   <div class="card shadow-lg h-100">
     <img src="{{ img }}" onerror="handleMissingImage(this)" alt="missing image" draggable="false" class="card-img-top drive-image">
     <div class="d-none image-placeholder justify-content-center align-middle">
