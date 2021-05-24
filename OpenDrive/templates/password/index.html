@@ -67,9 +67,9 @@
                 {{ form.hidden_tag() }}
               </form>
             </td>
-            <td data-class="site">{{ p.site }}</td>
-            <td data-class="username">{{ p.username }}</td>
-            <td data-class="password">{{ p.password }}</td>
+            <td data-class="site" title="{{ p.site }}">{{ p.site | safe }}</td>
+            <td data-class="username" title="{{ p.username }}">{{ p.username | safe }}</td>
+            <td data-class="password" title="{{ p.password }}">{{ p.password | safe }}</td>
           </tr>
           {% endfor %}
         </tbody>

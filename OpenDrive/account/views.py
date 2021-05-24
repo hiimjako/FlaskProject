@@ -25,16 +25,10 @@ from OpenDrive.account.forms import (
     RequestResetPasswordForm,
     ResetPasswordForm,
 )
-from cryptography.fernet import Fernet
+from OpenDrive.utils import symmetricEncrypt
 from OpenDrive.models import User
 
 account = Blueprint('account', __name__)
-
-
-def encrypt(psw):
-    f = Fernet(current_app.config['SALT_ENCRTYPTION'])
-    encrypted_data = f.encrypt(str.encode(psw))
-    return encrypted_data
 
 
 @account.route('/login', methods=['GET', 'POST'])
@@ -46,12 +40,10 @@ def login():
         if user is not None and user.password_hash is not None and \
                 user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
-            # TODO: save encrypted pass
-            encryptedPass = encrypt(form.password.data)
+            encryptedPass = symmetricEncrypt(form.password.data)
             flash('You are now logged in. Welcome back!', 'bg-primary')
             response = make_response(redirect(request.args.get('next') or url_for('main.index')))
-            response.set_cookie("hash", encryptedPass)
-            # request.cookies.get('somecookiename')
+            response.set_cookie('hash', encryptedPass)
             return response
         else:
             flash('Invalid email or password.', 'bg-danger')

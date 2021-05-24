@@ -12,23 +12,28 @@ from OpenDrive.password.forms import (
 from OpenDrive import db
 from OpenDrive.models import Password
 from flask_login import (current_user, login_required)
-from cryptography.fernet import Fernet
+from OpenDrive.utils import symmetricDecrypt
 
 
 password = Blueprint('password', __name__)
-
-
-def decrypt(psw):
-    f = Fernet(current_app.config['SALT_ENCRTYPTION'])
-    decrypted_data = f.decrypt(str.encode(psw))
-    return decrypted_data
 
 
 @password.route('/', methods=['GET', 'POST'])
 @login_required
 def index():
     form = CreateNewPassword()
-    # TODO: handle errors
+
+    cookiePsw = request.cookies.get('hash')
+    userPsw = ""
+    if cookiePsw is not None:
+        userPsw = symmetricDecrypt(cookiePsw)
+        if not current_user.verify_password(userPsw):
+            flash('Invalid cookie, relog to refresh', 'bg-danger')
+            return redirect(url_for('account.login'))
+    else:
+        flash('An error occured, try to login again', 'bg-danger')
+        return redirect(url_for('account.login'))
+
     if form.validate_on_submit():
         password = Password(
             site=form.site.data,
@@ -36,13 +41,15 @@ def index():
             password=form.password.data,
             user_id=current_user.id
         )
-        password.save()
+        password.save(userPsw)
         flash('Correctly password added', 'bg-primary')
     else:
         for error in form.errors:
             flash(form.errors[error][0], 'bg-danger')
-
+ 
     passwords = Password.query.filter_by(user_id=current_user.id).all()
+    for p in passwords:
+        p.password = symmetricDecrypt(p.password, userPsw)
     return render_template('password/index.html', form=form, passwords=passwords)
 
 
