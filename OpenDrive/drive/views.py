@@ -17,6 +17,7 @@ from OpenDrive.drive.utils import getFilePath
 from OpenDrive.decorators import get_hash_cookie_required
 from OpenDrive.utils import symmetricDecryptFile
 import io
+import mimetypes
 
 drive = Blueprint('drive', __name__)
 
@@ -58,11 +59,19 @@ def serve_file(file_id):
         file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
         path = getFilePath(file)
         if path:
-            fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
+            mimetype = mimetypes.MimeTypes().guess_type(file.filename)[0]
             as_attachment = request.args.get('as_attachment')
+
             if as_attachment == 'True':
-                return send_file(fileBin, attachment_filename=file.filename, as_attachment=True)
-            return send_file(fileBin)
+                # Quando scarico il file lo voglio sempre dectyptato
+                fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
+                return send_file(fileBin, mimetype=mimetype, attachment_filename=file.filename, as_attachment=True)
+
+            # per le anteprime decrypto solo le immagini, per mostrarle in anteprima
+            # gli altri file non sono utili
+            if mimetype.startswith("image"):
+                fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
+            return send_file(fileBin, mimetype=mimetype)
 
     if request.method == 'DELETE':
         file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
