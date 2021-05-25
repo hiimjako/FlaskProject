@@ -1,0 +1,33 @@
+{% import 'macros/nav_macros.html' as nav %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include 'partials/_head.html' %}
+    {% block custom_head_tags %}{% endblock %}
+</head>
+
+<body>
+    {% block nav %}
+        {{ nav.render_nav_with_search(current_user) }}
+    {% endblock %}
+
+    {% include 'partials/_flashes.html' %}
+
+    {% block js_script %}
+    {% endblock %}
+
+    {# When extended, the content block contains all the html of the webpage #}
+    {% block content %}
+    {% endblock %}
+
+    {# Implement CSRF protection for site #}
+    {% if csrf_token()|safe %}
+    <div style="visibility: hidden; display: none">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token()|safe }}">
+    </div>
+    {% endif %}
+</body>
+
+</html>

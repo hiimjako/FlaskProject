@@ -12,7 +12,8 @@ from OpenDrive.password.forms import (
 from OpenDrive import db
 from OpenDrive.models import Password
 from flask_login import (current_user, login_required)
-from cryptography.fernet import Fernet
+from OpenDrive.utils import symmetricDecrypt
+from OpenDrive.decorators import get_hash_cookie_required
 
 
 password = Blueprint('password', __name__)
@@ -20,9 +21,9 @@ password = Blueprint('password', __name__)
 
 @password.route('/', methods=['GET', 'POST'])
 @login_required
+@get_hash_cookie_required
 def index():
     form = CreateNewPassword()
-    # TODO: handle errors
     if form.validate_on_submit():
         password = Password(
             site=form.site.data,
@@ -30,17 +31,31 @@ def index():
             password=form.password.data,
             user_id=current_user.id
         )
-        password.save()
+        password.save(current_user.cookieHash)
         flash('Correctly password added', 'bg-primary')
     else:
         for error in form.errors:
             flash(form.errors[error][0], 'bg-danger')
 
     passwords = Password.query.filter_by(user_id=current_user.id).all()
+    for p in passwords:
+        p.password = symmetricDecrypt(p.password, current_user.cookieHash)
     return render_template('password/index.html', form=form, passwords=passwords)
 
 
 # DA FARE COSI O IN JS?
+# @password.route('/<int:id>', methods=['POST'])
+# @login_required
+# def delete_password(id):
+#     try:
+#         psw = Password.query.filter_by(id=id, user_id=current_user.id).first()
+#         db.session.delete(psw)
+#         db.session.commit()
+#         flash('Correctly deleted', 'bg-primary')
+#     except:
+#         flash('An error occured, retry', 'bg-danger')
+#     return redirect(url_for('password.index'))
+
 @password.route('/<int:id>', methods=['POST'])
 @login_required
 def delete_password(id):
@@ -48,7 +63,7 @@ def delete_password(id):
         psw = Password.query.filter_by(id=id, user_id=current_user.id).first()
         db.session.delete(psw)
         db.session.commit()
-        flash('Correctly deleted', 'bg-primary')
+        return {"status": True, "message": "Correctly deleted"}
     except:
-        flash('An error occured, retry', 'bg-danger')
+        return {"status": False, "message": "An error occured, retry"}
     return redirect(url_for('password.index'))

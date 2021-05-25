@@ -9,8 +9,11 @@ import os
 import datetime
 
 from OpenDrive.db import db, rq
+from OpenDrive.jobs.cryptography import add as queue
+from OpenDrive.utils import symmetricEncryptFile
 
 import enum
+import uuid
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
@@ -38,17 +41,28 @@ class File(db.Model):
     updated_at = db.Column(db.DateTime(timezone=False), onupdate=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self, filename, path, user_id):
-        self.filename = secure_filename(filename)
-        self.path = path
+    def __init__(self, file, user_id):
+        self.filename = secure_filename(file.filename)
+
+        basePath = current_app.config['UPLOAD_PATH']
+        if not os.path.exists(basePath):
+            os.makedirs(basePath)
+        self.path = os.path.join(basePath, str(uuid.uuid4()))
+
+        try:
+            file.save(self.path)
+        except:
+            print("file non caricato")
+
         self.user_id = user_id
 
-    def save(self):
+    def save(self, key: None):
         db.session.add(self)
         # rq.get_queue('cryptography').enqueue(
         #     test,
         #     arg1='ciao'
         # )
+        symmetricEncryptFile(self.path, key)
         return db.session.commit()
 
     def __repr__(self):

@@ -14,6 +14,14 @@ $(document).ready(function () {
     loadFile(file);
   });
 
+  $(document).on("keyup", "#nav-filter", function () {
+    let search = $(this).val().toLocaleLowerCase();
+    $(".searchable-card").filter(function () {
+      console.log($(this).text().toLocaleLowerCase());
+      $(this).toggle($(this).text().toLocaleLowerCase().indexOf(search) > -1);
+    });
+  });
+
   $(".closing-button").click(function () {
     let id = $(this).attr("data-id");
     var card = $(this);

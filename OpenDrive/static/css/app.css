@@ -11630,6 +11630,32 @@ fieldset:disabled .btn {
   color: #49ac98;
 }
 
+#index-password .no-border {
+  border: 0;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+#index-password span .bi {
+  cursor: pointer;
+}
+
+#index-password span .bi.bi-eye:hover {
+  color: #49ac98;
+}
+
+#index-password span .bi.bi-eye:hover::before {
+  content: "\f33e";
+}
+
+#index-password span .bi.bi-eye-slash:hover {
+  color: #49ac98;
+}
+
+#index-password span .bi.bi-eye-slash:hover::before {
+  content: "\f33f";
+}
+
 html {
   font-size: 1.2rem;
 }

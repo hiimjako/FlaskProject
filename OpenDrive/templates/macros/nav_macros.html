@@ -50,6 +50,34 @@
   {% endif %}
 {% endmacro %}
 
+{% macro render_nav_with_search(current_user) %}
+<nav class="navbar navbar-expand-lg navbar-dark component-navbar">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">
+      <img src="/static/image/logo.png" alt="" width="30" height="24" alt="missing logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <!-- Set class="nav-link active" for active item -->
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'drive.index' %}active{% endif %}" href="{{ url_for('drive.index') }}">Files</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'password.index' %}active{% endif %}" href="{{ url_for('password.index') }}">Password</a>
+          </li>
+          <li class="nav-item align-middle">
+            <input class="form-control bg-transparent no-border  border-primary text-light" id="nav-filter" type="text" aria-label="Search" placeholder="Search...">
+          </li>
+        </ul>
+        {{ account_section(current_user) }}
+    </div>
+  </div>
+</nav>
+{% endmacro %}
+
 {% macro render_nav(current_user) %}
 <nav class="navbar navbar-expand-lg navbar-dark component-navbar">
   <div class="container-fluid">
@@ -59,7 +87,6 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <!-- Set class="nav-link active" for active item -->
