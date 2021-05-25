@@ -69,4 +69,5 @@ class File(db.Model):
         return f'<File \'{self.filename}\'>'
 
     def getImageUrl(self):
-        return urllib.parse.urljoin(current_app.config['APP_URL'], posixpath.join('drive', 'file', str(self.id)))
+        # return urllib.parse.urljoin(current_app.config['APP_URL'], posixpath.join('drive', 'file', str(self.id)))
+        return posixpath.join('file', str(self.id))
