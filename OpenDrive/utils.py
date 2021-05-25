@@ -54,3 +54,40 @@ def symmetricEncrypt(psw: str,  key=None):
     f = Fernet(key)
     encrypted_data = f.encrypt(str.encode(psw))
     return encrypted_data.decode("utf-8")
+
+
+def symmetricDecryptFile(path: str, key=None):
+    if key is None:
+        try:
+            key = app.config['ENCRTYPTION_KEY']
+        except:
+            with app.app_context():
+                key = app.config['ENCRTYPTION_KEY']
+
+    keyHex = hashlib.md5(str.encode(key)).hexdigest()
+    key = base64.urlsafe_b64encode(keyHex.encode())
+    f = Fernet(key)
+
+    with open(path, "rb") as file:
+        encrypted_data = file.read()
+    decrypted_data = f.decrypt(encrypted_data)
+    return decrypted_data
+
+
+def symmetricEncryptFile(path: str,  key=None):
+    if key is None:
+        try:
+            key = app.config['ENCRTYPTION_KEY']
+        except:
+            with app.app_context():
+                key = app.config['ENCRTYPTION_KEY']
+
+    keyHex = hashlib.md5(str.encode(key)).hexdigest()
+    key = base64.urlsafe_b64encode(keyHex.encode())
+    f = Fernet(key)
+
+    with open(path, "rb") as file:
+        file_data = file.read()
+    encrypted_data = f.encrypt(file_data)
+    with open(path, "wb") as file:
+        file.write(encrypted_data)

@@ -9,6 +9,8 @@ import os
 import datetime
 
 from OpenDrive.db import db, rq
+from OpenDrive.jobs.cryptography import add as queue
+from OpenDrive.utils import symmetricEncryptFile
 
 import enum
 
@@ -43,12 +45,13 @@ class File(db.Model):
         self.path = path
         self.user_id = user_id
 
-    def save(self):
+    def save(self, key: None):
         db.session.add(self)
         # rq.get_queue('cryptography').enqueue(
         #     test,
         #     arg1='ciao'
         # )
+        symmetricEncryptFile(self.path, key)
         return db.session.commit()
 
     def __repr__(self):

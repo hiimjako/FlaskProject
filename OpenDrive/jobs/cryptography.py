@@ -1,8 +1,6 @@
-from rq import job
+from OpenDrive.db import rq
 
 
-@job
-def process(i):
-    print('jobbing')
-    print(i)
-    #  Long stuff to process
+@rq.job('low', timeout=60)
+def add(x, y):
+    return x + y

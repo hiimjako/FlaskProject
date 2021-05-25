@@ -15,6 +15,8 @@ from flask_login import (current_user, login_required)
 
 from OpenDrive.drive.utils import getFilePath
 from OpenDrive.decorators import get_hash_cookie_required
+from OpenDrive.utils import symmetricDecryptFile
+import io
 
 drive = Blueprint('drive', __name__)
 
@@ -37,7 +39,7 @@ def index():
             path=uploadPath,
             user_id=current_user.id
         )
-        file.save()
+        file.save(current_user.cookieHash)
         message = 'Correctly added'
         flash(message, 'bg-primary')
         return {'status': True, 'message': message}
@@ -50,15 +52,17 @@ def index():
 
 @drive.route('/file/<int:file_id>', methods=['GET', 'DELETE'])
 @login_required
+@get_hash_cookie_required
 def serve_file(file_id):
     if request.method == 'GET':
         file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
         path = getFilePath(file)
         if path:
+            fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
             as_attachment = request.args.get('as_attachment')
             if as_attachment == 'True':
-                return send_file(path, attachment_filename=file.filename, as_attachment=True)
-            return send_file(path)
+                return send_file(fileBin, attachment_filename=file.filename, as_attachment=True)
+            return send_file(fileBin)
 
     if request.method == 'DELETE':
         file = File.query.filter_by(id=file_id, user_id=current_user.id).first()

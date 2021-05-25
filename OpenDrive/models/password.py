@@ -26,7 +26,7 @@ class Password(db.Model):
         self.password = password
         self.user_id = user_id
 
-    def save(self, key: ""):
+    def save(self, key: None):
         self.password = symmetricEncrypt(self.password, key)
         db.session.add(self)
         return db.session.commit()
