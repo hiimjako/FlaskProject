@@ -56,6 +56,7 @@ def serve_file(file_id):
             mimetype = mimetypes.MimeTypes().guess_type(file.filename)[0]
             as_attachment = request.args.get('as_attachment')
 
+            fileBin = path
             if as_attachment == 'True':
                 # Quando scarico il file lo voglio sempre dectyptato
                 fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))

@@ -56,7 +56,6 @@ def setup_general():
                 first_name='Admin',
                 last_name='Account',
                 password=Config.ADMIN_PASSWORD,
-                confirmed=True,
                 email=Config.ADMIN_EMAIL)
             db.session.add(user)
             db.session.commit()
