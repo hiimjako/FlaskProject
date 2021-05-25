@@ -44,6 +44,18 @@ def index():
 
 
 # DA FARE COSI O IN JS?
+# @password.route('/<int:id>', methods=['POST'])
+# @login_required
+# def delete_password(id):
+#     try:
+#         psw = Password.query.filter_by(id=id, user_id=current_user.id).first()
+#         db.session.delete(psw)
+#         db.session.commit()
+#         flash('Correctly deleted', 'bg-primary')
+#     except:
+#         flash('An error occured, retry', 'bg-danger')
+#     return redirect(url_for('password.index'))
+
 @password.route('/<int:id>', methods=['POST'])
 @login_required
 def delete_password(id):
@@ -51,7 +63,7 @@ def delete_password(id):
         psw = Password.query.filter_by(id=id, user_id=current_user.id).first()
         db.session.delete(psw)
         db.session.commit()
-        flash('Correctly deleted', 'bg-primary')
+        return {"status": True, "message": "Correctly deleted"}
     except:
-        flash('An error occured, retry', 'bg-danger')
+        return {"status": False, "message": "An error occured, retry"}
     return redirect(url_for('password.index'))
