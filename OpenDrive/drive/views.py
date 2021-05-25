@@ -14,12 +14,14 @@ from OpenDrive.models import File
 from flask_login import (current_user, login_required)
 
 from OpenDrive.drive.utils import getFilePath
+from OpenDrive.decorators import get_hash_cookie_required
 
 drive = Blueprint('drive', __name__)
 
 
 @drive.route('/', methods=['GET', 'POST'])
 @login_required
+@get_hash_cookie_required
 def index():
     form = UploadNewFile()
     if form.validate_on_submit():

@@ -68,8 +68,8 @@
           <li class="nav-item">
             <a class="nav-link {% if request.endpoint == 'password.index' %}active{% endif %}" href="{{ url_for('password.index') }}">Password</a>
           </li>
-          <li class="nav-item">
-            <input class="form-control text-secondary" id="nav-filter" type="search" placeholder="Search" aria-label="Search">
+          <li class="nav-item align-middle">
+            <input class="form-control bg-transparent no-border  border-primary text-light" id="nav-filter" type="text" aria-label="Search" placeholder="Search...">
           </li>
         </ul>
         {{ account_section(current_user) }}
