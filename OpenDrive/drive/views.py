@@ -29,15 +29,8 @@ def index():
     form = UploadNewFile()
     if form.validate_on_submit():
         fileBin = form.file.data
-        filename = secure_filename(fileBin.filename)
-        basePath = current_app.config['UPLOAD_PATH']
-        if not os.path.exists(basePath):
-            os.makedirs(basePath)
-        uploadPath = os.path.join(basePath, filename)
-        fileBin.save(uploadPath)
         file = File(
-            filename=filename,
-            path=uploadPath,
+            file=fileBin,
             user_id=current_user.id
         )
         file.save(current_user.cookieHash)
@@ -47,6 +40,7 @@ def index():
         # return redirect(url_for('drive.index'))
 
     # Getting all user files
+    # No need to be decrypted
     files = File.query.filter_by(user_id=current_user.id).all()
     return render_template('drive/index.html', form=form, files=files)
 
