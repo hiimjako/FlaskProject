@@ -14,8 +14,8 @@ if path.exists(".env"):
 class Config:
     DEBUG = False
     TESTING = False
-    SSL_DISABLE = False
-    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = False
+    # TODO: da mettere in production
 
     APP_NAME = "Open drive"
     APP_URL = ""
@@ -48,6 +48,8 @@ class Config:
 
 class ProductionConfig(Config):
     FLASK_ENV = "production"
+    SSL_DISABLE = False
+    SESSION_COOKIE_SECURE = True
     # SQLALCHEMY_DATABASE_URI = "mysql://user@localhost/foo"
 
     @classmethod

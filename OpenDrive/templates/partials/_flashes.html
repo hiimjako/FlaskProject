@@ -1,6 +1,6 @@
 
 {% with msgs = get_flashed_messages(with_categories=true) %}
-    <div class="position-fixed bottom-0 start-0 p-3 " style="z-index: 5">
+    <div class="position-fixed bottom-0 end-0 p-3 " style="z-index: 5">
         <div class="toast-container">
         {% for category, message in msgs %}
             {% set cat = category or 'bg-primary' %}
