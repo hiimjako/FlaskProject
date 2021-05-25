@@ -4,17 +4,25 @@ services:
   flask-app:
     container_name: flask-app
     build:
-      dockerfile: Dockerfile.flask
+      dockerfile: ./OpenDrive
       context: .
-    ports:
-      - "5000:5000"
+    # ports:
+    #   - "5000:5000"
+    expose:
+      - 5000
     volumes:
       - ./:/app
     env_file:
       - .env
-    environment: 
+    environment:
       - FLASK_ENV=production
-
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
 
   flask-db:
     container_name: flask-db

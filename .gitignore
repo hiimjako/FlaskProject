@@ -134,3 +134,6 @@ upload/
 OpenDrive/__pycache__/*
 OpenDrive/migrations/__pycache__/*
 OpenDrive/migrations/versions/__pycache__/*
+*/__pycache__/*
+*/*/__pycache__/*
+*/*/*/__pycache__/*
