@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.8"
 
 services:
   flask-app:
@@ -12,17 +12,29 @@ services:
       - 5000
     volumes:
       - ./:/app
+    networks:
+      - flask-network
     env_file:
       - .env
     environment:
       - FLASK_ENV=production
+    depends_on:
+      - flask-db
+      - redis-cache
+    restart: always
+    command: gunicorn -w 2 -b :5000 wsgi:flaskServer
+
   nginx:
     build: ./nginx
     container_name: nginx
     restart: always
+    networks:
+      - flask-network
     ports:
       - "80:80"
       - "443:443"
+    depends_on:
+      - flask_app
 
   flask-db:
     container_name: flask-db
@@ -34,6 +46,8 @@ services:
       - .env
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
+    networks:
+      - flask-network
     volumes:
       - flask-db-data:/var/lib/postgresql/data/pgdata
 
@@ -44,6 +58,8 @@ services:
       context: .
     env_file:
       - .env
+    networks:
+      - flask-network
     volumes:
       - "./:/app"
 
@@ -55,8 +71,13 @@ services:
       context: .
     ports:
       - 6379:6379
+    networks:
+      - flask-network
     env_file:
       - .env
 volumes:
   flask-db-data:
     name: flask-db-data
+
+networks:
+  flask-network:

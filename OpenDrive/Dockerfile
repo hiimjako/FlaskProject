@@ -14,7 +14,7 @@ RUN mkdir "/uploads"
 COPY . /app
 # ENTRYPOINT ["python3", "-u" ,"manage.py", "runserver"]
 
-ENTRYPOINT ["gunicorn", "app:app", "-w", "2", "--threads", "2", "-b 0.0.0.0:5000"]
+# ENTRYPOINT ["gunicorn", "app:app", "-w", "2", "--threads", "2", "-b 0.0.0.0:5000"]
 
 # CMD ["uwsgi", "app.ini"]
 
