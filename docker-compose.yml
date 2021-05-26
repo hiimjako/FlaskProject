@@ -20,7 +20,7 @@ services:
       - FLASK_ENV=production
     depends_on:
       - flask-db
-      - redis-cache
+      - flask-redis
     restart: always
     command: gunicorn -w 2 -b :5000 wsgi:flaskServer
 
@@ -64,7 +64,7 @@ services:
       - "./:/app"
 
   flask-redis:
-    container_name: redis-cache
+    container_name: flask-redis
     hostname: flask-redis.docker
     build:
       dockerfile: Dockerfile.redis
