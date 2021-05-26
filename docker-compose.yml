@@ -4,7 +4,7 @@ services:
   flask-app:
     container_name: flask-app
     build:
-      dockerfile: ./OpenDrive
+      dockerfile: ./Dockerfile
       context: .
     # ports:
     #   - "5000:5000"
@@ -22,7 +22,7 @@ services:
       - flask-db
       - flask-redis
     restart: always
-    command: gunicorn -w 2 -b :5000 wsgi:flaskServer
+    # command: gunicorn -w 2 -b :5000 wsgi:flaskServer
 
   nginx:
     build: ./nginx

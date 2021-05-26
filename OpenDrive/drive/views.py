@@ -64,7 +64,7 @@ def serve_file(file_id):
 
             # per le anteprime decrypto solo le immagini, per mostrarle in anteprima
             # gli altri file non sono utili
-            if mimetype.startswith("image"):
+            if mimetype is not None and mimetype.startswith("image"):
                 fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
             return send_file(fileBin, mimetype=mimetype)
 
