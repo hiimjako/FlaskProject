@@ -34,8 +34,8 @@ services:
       - "443:443"
     volumes:
       - ./OpenDrive/static:/var/www/html/static
-      - ./OpenDrive/nginx/cert/conf:/etc/letsencrypt
-      - ./OpenDrive/nginx/cert/www:/var/www/certbot
+      - ./nginx/cert/conf:/etc/letsencrypt
+      - ./nginx/cert/www:/var/www/certbot
       - dhparam:/etc/ssl/certs
     depends_on:
       - flask-app
@@ -45,8 +45,8 @@ services:
     image: certbot/certbot
     container_name: certbot
     volumes:
-      - ./OpenDrive/nginx/cert/conf:/etc/letsencrypt
-      - ./OpenDrive/nginx/cert/www:/var/www/certbot
+      - ./nginx/cert/conf:/etc/letsencrypt
+      - ./nginx/cert/www:/var/www/certbot
     depends_on:
       - nginx
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
