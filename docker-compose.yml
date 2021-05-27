@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
 
   nginx:
-    build: ./nginx
+    image: nginx:1.15-alpine
     container_name: nginx
     restart: unless-stopped
     networks:
@@ -36,7 +36,7 @@ services:
       - ./OpenDrive/static:/var/www/html/static
       - ./nginx/cert/conf:/etc/letsencrypt
       - ./nginx/cert/www:/var/www/certbot
-      - dhparam:/etc/ssl/certs
+      - ./nginx/nginx.conf:/etc/nginx/conf.d
     depends_on:
       - flask-app
     command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
