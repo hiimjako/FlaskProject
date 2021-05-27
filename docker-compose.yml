@@ -34,22 +34,22 @@ services:
       - "443:443"
     volumes:
       - ./OpenDrive/static:/var/www/html/static
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
+      - ./OpenDrive/nginx/cert/conf:/etc/letsencrypt
+      - ./OpenDrive/nginx/cert/www:/var/www/certbot
       - dhparam:/etc/ssl/certs
     depends_on:
       - flask-app
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
 
-  # certbot:
-  #   image: certbot/certbot
-  #   container_name: certbot
-  #   volumes:
-  #     - certbot-etc:/etc/letsencrypt
-  #     - certbot-var:/var/lib/letsencrypt
-  #     - web-root:/var/www/html
-  #   depends_on:
-  #     - nginx
-  #   command: certonly --webroot --webroot-path=/var/www/html --email moretti919@gmail.com --agree-tos --no-eff-email --staging -d opendrive.site  -d www.opendrive.site
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./OpenDrive/nginx/cert/conf:/etc/letsencrypt
+      - ./OpenDrive/nginx/cert/www:/var/www/certbot
+    depends_on:
+      - nginx
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   # --force-renewal
   flask-db:
