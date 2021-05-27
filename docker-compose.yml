@@ -107,7 +107,7 @@ volumes:
       type: none
       device: /var/lib/letsencrypt
       o: bind
-  dh-param:
+  dhparam:
     driver: local
     driver_opts:
       type: none
