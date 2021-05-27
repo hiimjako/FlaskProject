@@ -1,6 +1,7 @@
 {% extends 'layouts/base.html' %}
 {% import 'macros/form_macros.html' as f %}
 
+<!-- TO FIX -->
 {% set deletion_endpoint = 'admin.delete_user_request' %}
 
 {% set endpoints = [
@@ -20,74 +21,104 @@
         {% endfor %}
     </div>
 {% endmacro %}
+<!-- END TO FIX -->
 
-{% macro user_info(user) %}
-    <table class="ui compact definition table">
-        <tr><td>Full name</td><td>{{ '%s %s' % (user.first_name, user.last_name) }}</td></tr>
-        <tr><td>Email address</td><td>{{ user.email }}</td></tr>
-        <tr><td>Account type</td><td>{{ user.role.name }}</td></tr>
+{% block js_script %}
+<script>
+    $(document).on("change", ".deletion.checkbox input[type='checkbox']", function () {
+        if (this.checked) {
+                $('.deletion.button').removeClass('disabled')
+                .attr('href', '{{ url_for('admin.delete_user', user_id=user.id) }}');
+        } else {
+                $('.deletion.button').addClass('disabled').removeAttr('href');
+        }
+    });
+</script>
+{% endblock %}
+
+{% macro user_table_info(user) %}
+<div class="row table-responsive">
+    <table id="users-table" class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Full name</th>
+                <th scope="col">Email address</th>
+                <th scope="col">Account type</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr onclick="window.location.href = '{{ url_for('admin.user_info', user_id=user.id) }}';">
+                <td class="align-middle col-4" scope="row" data-class="first_name" title="{{ user.first_name }}">
+                    {{ '%s %s' % (user.first_name, user.last_name) }}
+                </td>
+                <td class="align-middle col-3" data-class="email" title="{{ user.email }}">
+                    {{ user.email | safe }}
+                </td>
+                <td class="align-middle col-3" data-class="role" title="{{ user.role.name }}">
+                    {{ user.role.name | safe }}
+                </td>
+            </tr>
+        </tbody>
     </table>
+</div>
 {% endmacro %}
 
 {% block content %}
-    <div class="ui stackable centered grid container">
-        <div class="twelve wide column">
-            <a class="ui basic compact button" href="{{ url_for('admin.registered_users') }}">
-                <i class="caret left icon"></i>
-                Back to all users
-            </a>
-            <h2 class="ui header">
-                {{ user.full_name() }}
-                <div class="sub header">View and manage {{ user.first_name }}’s account.</div>
+<div class="ui stackable grid container">
+    <div class="sixteen wide tablet twelve wide computer centered column">
+        <div class="row">
+            <h2>
+                <a class="nounderline" href="{{ url_for('admin.registered_users') }}">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+                Back to users
             </h2>
         </div>
-        <div class="stretched divided very relaxed row">
-            <div class="four wide column">
-                {{ navigation(endpoints) }}
-            </div>
-            <div class="eight wide column">
-                {% if request.endpoint == deletion_endpoint %}
-                    <h3 class="ui red block header">
-                        <i class="warning circle icon"></i>
-                        <div class="content">
-                            This action is permanent
-                            <div class="sub header">
-                                Deleting a user account is not a reversible change. Any information associated
-                                with this account will be removed, and cannot be recovered.
-                            </div>
-                        </div>
-                    </h3>
-
-                    <div class="ui form">
-                        <div class="inline field">
-                            <div class="ui deletion checkbox">
-                                <input type="checkbox" tabindex="0" class="hidden">
-                                <label>I understand that this action cannot be undone.</label>
-                            </div>
-                        </div>
-                        <a class="ui disabled negative deletion button">
-                            Delete this user
-                        </a>
+        <div class="four wide column">
+            {{ navigation(endpoints) }}
+        </div>
+        <!-- <div class="ui menu">
+                <div id="select-role" class="ui dropdown item">
+                    <div class="text">
+                        All account types
                     </div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <div class="item" data-value="">All account types</div>
+                        {% for r in roles %}
+                            <div class="item" data-value="{{ r.name }}">{{ r.name }}s</div>
+                        {% endfor %}
                     </div>
-                {% elif form %}
-                    {{ f.render_form(form) }}
-                {% else %}
-                    {{ user_info(user) }}
-                {% endif %}
+                </div>
+                <div class="ui right search item">
+                    <div class="ui transparent icon input">
+                        <input id="search-users" type="text" placeholder="Search users…">
+                        <i class="search icon"></i>
+                    </div>
+                </div>
+            </div> -->
+        {% if request.endpoint == deletion_endpoint %}
+        <div class="row">
+            <div class="col">
+                <h1><i class="bi bi-exclamation-diamond-fill text-danger"></i>This action is permanent<i class="bi bi-exclamation-diamond-fill text-danger"></i></h1>
+                <h5>
+                    Deleting a user account is not a reversible change. Any information associated
+                    with this account will be removed, and cannot be recovered.
+                </h5>
+                <div class="deletion checkbox">
+                    <input type="checkbox" class="form-label" tabindex="0" class="hidden">
+                    <label>I understand that this action cannot be undone.</label>
+                </div>
+                <a class="disabled negative deletion button">
+                    Delete this user
+                </a>
             </div>
         </div>
+        {% elif form %}
+            {{ f.render_form(form) }}
+        {% else %}
+            {{ user_table_info(user) }}
+        {% endif %}
     </div>
-
-    <script type="text/javascript">
-        $('.deletion.checkbox').checkbox({
-            onChecked: function() {
-                $('.deletion.button').removeClass('disabled')
-                        .attr('href', '{{ url_for('admin.delete_user', user_id=user.id) }}');
-            },
-            onUnchecked: function() {
-                $('.deletion.button').addClass('disabled').removeAttr('href');
-            }
-        });
-    </script>
+</div>
 {% endblock %}

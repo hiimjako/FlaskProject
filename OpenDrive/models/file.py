@@ -39,7 +39,7 @@ class File(db.Model):
     insert_at = db.Column(db.DateTime(timezone=False),
                           server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=False), onupdate=func.now())
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
 
     def __init__(self, file, user_id):
         self.filename = secure_filename(file.filename)

@@ -11659,4 +11659,8 @@ fieldset:disabled .btn {
 html {
   font-size: 1.2rem;
 }
+
+.nounderline {
+  text-decoration: none !important;
+}
 /*# sourceMappingURL=app.css.map */
