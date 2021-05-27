@@ -6,10 +6,8 @@ services:
     build:
       dockerfile: ./Dockerfile
       context: .
-    # ports:
-    #   - "5000:5000"
-    expose:
-      - 5000
+    ports:
+      - "5000:5000"
     volumes:
       - ./:/app
     networks:
@@ -22,34 +20,6 @@ services:
       - flask-db
       - flask-redis
     restart: unless-stopped
-
-  nginx:
-    image: nginx:1.15-alpine
-    container_name: nginx
-    restart: unless-stopped
-    networks:
-      - flask-network
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./OpenDrive/static:/var/www/html/static
-      - ./nginx/cert/conf:/etc/letsencrypt
-      - ./nginx/cert/www:/var/www/certbot
-      - ./nginx:/etc/nginx/conf.d
-    depends_on:
-      - flask-app
-    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
-
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - ./nginx/cert/conf:/etc/letsencrypt
-      - ./nginx/cert/www:/var/www/certbot
-    depends_on:
-      - nginx
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   flask-db:
     container_name: flask-db
