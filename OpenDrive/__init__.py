@@ -7,6 +7,7 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_wtf import CSRFProtect
+from flask_mobility import Mobility
 from OpenDrive.db import db, migrate, rq
 
 from config import config as Config
@@ -40,6 +41,7 @@ def create_app(config):
     login_manager.init_app(app)
     migrate.init_app(app, db)
     csrf.init_app(app)
+    Mobility(app)
     # compress.init_app(app)
     rq.init_app(app)
     rq.redis_url = Config[config_name].REDIS_URL

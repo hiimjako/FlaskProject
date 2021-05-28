@@ -42,8 +42,15 @@
     <div class="row">
       <div class="col-12 col-md-10 col-lg-6">
         <div class="mb-3">
-          <label for="site" class="form-label">Site</label>
-          <input type="text" class="form-control no-border border-primary bg-transparent text-primary" id="site" name="site" value="{{password.site | safe}}" disabled>
+          <div class="row">
+            <div>
+              <a class="nounderline" href="{{ url_for('password.index') }}">
+                <i class="bi bi-arrow-left"></i>
+              </a>
+              <label for="site" class="form-label">Site</label>
+              <input type="text" class="form-control no-border border-primary bg-transparent text-primary" id="site" name="site" value="{{password.site | safe}}" disabled>
+            </div>
+          </div>
         </div>
         <div class="mb-3">
           <label for="username" class="form-label">Username</label>

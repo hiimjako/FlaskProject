@@ -46,24 +46,33 @@ $(document).ready(function () {
 </script>
 {% endblock %}
 
-{% block content %}
+
+{% macro render_for_desktop(form, passwords) %}
 <div id="page-password">
-  <div class="container position-relative g-8">
-    <form class="row row-cols-1 row-cols-md-2 row-cols-lg-4" action="" method="POST">
+  <div class="container position-relative">
+    <form class="row row-cols-1 row-cols-md-2 row-cols-lg-4 mb-4" action="" method="POST">
       <div class="col-auto">
-        <label for={{ form.site.id }} class="form-label">{{form.site.label}}</label>
+        <div class="justify-content-center d-flex">
+          {{form.site.label(class="form-label")}}
+        </div>
         {{ form.site(class="form-control text-secondary") }}
       </div>
       <div class="col-auto">
-        <label for={{ form.username.id }} class="form-label">{{form.username.label}}</label>
+        <div class="justify-content-center d-flex">
+          {{form.username.label(class="form-label")}}
+        </div>
         {{ form.username(class="form-control text-secondary") }}
       </div>
       <div class="col-auto">
-        <label for={{ form.password.id }} class="form-label">{{form.password.label}}</label>
+        <div class="justify-content-center d-flex">
+          {{form.password.label(class="form-label")}}
+        </div>
         {{ form.password(class="form-control text-secondary") }}
       </div>
       <div class="col-auto">
-        <label for={{ form.submit.id }} class="form-label">{{form.submit.label}}</label>
+        <div class="justify-content-center d-flex">
+          {{form.submit.label(class="form-label")}}
+        </div>
         {{ form.submit(class="form-control btn btn-primary") }}
       </div>
       {{ form.hidden_tag() }}
@@ -83,16 +92,16 @@ $(document).ready(function () {
           <tr>
             <td class="col-1" scope="row">
               <!-- <form action="{{ url_for('password.delete_password', id=p.id) }}" method="POST"> -->
-                <label for="mySubmit" class="btn"><i class="bi bi-x delete-row" data-id="{{ p.id }}" title="delete"></i></label>
-                <!-- <input id="mySubmit" type="submit" class="d-none" /> -->
-                <!-- {{ form.hidden_tag() }} -->
+              <label for="mySubmit" class="btn"><i class="bi bi-x delete-row" data-id="{{ p.id }}" title="delete"></i></label>
+              <!-- <input id="mySubmit" type="submit" class="d-none" /> -->
+              <!-- {{ form.hidden_tag() }} -->
               <!-- </form> -->
             </td>
             <td class="align-middle col-4" data-class="site" title="{{ p.site }}">
-                {{ p.site | safe }}
+              {{ p.site | safe }}
             </td>
             <td class="align-middle col-3" data-class="username" title="{{ p.username }}">
-                {{ p.username | safe }}
+              {{ p.username | safe }}
             </td>
             <td data-class="password col-2">
               <div class="input-group">
@@ -107,4 +116,60 @@ $(document).ready(function () {
     </div>
   </div>
 </div>
+{% endmacro %}
+
+{% macro render_for_mobile(form, passwords) %}
+<div id="page-password">
+  <div class="container position-relative">
+    <form class="row justify-content-center mb-4" action="" method="POST">
+      <div class="col-10">
+        <div class="justify-content-center d-flex">
+          {{form.site.label(class="form-label text-center")}}
+        </div>
+        {{ form.site(class="form-control text-secondary") }}
+      </div>
+      <div class="col-10">
+        <div class="justify-content-center d-flex">
+          {{form.username.label(class="form-label text-center")}}
+        </div>
+        {{ form.username(class="form-control text-secondary") }}
+      </div>
+      <div class="col-10">
+        <div class="justify-content-center d-flex">
+          {{form.password.label(class="form-label text-center")}}
+        </div>
+        {{ form.password(class="form-control text-secondary") }}
+      </div>
+      <div class="col-10">
+        <div class="justify-content-center d-flex">
+          {{form.submit.label(class="form-label text-center")}}
+        </div>
+        {{ form.submit(class="form-control btn btn-primary") }}
+      </div>
+      {{ form.hidden_tag() }}
+    </form>
+    <div class="row justify-content-center">
+      <h2 class="col-10">
+        Saved passwords
+      </h2>
+    </div>
+    <div class="row justify-content-center">
+      {% for p in passwords %}
+      <div class="col-10" title="{{ p.site }}">
+        <a href="{{ p.id }}">
+          <input type="text" class="form-control no-border border-primary bg-transparent text-primary" id="site" name="site" value="{{p.site | safe}}" disabled>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+{% block content %}
+  {% if request.MOBILE %}
+    {{ render_for_mobile(form, passwords) }}
+  {% else %}
+    {{ render_for_desktop(form, passwords) }}
+  {% endif %}
 {% endblock %}
