@@ -16,7 +16,7 @@ $(document).ready(function () {
           headers: {
             "x-csrf-token": csrf_token,
           },
-          url: `${id}`,
+          url: `delete/${id}`,
           method: "POST",
         }).done(function (res) {
           if (res.status === true) {
@@ -47,7 +47,7 @@ $(document).ready(function () {
 {% endblock %}
 
 {% block content %}
-<div id="index-password">
+<div id="page-password">
   <div class="container position-relative g-8">
     <form class="row row-cols-1 row-cols-md-2 row-cols-lg-4" action="" method="POST">
       <div class="col-auto">

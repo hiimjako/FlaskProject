@@ -1,0 +1,64 @@
+{% extends 'layouts/base.html' %}
+
+{% block js_script %}
+<script>
+  $(document).ready(function () {
+    $(document).on("click", ".delete-row", function () {
+      let id = $(this).attr("data-id");
+      var pswRow = $(this);
+      let csrf_token = $("#csrf_token").val();
+      if (!isNaN(id)) {
+        let request = $.ajax({
+          headers: {
+            "x-csrf-token": csrf_token,
+          },
+          url: `delete/${id}`,
+          method: "POST",
+        }).done(function (res) {
+          if (res.status === true) {
+            pswRow.closest('tr').remove();
+          }
+        });
+      }
+    });
+
+    $(document).on("click", ".bi-eye-slash", function () {
+      $(this).removeClass("bi-eye-slash").addClass("bi-eye");
+      $(this).closest(".input-group").find("input").attr("type", "password")
+    })
+
+    $(document).on("click", ".bi-eye", function () {
+      $(this).removeClass("bi-eye").addClass("bi-eye-slash");
+      $(this).closest(".input-group").find("input").attr("type", "text")
+    })
+
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="page-password">
+  <div class="container position-relative">
+    <div class="row">
+      <div class="col-12 col-md-10 col-lg-6">
+        <div class="mb-3">
+          <label for="site" class="form-label">Site</label>
+          <input type="text" class="form-control no-border border-primary bg-transparent text-primary" id="site" name="site" value="{{password.site | safe}}" disabled>
+        </div>
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" class="form-control no-border border-primary bg-transparent text-primary" id="username" name="username" value="{{password.username | safe}}" disabled>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
+            <input type="password" class="form-control no-border border-primary bg-transparent text-primary" id="password" name="password" value="{{ password.password | safe }}" aria-label="Username" disabled aria-describedby="password-{{ password.id }}">
+            <span class="input-group-text bg-transparent no-border" id="password-{{ password.id }}"><i class="bi bi-eye" aria-hidden="true"></i></span>
+          </div>
+        </div>
+      </div>
+      <label class="btn"><i class="bi bi-x delete-row" style="font-size: 64;" data-id="{{ password.id }}" title="delete"></i></label>
+    </div>
+  </div>
+</div>
+{% endblock %}

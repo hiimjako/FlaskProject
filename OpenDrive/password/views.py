@@ -56,7 +56,7 @@ def index():
 #         flash('An error occured, retry', 'bg-danger')
 #     return redirect(url_for('password.index'))
 
-@password.route('/<int:id>', methods=['POST'])
+@password.route('/delete/<int:id>', methods=['POST'])
 @login_required
 def delete_password(id):
     try:
@@ -67,3 +67,12 @@ def delete_password(id):
     except:
         return {"status": False, "message": "An error occured, retry"}
     return redirect(url_for('password.index'))
+
+
+@password.route('/<int:id>', methods=['GET'])
+@login_required
+@get_hash_cookie_required
+def single_password(id):
+    p = Password.query.filter_by(user_id=current_user.id, id=id).first()
+    p.password = symmetricDecrypt(p.password, current_user.cookieHash)
+    return render_template('password/single.html',  password=p)

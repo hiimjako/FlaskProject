@@ -11505,7 +11505,7 @@ fieldset:disabled .btn {
   transition: 0s;
 }
 
-#index-drive img.drive-image {
+#page-drive img.drive-image {
   width: 100%;
   /* You can set the dimensions to whatever you want */
   height: 200px;
@@ -11513,20 +11513,20 @@ fieldset:disabled .btn {
      object-fit: cover;
 }
 
-#index-drive .card {
+#page-drive .card {
   min-height: 200px;
   position: relative;
 }
 
-#index-drive .card:hover i.bi.closing-button {
+#page-drive .card:hover i.bi.closing-button {
   visibility: visible !important;
 }
 
-#index-drive .card i.bi {
+#page-drive .card i.bi {
   cursor: pointer;
 }
 
-#index-drive .card i.bi.closing-button {
+#page-drive .card i.bi.closing-button {
   visibility: hidden;
   background-color: #3b3a3a;
   position: absolute;
@@ -11535,30 +11535,30 @@ fieldset:disabled .btn {
   font-size: 32px;
 }
 
-#index-drive .card i.bi.closing-button:hover {
+#page-drive .card i.bi.closing-button:hover {
   color: #49ac98;
 }
 
-#index-drive .card .card-text i.bi {
+#page-drive .card .card-text i.bi {
   font-size: 32px;
   color: white;
 }
 
-#index-drive .card .card-text i.bi.bi-link:focus, #index-drive .card .card-text i.bi.bi-link:hover {
+#page-drive .card .card-text i.bi.bi-link:focus, #page-drive .card .card-text i.bi.bi-link:hover {
   color: #49ac98;
   -webkit-transition: color 0.15s ease-in-out, border-color 0.15s ease-in-out;
   transition: color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
 
-#index-drive .card .card-text i.bi.bi-cloud-arrow-down:focus, #index-drive .card .card-text i.bi.bi-cloud-arrow-down:hover {
+#page-drive .card .card-text i.bi.bi-cloud-arrow-down:focus, #page-drive .card .card-text i.bi.bi-cloud-arrow-down:hover {
   color: #49ac98;
 }
 
-#index-drive .card .card-text i.bi.bi-cloud-arrow-down:focus::before, #index-drive .card .card-text i.bi.bi-cloud-arrow-down:hover::before {
+#page-drive .card .card-text i.bi.bi-cloud-arrow-down:focus::before, #page-drive .card .card-text i.bi.bi-cloud-arrow-down:hover::before {
   content: "\f294";
 }
 
-#index-drive .card .image-placeholder {
+#page-drive .card .image-placeholder {
   width: 100%;
   /* You can set the dimensions to whatever you want */
   height: 200px;
@@ -11569,33 +11569,33 @@ fieldset:disabled .btn {
   color: #49ac98;
 }
 
-#index-drive .card .image-placeholder i {
+#page-drive .card .image-placeholder i {
   cursor: default;
 }
 
-#index-drive .upload-button {
+#page-drive .upload-button {
   border-style: dashed;
   border-color: #49ac98;
   cursor: pointer;
 }
 
-#index-drive .upload-button i.bi {
+#page-drive .upload-button i.bi {
   font-size: 48px;
   color: #49ac98;
 }
 
-#index-drive #progressBar {
+#page-drive #progressBar {
   display: none;
   width: 40%;
   left: 30%;
   bottom: 3%;
 }
 
-#index-drive #progressBar .progress-bar {
+#page-drive #progressBar .progress-bar {
   color: #202020;
 }
 
-#index-drive #dropLayout {
+#page-drive #dropLayout {
   position: absolute;
   border-style: dashed;
   border-width: 0.8rem;
@@ -11617,42 +11617,43 @@ fieldset:disabled .btn {
   z-index: 100;
 }
 
-#index-drive #dropLayout i.bi {
+#page-drive #dropLayout i.bi {
   font-size: 128px;
   color: #49ac98;
 }
 
-#index-password .delete-row {
+#page-password .delete-row {
   cursor: pointer;
+  font-size: 32px;
 }
 
-#index-password .delete-row:hover {
+#page-password .delete-row:hover {
   color: #49ac98;
 }
 
-#index-password .no-border {
+#page-password .no-border {
   border: 0;
   -webkit-box-shadow: none;
           box-shadow: none;
 }
 
-#index-password span .bi {
+#page-password span .bi {
   cursor: pointer;
 }
 
-#index-password span .bi.bi-eye:hover {
+#page-password span .bi.bi-eye:hover {
   color: #49ac98;
 }
 
-#index-password span .bi.bi-eye:hover::before {
+#page-password span .bi.bi-eye:hover::before {
   content: "\f33e";
 }
 
-#index-password span .bi.bi-eye-slash:hover {
+#page-password span .bi.bi-eye-slash:hover {
   color: #49ac98;
 }
 
-#index-password span .bi.bi-eye-slash:hover::before {
+#page-password span .bi.bi-eye-slash:hover::before {
   content: "\f33f";
 }
 

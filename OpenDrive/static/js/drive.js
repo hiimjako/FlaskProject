@@ -43,14 +43,14 @@ $(document).ready(function () {
   });
 
   const dropZoneElement = "#dropLayout";
-  const viewDropZone = "#index-drive .container";
+  const viewDropZone = "#page-drive .container";
   $(viewDropZone).on("drop dragover", (e) => {
     e.preventDefault();
     e.stopPropagation();
     $("#dropLayout").css("visibility", "visible");
   });
 
-  $("#index-drive").on("drop", (e) => {
+  $("#page-drive").on("drop", (e) => {
     e.preventDefault();
   });
 
@@ -162,7 +162,7 @@ function showDropLayout() {
     ) &&
     $(".card").length <= 0
   ) {
-    $("#index-drive > .container").css("height", "80vh");
+    $("#page-drive > .container").css("height", "80vh");
     $("#dropLayout").css("visibility", "visible");
   }
 }
