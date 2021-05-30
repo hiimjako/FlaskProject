@@ -53,7 +53,7 @@ def new_user():
 @login_required
 @admin_required
 def registered_users():
-    users = User.query.all()
+    users = User.query.order_by(User.role_id.desc(), User.last_name).all()
     roles = Role.query.all()
     return render_template(
         'admin/registered_users.html', users=users, roles=roles)
