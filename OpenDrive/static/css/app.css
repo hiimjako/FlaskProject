@@ -11664,4 +11664,10 @@ html {
 .nounderline {
   text-decoration: none !important;
 }
+
+.truncate-line {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
 /*# sourceMappingURL=app.css.map */

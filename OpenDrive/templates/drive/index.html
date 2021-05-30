@@ -15,10 +15,18 @@
     </div>
     
     <div class="card-body">
-      <h5 class="card-title" draggable="false" title={{ title | safe }}>{{ title | safe }}</h5>
-      <div class="card-text float-end">
-        <a href="{{ img ~ '?as_attachment=True'}}" class="px-1"><i class="bi bi-cloud-arrow-down download-button"></i></a>
-        <i class="bi bi-link px-1" data-id={{ id }}></i>
+      <div class="row">
+        <div class="col">
+          <h5 class="card-title truncate-line" draggable="false" title={{ title | safe }}>{{ title | safe }}</h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="card-text float-end">
+            <a href="{{ img ~ '?as_attachment=True'}}" class="px-1"><i class="bi bi-cloud-arrow-down download-button"></i></a>
+            <i class="bi bi-link px-1" data-id={{ id }}></i>
+          </div>
+        </div>
       </div>
       <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
     </div>
