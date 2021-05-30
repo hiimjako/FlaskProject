@@ -1,27 +1,21 @@
 {% extends 'layouts/base.html' %}
-{% import 'macros/form_macros.html' as f %}
-
-<!-- TO FIX -->
-{% set deletion_endpoint = 'admin.delete_user_request' %}
+{% import 'macros/admin_panel_macros.html' as admin_macro %}
 
 {% set endpoints = [
     ('admin.user_info', 'User information'),
     ('admin.change_user_email', 'Change email address'),
     ('admin.change_account_type', 'Change account type'),
-    (deletion_endpoint, 'Delete user')
+    ('admin.delete_user_request', 'Delete user')
 ] %}
 
-{% macro navigation(items) %}
-    <div class="ui vertical fluid secondary menu">
-        {% for route, name in items %}
-            {% set href = url_for(route, user_id=user.id) %}
-            <a class="item {% if request.endpoint == route %}active{% endif %}" href="{{ href }}">
-                {{ name }}
-            </a>
-        {% endfor %}
-    </div>
+{% macro navigation_tab(route, name) %}
+    {% set href = url_for(route, user_id=user.id) %}
+    <li class="nav-item">
+        <a class="{% if request.endpoint == route %}active text-secondary {% else %} text-primary {% endif %} nav-link" href="{{ href }}">
+            {{ name }}
+        </a>
+    </li>
 {% endmacro %}
-<!-- END TO FIX -->
 
 {% block js_script %}
 <script>
@@ -47,7 +41,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr onclick="window.location.href = '{{ url_for('admin.user_info', user_id=user.id) }}';">
+            <tr class="clickable-item" onclick="window.location.href = '{{ url_for('admin.user_info', user_id=user.id) }}';">
                 <td class="align-middle col-4" scope="row" data-class="first_name" title="{{ user.first_name }}">
                     {{ '%s %s' % (user.first_name, user.last_name) }}
                 </td>
@@ -66,38 +60,13 @@
 {% block content %}
 <div class="ui stackable grid container">
     <div class="sixteen wide tablet twelve wide computer centered column">
-        <div class="row">
-            <h2>
-                <a class="nounderline" href="{{ url_for('admin.registered_users') }}">
-                    <i class="bi bi-arrow-left"></i>
-                </a>
-                Back to users
-            </h2>
-        </div>
-        <div class="four wide column">
-            {{ navigation(endpoints) }}
-        </div>
-        <!-- <div class="ui menu">
-                <div id="select-role" class="ui dropdown item">
-                    <div class="text">
-                        All account types
-                    </div>
-                    <i class="dropdown icon"></i>
-                    <div class="menu">
-                        <div class="item" data-value="">All account types</div>
-                        {% for r in roles %}
-                            <div class="item" data-value="{{ r.name }}">{{ r.name }}s</div>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div class="ui right search item">
-                    <div class="ui transparent icon input">
-                        <input id="search-users" type="text" placeholder="Search users…">
-                        <i class="search icon"></i>
-                    </div>
-                </div>
-            </div> -->
-        {% if request.endpoint == deletion_endpoint %}
+        {{ admin_macro.panel_header('Back to users', 'admin.registered_users') }}
+        <ul class="nav nav-pills mb-3">
+            {% for route, name in endpoints %}
+                {{ navigation_tab(route, name) }}
+            {% endfor%}
+        </ul>
+        {% if request.endpoint == 'admin.delete_user_request' %}
         <div class="row">
             <div class="col">
                 <h1><i class="bi bi-exclamation-diamond-fill text-danger"></i>This action is permanent<i class="bi bi-exclamation-diamond-fill text-danger"></i></h1>
@@ -115,7 +84,18 @@
             </div>
         </div>
         {% elif form %}
-            {{ f.render_form(form) }}
+        <div class="row mt-3">
+            <div class="col-12 col-md-6 col-lg-4">
+                <form action="" method="POST">
+                    <div class="mb-3">
+                        <label for={{ form.email.id }} class="form-label">Email address</label>
+                        {{ form.email(class="form-control text-secondary") }}
+                    </div>
+                    {{ form.submit(class="btn btn-primary") }}
+                    {{ form.hidden_tag() }}
+                </form>
+            </div>
+        </div>
         {% else %}
             {{ user_table_info(user) }}
         {% endif %}

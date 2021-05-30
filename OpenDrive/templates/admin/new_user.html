@@ -1,16 +1,10 @@
 {% extends 'layouts/base.html' %}
 {% import 'macros/check_password.html' as check %}
+{% import 'macros/admin_panel_macros.html' as admin_macro %}
 
 {% block content %}
 <div class="container position-relative">
-    <div class="row">
-        <h2>
-            <a class="nounderline" href="{{ url_for('admin.index') }}">
-                <i class="bi bi-arrow-left"></i>
-            </a>
-            Create a new user account
-        </h2>
-    </div>
+    {{ admin_macro.panel_header('Create a new user account', 'admin.index') }}
     <div class="row">
         <div class="col-4">
         <form action="" method="POST">

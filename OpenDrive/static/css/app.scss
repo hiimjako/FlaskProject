@@ -48,3 +48,11 @@ html {
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
+.clickable-item {
+  cursor: pointer;
+}
+
+.text-item {
+  cursor: text;
+}
