@@ -112,15 +112,13 @@ function loadFile(file) {
     }).done(function (res) {
       if (res.status === true) {
         // TODO: mettere un flash tipo
-        setTimeout(function () {
-          $("#progressBar").hide();
-          $("#progressBar .progress-bar")
-            .css("width", percentage + "%")
-            .attr("aria-valuenow", percentage)
-            .text(percentage + "%");
+        $("#progressBar").hide();
+        $("#progressBar .progress-bar")
+          .css("width", percentage + "%")
+          .attr("aria-valuenow", percentage)
+          .text(percentage + "%");
 
-          location.reload();
-        }, 2500);
+        location.reload();
       }
     });
   });
