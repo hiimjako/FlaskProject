@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import os
-import subprocess
 
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager, Shell, Server
@@ -39,12 +38,6 @@ def setup_dev():
     setup_general()
 
 
-# @manager.command
-# def setup_prod():
-#     """Runs the set-up needed for production."""
-#     setup_general()
-
-
 def setup_general():
     """Runs the set-up needed for both local development and production.
        Also sets up first admin user."""
@@ -75,19 +68,6 @@ def run_worker():
     with Connection(conn):
         worker = Worker(map(Queue, listenQueue))
         worker.work()
-
-
-@manager.command
-def format():
-    """Runs the yapf and isort formatters over the project."""
-    isort = 'isort -rc *.py app/'
-    yapf = 'yapf -r -i *.py app/'
-
-    print('Running {}'.format(isort))
-    subprocess.call(isort, shell=True)
-
-    print('Running {}'.format(yapf))
-    subprocess.call(yapf, shell=True)
 
 
 if __name__ == '__main__':

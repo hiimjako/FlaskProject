@@ -16,15 +16,7 @@ from flask_login import (
 )
 
 from OpenDrive import db, rq
-from OpenDrive.account.forms import (
-    ChangeEmailForm,
-    ChangePasswordForm,
-    CreatePasswordForm,
-    LoginForm,
-    RegistrationForm,
-    RequestResetPasswordForm,
-    ResetPasswordForm,
-)
+from OpenDrive.account.forms import (LoginForm)
 from OpenDrive.utils import symmetricEncrypt
 from OpenDrive.models import User
 
@@ -33,7 +25,6 @@ account = Blueprint('account', __name__)
 
 @account.route('/login', methods=['GET', 'POST'])
 def login():
-    """Log in an existing user."""
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -64,7 +55,6 @@ def logout():
 @account.route('/manage/info', methods=['GET', 'POST'])
 @login_required
 def manage():
-    """Display a user's account information."""
     return render_template('account/manage.html', user=current_user, form=None)
 
 

@@ -14,7 +14,6 @@ from OpenDrive import db
 from OpenDrive.admin.forms import (
     ChangeAccountTypeForm,
     ChangeUserEmailForm,
-    InviteUserForm,
     NewUserForm,
 )
 from OpenDrive.decorators import admin_required
@@ -47,31 +46,6 @@ def new_user():
         db.session.add(user)
         db.session.commit()
         flash('User {} successfully created'.format(user.full_name()),
-              'form-success')
-    return render_template('admin/new_user.html', form=form)
-
-
-@admin.route('/invite-user', methods=['GET', 'POST'])
-@login_required
-@admin_required
-def invite_user():
-    """Invites a new user to create an account and set their own password."""
-    form = InviteUserForm()
-    if form.validate_on_submit():
-        user = User(
-            role=form.role.data,
-            first_name=form.first_name.data,
-            last_name=form.last_name.data,
-            email=form.email.data)
-        db.session.add(user)
-        db.session.commit()
-        token = user.generate_confirmation_token()
-        invite_link = url_for(
-            'account.join_from_invite',
-            user_id=user.id,
-            token=token,
-            _external=True)
-        flash('User {} successfully invited'.format(user.full_name()),
               'form-success')
     return render_template('admin/new_user.html', form=form)
 

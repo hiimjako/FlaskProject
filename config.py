@@ -15,10 +15,8 @@ class Config:
     DEBUG = False
     TESTING = False
     SESSION_COOKIE_SECURE = False
-    # TODO: da mettere in production
 
     APP_NAME = "Open drive"
-    APP_URL = ""
     UPLOAD_PATH = path.join(basedir, "upload")
 
     ENCRTYPTION_KEY = environ.get("ENCRTYPTION_KEY", default="secret")
@@ -48,7 +46,6 @@ class Config:
 
 class ProductionConfig(Config):
     FLASK_ENV = "production"
-    SSL_DISABLE = False
     SESSION_COOKIE_SECURE = True
     # SQLALCHEMY_DATABASE_URI = "mysql://user@localhost/foo"
 
@@ -60,13 +57,11 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
     FLASK_ENV = "development"
-    APP_URL = "http://127.0.0.1:5000"
     POSTGRES_URL = "127.0.0.1"
     RQ_DEFAULT_HOST = "127.0.0.1"
     REDIS_URL = f'redis://:{Config.RQ_DEFAULT_PASSWORD}@{RQ_DEFAULT_HOST}:{Config.RQ_DEFAULT_PORT}/{Config.RQ_DEFAULT_DB}'
     SQLALCHEMY_DATABASE_URI = f"postgresql://{Config.POSTGRES_USER}:{Config.POSTGRES_PASSWORD}@{POSTGRES_URL}:{Config.POSTGRES_PORT}/{Config.POSTGRES_DB}"
     DEBUG = True
-    ASSETS_DEBUG = True
 
     @classmethod
     def init_app(cls, app):
