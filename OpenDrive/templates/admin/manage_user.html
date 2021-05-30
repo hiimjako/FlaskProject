@@ -19,14 +19,13 @@
 
 {% block js_script %}
 <script>
-    $(document).on("change", ".deletion.checkbox input[type='checkbox']", function () {
-        if (this.checked) {
-                $('.deletion.button').removeClass('disabled')
-                .attr('href', '{{ url_for('admin.delete_user', user_id=user.id) }}');
-        } else {
-                $('.deletion.button').addClass('disabled').removeAttr('href');
-        }
-    });
+$(document).on("change", "#checkbox-delete", function () {
+    if (this.checked) {
+        $('.delete-user').removeClass('disabled').attr('href', '{{ url_for('admin.delete_user', user_id=user.id) }}');
+    } else {
+        $('.delete-user').addClass('disabled').removeAttr('href');
+    }
+});
 </script>
 {% endblock %}
 
@@ -67,29 +66,48 @@
             {% endfor%}
         </ul>
         {% if request.endpoint == 'admin.delete_user_request' %}
-        <div class="row">
-            <div class="col">
-                <h1><i class="bi bi-exclamation-diamond-fill text-danger"></i>This action is permanent<i class="bi bi-exclamation-diamond-fill text-danger"></i></h1>
+        <div class="row my-2">
+            <div class="col justify-content-center">
+                <h1><i class="bi bi-exclamation-diamond-fill text-danger pe-2"></i>This action is permanent<i class="bi bi-exclamation-diamond-fill text-danger px-2"></i></h1>
                 <h5>
                     Deleting a user account is not a reversible change. Any information associated
                     with this account will be removed, and cannot be recovered.
                 </h5>
-                <div class="deletion checkbox">
-                    <input type="checkbox" class="form-label" tabindex="0" class="hidden">
-                    <label>I understand that this action cannot be undone.</label>
-                </div>
-                <a class="disabled negative deletion button">
+           </div>
+        </div>
+        <div class="row my-2">
+            <div class="col justify-content-center">
+                <input type="checkbox" id="checkbox-delete" class="form-check-input" tabindex="0">
+                <label class="form-check-label" for="checkbox-delete">I understand that this action cannot be undone.</label>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col justify-content-center">
+                <a class="btn bg-primary text-secondary disabled delete-user">
                     Delete this user
                 </a>
             </div>
         </div>
-        {% elif form %}
+        {% elif request.endpoint == 'admin.change_user_email' %}
         <div class="row mt-3">
             <div class="col-12 col-md-6 col-lg-4">
                 <form action="" method="POST">
                     <div class="mb-3">
                         <label for={{ form.email.id }} class="form-label">Email address</label>
                         {{ form.email(class="form-control text-secondary") }}
+                    </div>
+                    {{ form.submit(class="btn btn-primary") }}
+                    {{ form.hidden_tag() }}
+                </form>
+            </div>
+        </div>
+        {% elif request.endpoint == 'admin.change_account_type' %}
+        <div class="row mt-3">
+            <div class="col-12 col-md-6 col-lg-4">
+                <form action="" method="POST">
+                    <div class="mb-3">
+                        <label for={{ form.role.id }} class="form-label">Email address</label>
+                        {{ form.role(class="form-control text-secondary") }}
                     </div>
                     {{ form.submit(class="btn btn-primary") }}
                     {{ form.hidden_tag() }}

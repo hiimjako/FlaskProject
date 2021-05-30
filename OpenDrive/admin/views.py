@@ -34,7 +34,6 @@ def index():
 @login_required
 @admin_required
 def new_user():
-    """Create a new user."""
     form = NewUserForm()
     if form.validate_on_submit():
         user = User(
@@ -46,7 +45,7 @@ def new_user():
         db.session.add(user)
         db.session.commit()
         flash('User {} successfully created'.format(user.full_name()),
-              'form-success')
+              'bg-primary')
     return render_template('admin/new_user.html', form=form)
 
 
@@ -54,7 +53,6 @@ def new_user():
 @login_required
 @admin_required
 def registered_users():
-    """View all registered users."""
     users = User.query.all()
     roles = Role.query.all()
     return render_template(
@@ -66,7 +64,6 @@ def registered_users():
 @login_required
 @admin_required
 def user_info(user_id):
-    """View a user's profile."""
     user = User.query.filter_by(id=user_id).first()
     if user is None:
         abort(404)
@@ -77,7 +74,6 @@ def user_info(user_id):
 @login_required
 @admin_required
 def change_user_email(user_id):
-    """Change a user's email."""
     user = User.query.filter_by(id=user_id).first()
     if user is None:
         abort(404)
@@ -86,20 +82,20 @@ def change_user_email(user_id):
         user.email = form.email.data
         db.session.add(user)
         db.session.commit()
-        flash('Email for user {} successfully changed to {}.'.format(
-            user.full_name(), user.email), 'form-success')
+        flash(f'Email for user {user.full_name()} successfully changed to {user.email}.', 'bg-primary')
+    else:
+        for error in form.errors:
+            flash(form.errors[error][0], 'bg-danger')
+
     return render_template('admin/manage_user.html', user=user, form=form)
 
 
-@admin.route(
-    '/user/<int:user_id>/change-account-type', methods=['GET', 'POST'])
-@login_required
-@admin_required
+@ admin.route('/user/<int:user_id>/change-account-type', methods=['GET', 'POST'])
+@ login_required
+@ admin_required
 def change_account_type(user_id):
-    """Change a user's account type."""
     if current_user.id == user_id:
-        flash('You cannot change the type of your own account. Please ask '
-              'another administrator to do this.', 'error')
+        flash('You cannot change the type of your own account.', 'bg-danger')
         return redirect(url_for('admin.user_info', user_id=user_id))
 
     user = User.query.get(user_id)
@@ -111,29 +107,26 @@ def change_account_type(user_id):
         db.session.add(user)
         db.session.commit()
         flash('Role for user {} successfully changed to {}.'.format(
-            user.full_name(), user.role.name), 'form-success')
+            user.full_name(), user.role.name), 'bg-primary')
     return render_template('admin/manage_user.html', user=user, form=form)
 
 
-@admin.route('/user/<int:user_id>/delete')
-@login_required
-@admin_required
+@ admin.route('/user/<int:user_id>/delete')
+@ login_required
+@ admin_required
 def delete_user_request(user_id):
-    """Request deletion of a user's account."""
     user = User.query.filter_by(id=user_id).first()
     if user is None:
         abort(404)
     return render_template('admin/manage_user.html', user=user)
 
 
-@admin.route('/user/<int:user_id>/_delete')
-@login_required
-@admin_required
+@ admin.route('/user/<int:user_id>/_delete')
+@ login_required
+@ admin_required
 def delete_user(user_id):
-    """Delete a user's account."""
     if current_user.id == user_id:
-        flash('You cannot delete your own account. Please ask another '
-              'administrator to do this.', 'error')
+        flash('You cannot delete your own account.', 'bg-danger')
     else:
         user = User.query.filter_by(id=user_id).first()
         db.session.delete(user)
