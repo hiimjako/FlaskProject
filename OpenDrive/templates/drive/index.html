@@ -17,7 +17,7 @@
     <div class="card-body">
       <div class="row">
         <div class="col">
-          <h5 class="card-title truncate-line" draggable="false" title={{ title | safe }}>{{ title | safe }}</h5>
+          <h5 class="card-title truncate-line" draggable="false" data-bs-toggle="tooltip" data-bs-placement="bottom"  title={{ title | safe }}>{{ title | safe }}</h5>
         </div>
       </div>
       <div class="row">
@@ -31,7 +31,7 @@
       <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
     </div>
     <span>
-      <i class="bi bi-x closing-button rounded-pill" data-id={{ id }} title="delete"></i>
+      <i class="bi bi-x closing-button rounded-circle" data-id={{ id }} title="delete"></i>
     </span>
   </div>
 </div>

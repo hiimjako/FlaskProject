@@ -11528,15 +11528,16 @@ fieldset:disabled .btn {
 
 #page-drive .card i.bi.closing-button {
   visibility: hidden;
-  background-color: #3b3a3a;
   position: absolute;
   top: 2%;
   right: 1%;
   font-size: 32px;
+  mix-blend-mode: difference;
 }
 
 #page-drive .card i.bi.closing-button:hover {
   color: #49ac98;
+  mix-blend-mode: normal;
 }
 
 #page-drive .card .card-text i.bi {
@@ -11655,6 +11656,10 @@ fieldset:disabled .btn {
 
 #page-password span .bi.bi-eye-slash:hover::before {
   content: "\f33f";
+}
+
+#page-password #password-table tr:hover .input-group input {
+  color: #49ac98;
 }
 
 html {

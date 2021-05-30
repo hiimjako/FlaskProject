@@ -22,14 +22,14 @@
 
       &.closing-button {
         visibility: hidden;
-        background-color: $card-bg;
         position: absolute;
         top: 2%;
         right: 1%;
         font-size: 32px;
-
+        mix-blend-mode: difference;
         &:hover {
           color: $primary;
+          mix-blend-mode: normal;
         }
       }
     }
