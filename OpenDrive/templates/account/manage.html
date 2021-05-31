@@ -1,67 +1,72 @@
 {% extends 'layouts/base.html' %}
-{% import 'macros/form_macros.html' as f %}
-{% import 'macros/check_password.html' as check %}
+{% import 'macros/account_panel_macros.html' as admin_macro %}
 
 {% set endpoints = [
-    ('account.manage', 'Account information'),
+('account.manage', 'Account Settings'),
+('account.change_email', 'Change email'),
 ] %}
 
-{% macro navigation(items) %}
-    <div class="ui vertical fluid secondary menu">
-        {% for route, name in items %}
-            {% set href = url_for(route) %}
-            <a class="item {% if request.endpoint == route %}active{% endif %}" href="{{ href }}">
-                {{ name }}
-            </a>
-        {% endfor %}
-    </div>
+{% macro navigation_tab(route, name) %}
+{% set href = url_for(route, user_id=user.id) %}
+<li class="nav-item">
+    <a class="{% if request.endpoint == route %} active text-secondary {% else %} text-primary {% endif %} nav-link" href="{{ href }}">
+        {{ name }}
+    </a>
+</li>
 {% endmacro %}
 
-{% macro user_info(user) %}
-    <table class="table">
-        <tr><td>Full name</td><td>{{ '%s %s' % (user.first_name, user.last_name) }}</td></tr>
-        <tr><td>Email address</td><td>{{ user.email }}</td></tr>
-        <tr><td>Account type</td><td>{{ user.role.name }}</td></tr>
+{% macro user_table_info(user) %}
+<div class="row table-responsive">
+    <table id="users-table" class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Full name</th>
+                <th scope="col">Email address</th>
+                <th scope="col">Account type</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="align-middle col-4" scope="row" data-class="first_name" title="{{ user.first_name }}">
+                    {{ '%s %s' % (user.first_name, user.last_name) }}
+                </td>
+                <td class="align-middle col-3" data-class="email" title="{{ user.email }}">
+                    {{ user.email | safe }}
+                </td>
+                <td class="align-middle col-3" data-class="role" title="{{ user.role.name }}">
+                    {{ user.role.name | safe }}
+                </td>
+            </tr>
+        </tbody>
     </table>
+</div>
 {% endmacro %}
 
 {% block content %}
-<div class="container position-relative g-8">
-    <div class="row">
-        <h2>
-            Account Settings,
-            <small class="text-muted">Manage your account settings and change your login information.</small>
-        </h2>
-    </div>
-    <div class="row">
-        <div class="col">
-            {{ navigation(endpoints) }}
+<div class="ui stackable grid container">
+    <div class="sixteen wide tablet twelve wide computer centered column">
+        {{ admin_macro.panel_header('Back to drive', 'drive.index') }}
+        <ul class="nav nav-pills mb-3">
+            {% for route, name in endpoints %}
+            {{ navigation_tab(route, name) }}
+            {% endfor%}
+        </ul>
+        {% if request.endpoint == 'account.change_email' %}
+        <div class="row mt-3">
+            <div class="col-12 col-md-6 col-lg-4">
+                <form action="" method="POST">
+                    <div class="mb-3">
+                        <label for={{ form.email.id }} class="form-label">Email address</label>
+                        {{ form.email(class="form-control text-secondary") }}
+                    </div>
+                    {{ form.submit(class="btn btn-primary") }}
+                    {{ form.hidden_tag() }}
+                </form>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            {% if form %}
-                {{ f.render_form(form, extra_classes='fluid') }}
-            {% else %}
-                {{ user_info(user) }}
-            {% endif %}
-        </div>
+        {% else %}
+        {{ user_table_info(user) }}
+        {% endif %}
     </div>
 </div>
-
-    <!-- <div class="ui stackable centered grid container">
-        <div class="stretched divided very relaxed row">
-            <div class="four wide column">
-                {{ navigation(endpoints) }}
-            </div>
-            <div class="eight wide column">
-                {% if form %}
-                    {{ f.render_form(form, extra_classes='fluid') }}
-                {% else %}
-                    {{ user_info(user) }}
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    {{ check.password_check('new_password', 0) }} -->
 {% endblock %}

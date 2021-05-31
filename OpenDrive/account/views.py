@@ -16,7 +16,7 @@ from flask_login import (
 )
 
 from OpenDrive import db, rq
-from OpenDrive.account.forms import (LoginForm)
+from OpenDrive.account.forms import (LoginForm, ChangeUserEmailForm)
 from OpenDrive.utils import symmetricEncrypt
 from OpenDrive.models import User
 
@@ -56,6 +56,22 @@ def logout():
 @login_required
 def manage():
     return render_template('account/manage.html', user=current_user, form=None)
+
+
+@account.route('/manage/new-email', methods=['GET', 'POST'])
+@login_required
+def change_email():
+    form = ChangeUserEmailForm()
+    if form.validate_on_submit():
+        current_user.email = form.email.data
+        db.session.add(current_user)
+        db.session.commit()
+        flash(f'Email successfully changed to {current_user.email}.', 'bg-primary')
+    else:
+        for error in form.errors:
+            flash(form.errors[error][0], 'bg-danger')
+
+    return render_template('account/manage.html', user=current_user, form=form)
 
 
 # @account.before_app_request

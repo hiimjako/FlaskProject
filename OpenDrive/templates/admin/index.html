@@ -1,5 +1,5 @@
 {% extends 'layouts/base.html' %}
-{% import 'macros/admin_panel_macros.html' as admin_macro %}
+{% import 'macros/account_panel_macros.html' as admin_macro %}
 
 {% macro dashboard_option(title, endpoint, description=None, icon=None) %}
 <a class="col nounderline" href="{{ url_for(endpoint) }}">
