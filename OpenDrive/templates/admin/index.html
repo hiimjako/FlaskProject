@@ -1,5 +1,5 @@
 {% extends 'layouts/base.html' %}
-{% import 'macros/account_panel_macros.html' as admin_macro %}
+{% import 'macros/account_panel_macros.html' as panel_macro %}
 
 {% macro dashboard_option(title, endpoint, description=None, icon=None) %}
 <a class="col nounderline" href="{{ url_for(endpoint) }}">
@@ -22,12 +22,14 @@
 {% block content %}
 <div id="page-admin">
     <div class="container position-relative">
-        {{ admin_macro.panel_header('Admin Dashboard') }}
+        {{ panel_macro.panel_header('Admin Dashboard') }}
         <div class="row">
             {{ dashboard_option('Manage Users', 'admin.registered_users',
             description='View and manage user accounts', icon='bi-people-fill') }}
             {{ dashboard_option('Add New User', 'admin.new_user',
             description='Create a new user account', icon='bi-person-plus-fill') }}
+            {{ dashboard_option('Show usage', 'admin.hardware_usage',
+            description='Show how many files and password are stored', icon='bi-gear-wide-connected') }}
         </div>
     </div>
 </div>

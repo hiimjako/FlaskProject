@@ -1,0 +1,54 @@
+{% extends 'layouts/base_extended.html' %}
+{% import 'macros/account_panel_macros.html' as panel_macro %}
+
+{% block js_script %}
+<script>
+  $(document).ready(function () {
+    $("#nav-filter").on("keyup", function () {
+      let search = $(this).val().toLocaleLowerCase();
+      $("#system-table tbody tr").filter(function () {
+        $(this).toggle($(this).text().toLocaleLowerCase().indexOf(search) > -1)
+      })
+    })
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="ui stackable grid container">
+  <div class="sixteen wide tablet twelve wide computer centered column">
+    {{ panel_macro.panel_header('System usage', 'admin.index') }}
+    <div class="row table-responsive">
+      <table id="system-table" class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">First name</th>
+            <th scope="col">Last name</th>
+            <th scope="col">Email address</th>
+            <th scope="col">N. files</th>
+            <th scope="col">N. passwords</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+          <tr>
+            <td class="align-middle col-4" scope="row" data-class="first_name" title="{{ u.first_name }}">
+              {{ u.first_name | safe }}
+            </td>
+            <td class="align-middle col-3" data-class="last_name" title="{{ u.last_name }}">
+              {{ u.last_name | safe }}
+            </td>
+            <td class="align-middle col-3" data-class="email" title="{{ u.email }}">
+              {{ u.email | safe }}
+            </td>
+            <td class="align-middle col-3" data-class="role" title="{{ u.role.name }}">
+              {{ u.role.name | safe }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

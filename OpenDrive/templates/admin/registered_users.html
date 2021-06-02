@@ -1,5 +1,5 @@
 {% extends 'layouts/base_extended.html' %}
-{% import 'macros/account_panel_macros.html' as admin_macro %}
+{% import 'macros/account_panel_macros.html' as panel_macro %}
 
 {% block js_script %}
 <script>
@@ -17,7 +17,7 @@
 {% block content %}
     <div class="ui stackable grid container">
         <div class="sixteen wide tablet twelve wide computer centered column">
-            {{ admin_macro.panel_header('Registered users', 'admin.index') }}
+            {{ panel_macro.panel_header('Registered users', 'admin.index') }}
             <div class="row table-responsive">
                 <table id="users-table" class="table table-striped table-hover">
                     <thead>

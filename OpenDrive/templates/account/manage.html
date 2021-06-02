@@ -1,5 +1,5 @@
 {% extends 'layouts/base.html' %}
-{% import 'macros/account_panel_macros.html' as admin_macro %}
+{% import 'macros/account_panel_macros.html' as panel_macro %}
 
 {% set endpoints = [
 ('account.manage', 'Account Settings'),
@@ -45,7 +45,7 @@
 {% block content %}
 <div class="ui stackable grid container">
     <div class="sixteen wide tablet twelve wide computer centered column">
-        {{ admin_macro.panel_header('Back to drive', 'drive.index') }}
+        {{ panel_macro.panel_header('Back to drive', 'drive.index') }}
         <ul class="nav nav-pills mb-3">
             {% for route, name in endpoints %}
             {{ navigation_tab(route, name) }}

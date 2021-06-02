@@ -1,10 +1,10 @@
 {% extends 'layouts/base.html' %}
 {% import 'macros/check_password.html' as check %}
-{% import 'macros/account_panel_macros.html' as admin_macro %}
+{% import 'macros/account_panel_macros.html' as panel_macro %}
 
 {% block content %}
 <div class="container position-relative">
-    {{ admin_macro.panel_header('Create a new user account', 'admin.index') }}
+    {{ panel_macro.panel_header('Create a new user account', 'admin.index') }}
     <div class="row">
         <div class="col-4">
         <form action="" method="POST">
