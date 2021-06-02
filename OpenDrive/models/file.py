@@ -14,6 +14,7 @@ from OpenDrive.utils import symmetricEncryptFile
 
 import enum
 import uuid
+import mimetypes
 
 
 def test():
@@ -58,5 +59,16 @@ class File(db.Model):
     def __repr__(self):
         return f'<File \'{self.filename}\'>'
 
+    def getFilePath(self):
+        path = None
+        if os.path.isfile(self.path):
+            path = self.path
+        elif os.path.isfile(os.path.join(current_app.config['UPLOAD_PATH'], self.filename)):
+            path = os.path.join(current_app.config['UPLOAD_PATH'], self.filename)
+        return path
+
     def getImageUrl(self):
         return posixpath.join('file', str(self.id))
+
+    def getMimeType(self):
+        return mimetypes.MimeTypes().guess_type(self.filename)[0]

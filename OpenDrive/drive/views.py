@@ -13,11 +13,9 @@ from OpenDrive import db
 from OpenDrive.models import File
 from flask_login import (current_user, login_required)
 
-from OpenDrive.drive.utils import getFilePath
 from OpenDrive.decorators import get_hash_cookie_required
 from OpenDrive.utils import symmetricDecryptFile
 import io
-import mimetypes
 
 drive = Blueprint('drive', __name__)
 
@@ -51,9 +49,9 @@ def index():
 def serve_file(file_id):
     if request.method == 'GET':
         file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
-        path = getFilePath(file)
+        path = file.getFilePath()
         if path:
-            mimetype = mimetypes.MimeTypes().guess_type(file.filename)[0]
+            mimetype = file.getMimeType()
             as_attachment = request.args.get('as_attachment')
             show = request.args.get('show')
 
@@ -73,10 +71,12 @@ def serve_file(file_id):
             if mimetype is not None and mimetype.startswith("image"):
                 fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
             return send_file(fileBin, mimetype=mimetype)
+        else:
+            flash('Error: file not found. Ask to admin', 'bg-danger')
 
     if request.method == 'DELETE':
         file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
-        path = getFilePath(file)
+        path = file.getFilePath()
 
         if path:
             os.remove(path)
