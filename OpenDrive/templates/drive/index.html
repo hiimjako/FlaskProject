@@ -11,6 +11,10 @@
   <!-- or bi-film -->
   {%set iconMime = "bi-file-earmark-play-fill" %}
 {% endif%}
+{% if "pdf" in mimeType%}
+  <!-- or bi-film -->
+  {%set iconMime = "bi-file-earmark-pdf-fill" %}
+{% endif%}
 <div class="col p-2 searchable-card">
   <div class="card shadow-lg h-100">
     <a href="{{ url ~ '?show=True'}}" target="_blank">
