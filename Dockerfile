@@ -12,7 +12,7 @@ ENV PYTHONIOENCODING=UTF-8
 
 RUN mkdir "/uploads" 
 COPY . /app
-ENTRYPOINT ["gunicorn", "-w", "2", "OpenDrive:create_app('production')", "2", "-b :5000"]
+ENTRYPOINT ["gunicorn", "-w", "3", "OpenDrive:create_app('production')", "2", "-b :5000"]
 
 # ENTRYPOINT ["python3", "-u" ,"manage.py", "runserver"]
 
