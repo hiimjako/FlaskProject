@@ -1,3 +1,5 @@
+var isUploading = false;
+
 $(document).ready(function () {
   // <!-- {# include "drive/drive.js" | safe #} -->
 
@@ -17,7 +19,6 @@ $(document).ready(function () {
   $(document).on("keyup", "#nav-filter", function () {
     let search = $(this).val().toLocaleLowerCase();
     $(".searchable-card").filter(function () {
-      console.log($(this).text().toLocaleLowerCase());
       $(this).toggle($(this).text().toLocaleLowerCase().indexOf(search) > -1);
     });
   });
@@ -94,56 +95,55 @@ $(document).ready(function () {
  * @param {File} file
  */
 function loadFile(file) {
-  var reader = new FileReader();
+  if (isUploading) return;
 
-  // reader.addEventListener("loadstart", handleEvent);
-  // reader.addEventListener("load", handleEvent);
-  reader.addEventListener("loadend", function () {
-    let percentage = 0;
+  var ajaxData = new FormData($("form").get(0));
+  ajaxData.append($("form input[type='file']").attr("name"), file);
 
-    var ajaxData = new FormData($("form").get(0));
-    ajaxData.append($("form input[type='file']").attr("name"), file);
+  $.ajax({
+    headers: {
+      "x-csrf-token": csrf_token,
+    },
+    url: $("form").attr("action"),
+    type: $("form").attr("method"),
+    method: "POST",
+    data: ajaxData,
+    dataType: "json",
+    cache: false,
+    contentType: false,
+    processData: false,
+    beforeSend: function (xhr) {
+      isUploading = true;
+    },
+    xhr: function () {
+      var xhr = new window.XMLHttpRequest();
+      xhr.upload.addEventListener("progress", function (progress) {
+        if (progress.lengthComputable) {
+          var percentage = Math.floor((progress.loaded / progress.total) * 100);
 
-    $.ajax({
-      headers: {
-        "x-csrf-token": csrf_token,
-      },
-      url: $("form").attr("action"),
-      type: $("form").attr("method"),
-      method: "POST",
-      data: ajaxData,
-      dataType: "json",
-      cache: false,
-      contentType: false,
-      processData: false,
-    }).done(function (res) {
-      if (res.status === true) {
-        // TODO: mettere un flash tipo
-        $("#progressBar").hide();
-        $("#progressBar .progress-bar")
-          .css("width", percentage + "%")
-          .attr("aria-valuenow", percentage)
-          .text(percentage + "%");
+          $("#progressBar").show();
+          $("#progressBar .progress-bar")
+            .css("width", percentage + "%")
+            .attr("aria-valuenow", percentage)
+            .text(percentage + "%");
+        }
+      });
 
-        location.reload();
-      }
-    });
-  });
-
-  reader.addEventListener("progress", function (e) {
-    if (e.lengthComputable) {
-      var percentage = Math.round((e.loaded * 100) / e.total);
-      $("#progressBar").show();
+      return xhr;
+    },
+  }).done(function (res) {
+    if (res.status === true) {
+      // TODO: mettere un flash tipo
+      $("#progressBar").hide();
       $("#progressBar .progress-bar")
-        .css("width", percentage + "%")
-        .attr("aria-valuenow", percentage)
-        .text(percentage + "%");
+        .css("width", "0%")
+        .attr("aria-valuenow", 0)
+        .text("0%");
+
+      isUploading = false;
+      location.reload();
     }
   });
-  // reader.addEventListener("error", handleEvent);
-  // reader.addEventListener("abort", handleEvent);
-
-  reader.readAsDataURL(file);
 }
 
 /**
