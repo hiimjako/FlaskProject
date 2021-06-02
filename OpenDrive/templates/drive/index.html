@@ -5,14 +5,15 @@
 <script src="{{ url_for('static',filename='js/drive.js') }}"></script>
 {% endmacro %}
 
-{%macro card(id, title='No title', text='No text', img='/static/image/no-img.svg') %}
+{%macro card(id, title='No title', text='No text', url='/static/image/no-img.svg') %}
 <div class="col p-2 searchable-card">
   <div class="card shadow-lg h-100">
-    <img src="{{ img }}" onerror="handleMissingImage(this)" alt="missing image" draggable="false" class="card-img-top drive-image">
-    <div class="d-none image-placeholder justify-content-center align-middle">
-      <i class="bi bi-file-earmark-fill"></i>
-    </div>
-    
+    <a href="{{ url ~ '?show=True'}}" target="_blank">
+      <img src="{{ url }}" onerror="handleMissingImage(this)" alt="missing image" draggable="false" class="card-img-top drive-image">
+      <div class="d-none image-placeholder justify-content-center align-middle">
+        <i class="bi bi-file-earmark-fill"></i>
+      </div>
+    </a>
     <div class="card-body">
       <div class="row">
         <div class="col">
@@ -22,7 +23,7 @@
       <div class="row">
         <div class="col">
           <div class="card-text float-end">
-            <a href="{{ img ~ '?as_attachment=True'}}" class="px-1"><i class="bi bi-cloud-arrow-down download-button"></i></a>
+            <a href="{{ url ~ '?as_attachment=True'}}" class="px-1"><i class="bi bi-cloud-arrow-down download-button"></i></a>
             <i class="bi bi-link px-1" data-id={{ id }}></i>
           </div>
         </div>

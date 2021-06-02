@@ -55,12 +55,18 @@ def serve_file(file_id):
         if path:
             mimetype = mimetypes.MimeTypes().guess_type(file.filename)[0]
             as_attachment = request.args.get('as_attachment')
+            show = request.args.get('show')
 
             fileBin = path
             if as_attachment == 'True':
                 # Quando scarico il file lo voglio sempre dectyptato
                 fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
                 return send_file(fileBin, mimetype=mimetype, attachment_filename=file.filename, as_attachment=True)
+
+            if show == 'True':
+                # Quando lo apro in una nuova tab lo voglio decryptato
+                fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
+                return send_file(fileBin, mimetype=mimetype)
 
             # per le anteprime decrypto solo le immagini, per mostrarle in anteprima
             # gli altri file non sono utili

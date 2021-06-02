@@ -11570,10 +11570,6 @@ fieldset:disabled .btn {
   color: #49ac98;
 }
 
-#page-drive .card .image-placeholder i {
-  cursor: default;
-}
-
 #page-drive .upload-button {
   border-style: dashed;
   border-color: #49ac98;
