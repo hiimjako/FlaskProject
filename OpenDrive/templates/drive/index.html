@@ -5,13 +5,18 @@
 <script src="{{ url_for('static',filename='js/drive.js') }}"></script>
 {% endmacro %}
 
-{%macro card(id, title='No title', text='No text', url='/static/image/no-img.svg') %}
+{%macro card(id, title='No title', mimeType="", text='No text', url='/static/image/no-img.svg') %}
+{%set iconMime = "bi-file-earmark-fill" %}
+{% if "video" in mimeType%}
+  <!-- or bi-film -->
+  {%set iconMime = "bi-file-earmark-play-fill" %}
+{% endif%}
 <div class="col p-2 searchable-card">
   <div class="card shadow-lg h-100">
     <a href="{{ url ~ '?show=True'}}" target="_blank">
       <img src="{{ url }}" onerror="handleMissingImage(this)" alt="missing image" draggable="false" class="card-img-top drive-image">
-      <div class="d-none image-placeholder justify-content-center align-middle">
-        <i class="bi bi-file-earmark-fill"></i>
+      <div class="d-none icon-placeholder justify-content-center align-middle">
+        <i class="bi {{ iconMime }}"></i>
       </div>
     </a>
     <div class="card-body">
@@ -65,7 +70,7 @@
   <div class="container position-relative g-8">
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
       {% for file in files %}
-      {{ card(file.id, file['filename'], file.getImageUrl(), file.getImageUrl()) }}
+      {{ card(file.id, file['filename'], file.getMimeType(), file.getImageUrl(), file.getImageUrl()) }}
       {% endfor %}
     </div>
   </div>

@@ -154,7 +154,7 @@ function loadFile(file) {
 function handleMissingImage(img) {
   img.onerror = null;
   img.style = "display: none";
-  $(img).siblings(".image-placeholder").toggleClass("d-none d-flex");
+  $(img).siblings(".icon-placeholder").toggleClass("d-none d-flex");
 }
 
 /**
