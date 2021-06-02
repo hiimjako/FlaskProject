@@ -70,6 +70,15 @@ def user_info(user_id):
     return render_template('admin/manage_user.html', user=user)
 
 
+@admin.route('/system-manager')
+@login_required
+@admin_required
+def hardware_usage():
+    users = []
+    return render_template(
+        'admin/system_manager.html', users=users)
+
+
 @admin.route('/user/<int:user_id>/change-email', methods=['GET', 'POST'])
 @login_required
 @admin_required

@@ -70,10 +70,11 @@ $(document).ready(function () {
         {{ form.password(class="form-control text-secondary") }}
       </div>
       <div class="col-auto">
+        <!-- Fix me align bottom -->
         <div class="justify-content-center d-flex">
-          {{form.submit.label(class="form-label")}}
+          {{form.submit.label(class="form-label text-secondary")}}
         </div>
-        {{ form.submit(class="form-control btn btn-primary") }}
+        {{form.submit(class="form-control btn btn-primary text-secondary") }}
       </div>
       {{ form.hidden_tag() }}
     </form>
