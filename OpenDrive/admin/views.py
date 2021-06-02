@@ -9,7 +9,7 @@ from flask import (
 )
 from flask_login import current_user, login_required
 # from flask_rq2  import get_queue
-
+from sqlalchemy import func
 from OpenDrive import db
 from OpenDrive.admin.forms import (
     ChangeAccountTypeForm,
@@ -17,7 +17,7 @@ from OpenDrive.admin.forms import (
     NewUserForm,
 )
 from OpenDrive.decorators import admin_required
-from OpenDrive.models import Role, User
+from OpenDrive.models import Role, User, File, Password
 
 admin = Blueprint('admin', __name__)
 
@@ -57,6 +57,15 @@ def registered_users():
     roles = Role.query.all()
     return render_template(
         'admin/registered_users.html', users=users, roles=roles)
+
+
+@admin.route('/system-manager')
+@login_required
+@admin_required
+def hardware_usage():
+    users = db.session.query(User, func.count(File.id), func.count(Password.id)).filter(User.id == File.user_id).filter(User.id == Password.user_id).group_by(User).all()
+    return render_template(
+        'admin/system_manager.html', users=users)
 
 
 @admin.route('/user/<int:user_id>')

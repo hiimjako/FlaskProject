@@ -4,6 +4,8 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature, SignatureExpired
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from OpenDrive.models import File
+from OpenDrive.models import Password
 from .. import db, login_manager
 
 
@@ -53,6 +55,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    files = db.relationship(File, backref='file', lazy='dynamic')
+    passwords = db.relationship(Password, backref='password', lazy='dynamic')
     # files = db.relationship('File', backref='file', lazy='dynamic')
 
     def __init__(self, **kwargs):
