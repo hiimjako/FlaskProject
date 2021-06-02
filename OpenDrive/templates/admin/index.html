@@ -23,7 +23,7 @@
 <div id="page-admin">
     <div class="container position-relative">
         {{ panel_macro.panel_header('Admin Dashboard') }}
-        <div class="row">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
             {{ dashboard_option('Manage Users', 'admin.registered_users',
             description='View and manage user accounts', icon='bi-people-fill') }}
             {{ dashboard_option('Add New User', 'admin.new_user',
