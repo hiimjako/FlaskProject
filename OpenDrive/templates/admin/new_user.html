@@ -35,7 +35,11 @@
             {% if form.password %}
                 {{ check.password_check('password', 0) }}
             {% endif %}
-            {{ form.submit(class="btn btn-primary") }}
+            <div class="mb-3">
+                <div class="d-grid col-12">
+                    {{ form.submit(class="btn btn-primary btn-lg aligin-center") }}
+                </div>
+            </div>
             {{ form.hidden_tag() }}
         </form>
         </div>
