@@ -71,4 +71,4 @@ class File(db.Model):
         return posixpath.join('file', str(self.id))
 
     def getMimeType(self):
-        return mimetypes.MimeTypes().guess_type(self.filename)[0]
+        return mimetypes.MimeTypes().guess_type(self.filename)[0] or "application/octet-stream"
