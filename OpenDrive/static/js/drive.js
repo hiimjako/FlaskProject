@@ -87,6 +87,29 @@ $(document).ready(function () {
   tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl);
   });
+
+  let onClickOutside = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    $("#context_menu").hide();
+    $(document).off("click", "body", onClickOutside);
+  };
+
+  // Context menu
+  $(".card").contextmenu(function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    let contextmenu = $("#context_menu");
+    $(document).on("click", "body", onClickOutside);
+    const x = e.pageX;
+    const y = e.pageY - 15;
+    contextmenu.css({
+      display: "block",
+      zIndex: 5000,
+      left: x + "px",
+      top: y + "px",
+    });
+  });
 });
 
 /**

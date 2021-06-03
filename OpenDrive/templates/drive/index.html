@@ -15,7 +15,7 @@
   {%set iconMime = "bi-file-earmark-pdf-fill" %}
 {% endif%}
 {% if "zip" in mimeType%}
-  {%set iconMime = "bi-file-earmark-zip-fill" %}
+  {%set iconMime = "bi-file-earmark-zip-fill" %}2
 {% endif%}
 
 <div class="col p-2 searchable-card">
@@ -46,6 +46,16 @@
       <i class="bi bi-x closing-button rounded-circle" data-id={{ id }} title="delete"></i>
     </span>
   </div>
+</div>
+{% endmacro %}
+
+{%macro context_menu() %}
+<div id="context_menu" class="dropdown position-fixed" style="display: none;">
+  <ul class="dropdown-menu d-block">
+    <li><a class="dropdown-item" href="#">Action</a></li>
+    <li><a class="dropdown-item" href="#">Another action</a></li>
+    <li><a class="dropdown-item" href="#">Something else here</a></li>
+  </ul>
 </div>
 {% endmacro %}
 
@@ -84,5 +94,6 @@
   {{ upload_button(form) }}
   {{ progressBar() }}
   {{ onDropLayout() }}
+  {{ context_menu() }}
 </div>
 {% endblock %}

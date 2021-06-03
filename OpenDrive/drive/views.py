@@ -6,7 +6,8 @@ from werkzeug.utils import secure_filename
 from flask.helpers import send_file, url_for
 
 from OpenDrive.drive.forms import (
-    UploadNewFile
+    UploadNewFile,
+    RenameFile
 )
 
 from OpenDrive import db
@@ -87,6 +88,25 @@ def serve_file(file_id):
         return {'status': True, 'message': 'Correctly deleted'}
 
     return {'status': False, 'message': 'Error'}
+
+
+@drive.route('/file/<int:file_id>/rename', methods=['POST'])
+@login_required
+def rename_file(file_id):
+    if request.method == 'POST':
+        form = RenameFile()
+        if form.validate_on_submit():
+            file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
+            if file:
+                file.filename = form.filename
+                db.session.add(file)
+                db.session.commit()
+                return {'status': True, 'message': 'Correctly updated'}
+        else:
+            return {'status': False, 'message': form.errors}
+
+    return {'status': False, 'message': 'Error while updating'}
+
 
 # TODO: parte dei file condivisi
 # @drive.route('/shared/<int:file_id>', methods=['GET', 'POST'])
