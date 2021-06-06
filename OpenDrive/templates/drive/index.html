@@ -8,20 +8,21 @@
 {%macro card(id, title='No title', mimeType="", text='No text', url='/static/image/no-img.svg') %}
 {%set iconMime = "bi-file-earmark-fill" %}
 {% if "video" in mimeType%}
-  <!-- or bi-film -->
-  {%set iconMime = "bi-file-earmark-play-fill" %}
+<!-- or bi-film -->
+{%set iconMime = "bi-file-earmark-play-fill" %}
 {% endif%}
 {% if "pdf" in mimeType%}
-  {%set iconMime = "bi-file-earmark-pdf-fill" %}
+{%set iconMime = "bi-file-earmark-pdf-fill" %}
 {% endif%}
 {% if "zip" in mimeType%}
-  {%set iconMime = "bi-file-earmark-zip-fill" %}2
+{%set iconMime = "bi-file-earmark-zip-fill" %}
 {% endif%}
 
 <div class="col p-2 searchable-card">
   <div class="card shadow-lg h-100">
     <a href="{{ url ~ '?show=True'}}" target="_blank">
-      <img src="{{ url }}" onerror="handleMissingImage(this)" alt="missing image" draggable="false" class="card-img-top drive-image">
+      <img src="{{ url }}" onerror="handleMissingImage(this)" alt="missing image" draggable="false"
+        class="card-img-top drive-image">
       <div class="d-none icon-placeholder justify-content-center align-middle">
         <i class="bi {{ iconMime }}"></i>
       </div>
@@ -29,18 +30,19 @@
     <div class="card-body">
       <div class="row">
         <div class="col">
-          <h5 class="card-title truncate-line" draggable="false" data-bs-toggle="tooltip" data-bs-placement="bottom"  title={{ title | safe }}>{{ title | safe }}</h5>
+          <h5 class="card-title truncate-line" draggable="false" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            title={{ title | safe }}>{{ title | safe }}</h5>
         </div>
       </div>
       <div class="row">
         <div class="col">
           <div class="card-text float-end">
-            <a href="{{ url ~ '?as_attachment=True'}}" class="px-1"><i class="bi bi-cloud-arrow-down download-button"></i></a>
+            <a href="{{ url ~ '?as_attachment=True'}}" class="px-1"><i
+                class="bi bi-cloud-arrow-down download-button"></i></a>
             <i class="bi bi-link px-1" data-id={{ id }}></i>
           </div>
         </div>
       </div>
-      <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
     </div>
     <span>
       <i class="bi bi-x closing-button rounded-circle" data-id={{ id }} title="delete"></i>
@@ -52,9 +54,10 @@
 {%macro context_menu() %}
 <div id="context_menu" class="dropdown position-fixed" style="display: none;">
   <ul class="dropdown-menu d-block">
-    <li><a class="dropdown-item" href="#">Action</a></li>
-    <li><a class="dropdown-item" href="#">Another action</a></li>
-    <li><a class="dropdown-item" href="#">Something else here</a></li>
+    <li><a class="dropdown-item" id="rename" href="#"><i class="bi bi-pencil-square pe-1"></i>Rename</a></li>
+    <!-- <li><hr class="dropdown-divider"></li> -->
+    <li><a class="dropdown-item" id="download" href="#"><i
+          class="bi bi-cloud-arrow-down download-button pe-1"></i>Download</a></li>
   </ul>
 </div>
 {% endmacro %}
@@ -71,7 +74,8 @@
 
 {%macro progressBar() %}
 <div id="progressBar" class="progress position-fixed">
-  <div class="progress-bar bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+  <div class="progress-bar bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0"
+    aria-valuemax="100">0%</div>
 </div>
 {% endmacro %}
 

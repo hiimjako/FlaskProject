@@ -88,6 +88,7 @@ $(document).ready(function () {
     return new bootstrap.Tooltip(tooltipTriggerEl);
   });
 
+  // Context menu
   let onClickOutside = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -95,11 +96,13 @@ $(document).ready(function () {
     $(document).off("click", "body", onClickOutside);
   };
 
-  // Context menu
   $(".card").contextmenu(function (e) {
     e.preventDefault();
     e.stopPropagation();
+    let cardItem = $(this).find(".card-text > a").attr("href");
     let contextmenu = $("#context_menu");
+    contextmenu.find("#rename").attr("href", cardItem);
+    contextmenu.find("#download").attr("href", cardItem);
     $(document).on("click", "body", onClickOutside);
     const x = e.pageX;
     const y = e.pageY - 15;
