@@ -64,6 +64,7 @@ def serve_file(file_id):
 
             if show == 'True':
                 # Quando lo apro in una nuova tab lo voglio decryptato
+                # TODO: far si che quando si apre in una nuova tab ci sia il nome corretto
                 fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
                 return send_file(fileBin, mimetype=mimetype)
 

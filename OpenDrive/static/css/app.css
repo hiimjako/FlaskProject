@@ -11660,6 +11660,11 @@ fieldset:disabled .btn {
 
 html {
   font-size: 1.2rem;
+  height: 100% !important;
+}
+
+body {
+  height: 100% !important;
 }
 
 .nounderline {

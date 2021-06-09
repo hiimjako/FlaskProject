@@ -37,6 +37,11 @@ $table-striped-bg-factor: 0.2;
 
 html {
   font-size: 1.2rem;
+  height: 100% !important;
+}
+
+body {  
+  height: 100% !important;
 }
 
 .nounderline {
