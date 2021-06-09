@@ -34,6 +34,7 @@ class File(db.Model):
 
     def __init__(self, file, user_id):
         self.filename = secure_filename(file.filename)
+        self.filename = os.path.splitext(self.filename)[0] + os.path.splitext(self.filename)[1].lower()
 
         basePath = current_app.config['UPLOAD_PATH']
         if not os.path.exists(basePath):
