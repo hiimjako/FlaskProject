@@ -19,7 +19,7 @@
 {% endif%}
 
 <div class="col p-2 searchable-card">
-  <div class="card shadow-lg h-100">
+  <div class="card shadow-lg h-100" data-id={{ id }}>
     <a href="{{ url ~ '?show=True'}}" target="_blank">
       <img src="{{ url }}" onerror="handleMissingImage(this)" alt="missing image" draggable="false"
         class="card-img-top drive-image">
@@ -37,8 +37,7 @@
       <div class="row">
         <div class="col">
           <div class="card-text float-end">
-            <a href="{{ url ~ '?as_attachment=True'}}" class="px-1"><i
-                class="bi bi-cloud-arrow-down download-button"></i></a>
+            <a href="{{ url ~ '?as_attachment=True'}}" class="px-1"><i class="bi bi-cloud-arrow-down"></i></a>
             <i class="bi bi-link px-1" data-id={{ id }}></i>
           </div>
         </div>
@@ -54,10 +53,13 @@
 {%macro context_menu() %}
 <div id="context_menu" class="dropdown position-fixed" style="display: none;">
   <ul class="dropdown-menu d-block">
-    <li><a class="dropdown-item" id="rename" href="#"><i class="bi bi-pencil-square pe-1"></i>Rename</a></li>
-    <!-- <li><hr class="dropdown-divider"></li> -->
-    <li><a class="dropdown-item" id="download" href="#"><i
-          class="bi bi-cloud-arrow-down download-button pe-1"></i>Download</a></li>
+    <li><a class="dropdown-item" id="rename"><i class="bi bi-pencil-square pe-1"></i>Rename</a></li>
+    <li><a class="dropdown-item" id="download"><i class="bi bi-cloud-arrow-down pe-1"></i>Download</a>
+    <li>
+      <hr class="dropdown-divider">
+    </li>
+    <li><a class="dropdown-item" id="share"><i class="bi bi-link pe-1"></i>Share</a>
+    </li>
   </ul>
 </div>
 {% endmacro %}

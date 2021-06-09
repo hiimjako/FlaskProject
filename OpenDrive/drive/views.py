@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, send_from_directory, current_app, request, flash
+from flask import Blueprint, render_template, redirect, request, flash
 
 import os
 
@@ -90,35 +90,31 @@ def serve_file(file_id):
     return {'status': False, 'message': 'Error'}
 
 
-@drive.route('/file/<int:file_id>/rename', methods=['POST'])
+@drive.route('/file/<int:file_id>/rename', methods=['GET', 'POST'])
 @login_required
 def rename_file(file_id):
+    form = RenameFile()
     if request.method == 'POST':
-        form = RenameFile()
         if form.validate_on_submit():
-            file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
+            file = File.query.filter_by(
+                id=file_id, user_id=current_user.id).first()
             if file:
-                file.filename = form.filename
+                file.filename = os.path.splitext(form.filename.data)[0] + os.path.splitext(file.filename)[1]
                 db.session.add(file)
                 db.session.commit()
-                return {'status': True, 'message': 'Correctly updated'}
+                flash('Correctly updated', 'bg-primary')
+                return redirect(url_for('drive.index'))
+ 
         else:
-            return {'status': False, 'message': form.errors}
+            for error in form.errors:
+                flash(form.errors[error][0], 'bg-danger')
 
-    return {'status': False, 'message': 'Error while updating'}
+    file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
+    return render_template('drive/rename_file.html', form=form, file=file)
 
+@drive.route('/file/<int:file_id>/share', methods=['GET'])
+@login_required
+def share_file(file_id):
+    flash("Feature work in progress :)", 'bg-danger')
+    return redirect(url_for('drive.index'))
 
-# TODO: parte dei file condivisi
-# @drive.route('/shared/<int:file_id>', methods=['GET', 'POST'])
-# @login_required
-# def serve_file(file_id):
-#     file = File.query.filter_by(id=file_id).first()
-#     path = file.path
-#     if os.path.isfile(file.path):
-#         path = file.path
-#     elif os.path.isfile(os.path.join(current_app.config['UPLOAD_PATH'], file.filename)):
-#         path = os.path.join(current_app.config['UPLOAD_PATH'], file.filename)
-#     else:
-#         return None
-
-#     return send_file(path)
