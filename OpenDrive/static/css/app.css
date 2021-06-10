@@ -11511,6 +11511,13 @@ fieldset:disabled .btn {
   height: 200px;
   -o-object-fit: cover;
      object-fit: cover;
+  opacity: 1;
+  -webkit-transition: opacity 1s;
+  transition: opacity 1s;
+}
+
+#page-drive img.drive-image[data-src] {
+  opacity: 0;
 }
 
 #page-drive .card {

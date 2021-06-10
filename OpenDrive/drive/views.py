@@ -74,7 +74,7 @@ def serve_file(file_id):
                 fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
             return send_file(fileBin, mimetype=mimetype)
         else:
-            flash('Error: file not found. Ask to admin', 'bg-danger')
+            flash(f'Error: file {file.filename.strip()} not found. Ask to admin', 'bg-danger')
 
     if request.method == 'DELETE':
         file = File.query.filter_by(id=file_id, user_id=current_user.id).first()

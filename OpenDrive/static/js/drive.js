@@ -120,6 +120,15 @@ $(document).ready(function () {
   $(document).on('click', '#context_menu a', function () {
     window.location = $(this).attr("href");
   })
+
+  $('img[data-src]').each(function (e) {
+    let img = $(this);
+    img.attr('src', img.attr('data-src'))
+    img.removeAttr('data-src')
+    img.on('error', function () {
+      handleMissingImage(this)
+    });
+  })
 });
 
 /**
@@ -185,6 +194,7 @@ function loadFile(file) {
  * @param {HTMLImageElement} img
  */
 function handleMissingImage(img) {
+  console.log(img);
   img.onerror = null;
   img.style = "display: none";
   $(img).siblings(".icon-placeholder").toggleClass("d-none d-flex");
