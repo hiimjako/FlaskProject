@@ -13,6 +13,7 @@ This is the internet, web and cloud exam project, developed in flask
 - Open http://127.0.0.1:5000/
   - Log in with ADMIN_EMAIL and ADMIN_PASSWORD
 
+Or it's aviable on [opendrive.site](https://opendrive.site/ "Site homepage")
 # Flask migrate
 
 Inizialize migration `flask db init`
