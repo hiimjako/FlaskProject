@@ -194,7 +194,6 @@ function loadFile(file) {
  * @param {HTMLImageElement} img
  */
 function handleMissingImage(img) {
-  console.log(img);
   img.onerror = null;
   img.style = "display: none";
   $(img).siblings(".icon-placeholder").toggleClass("d-none d-flex");
