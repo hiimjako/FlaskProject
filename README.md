@@ -20,12 +20,9 @@ Commit migration `flask db migrate -m ""`
 
 Apply migrations `flask db upgrade`
 
-https://github.com/hack4impact/flask-base
-
-If there are some trubles with "psycopg2" remove it from requirements.txt and use docker instead
+If there are some trubles with "psycopg2" remove it from requirements.txt or use docker instead
 
 **# TODO**
-
 - add file size to db, for limit the amount of file to upload per user
 - System manager
 - Name to pdf while download in new page
