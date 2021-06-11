@@ -106,8 +106,8 @@ $(document).ready(function () {
     contextmenu.find("#download").attr("href", `file/${itemId}?as_attachment=True`);
     contextmenu.find("#share").attr("href", `file/${itemId}/share`);
     $(document).on("click", "body", onClickOutside);
-    const x = e.pageX;
-    const y = e.pageY - 15;
+    const x = e.clientX + 10;
+    const y = e.clientY + 15;
     contextmenu.css({
       display: "block",
       zIndex: 5000,
@@ -216,7 +216,6 @@ function handleMissingImage(img) {
  * @param {HTMLImageElement} img
  */
 function onImageLoad(img) {
-  console.log("load");
   $(img)
     .removeClass("d-none")
     .addClass("d-flex")
@@ -237,7 +236,6 @@ function showDropLayout() {
     ) &&
     $(".card").length <= 0
   ) {
-    $("#page-drive > .container").css("height", "80vh");
     $("#dropLayout").css("visibility", "visible");
   }
 }
