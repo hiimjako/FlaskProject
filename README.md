@@ -1,8 +1,8 @@
-**# FlaskProject**
+# FlaskProject
 
 This is the internet, web and cloud exam project, developed in flask
 
-**# How to run this project**
+# How to run this project
 
 - Add ADMIN_EMAIL and ADMIN_PASSWORD to .env
 - docker-compose -f docker-compose-dev.yml up 
@@ -31,3 +31,4 @@ If there are some trubles with "psycopg2" remove it from requirements.txt or use
 - Invite user via email
 - Change password, with rq queue to recrypt all files
 - Add rq thats handles file inputs
+- Add folders in drive
