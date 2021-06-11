@@ -216,9 +216,12 @@ function handleMissingImage(img) {
  * @param {HTMLImageElement} img
  */
 function onImageLoad(img) {
+  console.log("load");
   $(img)
     .removeClass("d-none")
-    .addClass("d-flex");
+    .addClass("d-flex")
+    .animate({ opacity: 1 });
+
   $(img).siblings(".spinner-placeholder")
     .removeClass("d-flex")
     .addClass("d-none");

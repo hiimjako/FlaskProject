@@ -5,9 +5,11 @@
     width: 100%; /* You can set the dimensions to whatever you want */
     height: $minHeight;
     object-fit: cover;
-    opacity: 1;
-    transition: opacity 1s;
     &[data-src] {
+      opacity: 0;
+    }
+
+    &.hide{
       opacity: 0;
     }
   }
