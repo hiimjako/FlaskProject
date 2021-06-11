@@ -54,7 +54,7 @@ def serve_file(file_id):
         if path:
             mimetype = file.getMimeType()
             as_attachment = request.args.get('as_attachment')
-            show = request.args.get('show')
+            preview = request.args.get('preview')
 
             fileBin = path
             if as_attachment == 'True':
@@ -62,16 +62,17 @@ def serve_file(file_id):
                 fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
                 return send_file(fileBin, mimetype=mimetype, attachment_filename=file.filename, as_attachment=True)
 
-            if show == 'True':
-                # Quando lo apro in una nuova tab lo voglio decryptato
-                # TODO: far si che quando si apre in una nuova tab ci sia il nome corretto
-                fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
+            if preview == 'True':
+                # per le anteprime decrypto solo le immagini, per mostrarle in anteprima
+                # gli altri file non sono utili
+                fileBin = io.BytesIO(bytes())
+                if mimetype is not None and mimetype.startswith("image"):
+                    fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
                 return send_file(fileBin, mimetype=mimetype)
-
-            # per le anteprime decrypto solo le immagini, per mostrarle in anteprima
-            # gli altri file non sono utili
-            if mimetype is not None and mimetype.startswith("image"):
-                fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
+            
+            # Quando lo apro in una nuova tab lo voglio decryptato
+            # TODO: far si che quando si apre in una nuova tab ci sia il nome corretto
+            fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
             return send_file(fileBin, mimetype=mimetype)
         else:
             flash(f'Error: file {file.filename.strip()} not found. Ask to admin', 'bg-danger')

@@ -20,8 +20,8 @@
 
 <div class="col p-2 searchable-card">
   <div class="card shadow-lg h-100" data-id={{ id }}>
-    <a href="{{ url ~ '?show=True'}}" target="_blank">
-      <img data-src="{{ url }}" alt="missing image" draggable="false" class="card-img-top drive-image">
+    <a href="{{ url }}" target="_blank">
+      <img data-src="{{ url ~ '?preview=True' }}" alt="missing image" draggable="false" class="card-img-top drive-image">
       <div class="d-none icon-placeholder justify-content-center align-middle">
         <i class="bi {{ iconMime }}"></i>
       </div>
