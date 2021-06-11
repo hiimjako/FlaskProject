@@ -21,8 +21,16 @@
 <div class="col p-2 searchable-card">
   <div class="card shadow-lg h-100" data-id={{ id }}>
     <a href="{{ url }}" target="_blank">
-      <img data-src="{{ url ~ '?preview=True' }}" alt="missing image" draggable="false" class="card-img-top drive-image">
-      <div class="d-none icon-placeholder justify-content-center align-middle">
+      <!-- spinner before load -->
+      <div class="d-flex justify-content-center spinner-placeholder">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      <!-- image -->
+      <img data-src="{{ url ~ '?preview=True' }}" alt="missing image" draggable="false" class="card-img-top drive-image d-none">
+      <!-- fallback if not image/not exists -->
+      <div class="d-none icon-placeholder text-primary justify-content-center align-middle">
         <i class="bi {{ iconMime }}"></i>
       </div>
     </a>

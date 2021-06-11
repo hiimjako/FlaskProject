@@ -11568,13 +11568,18 @@ fieldset:disabled .btn {
 
 #page-drive .card .icon-placeholder {
   width: 100%;
-  /* You can set the dimensions to whatever you want */
   height: 200px;
   font-size: 64px;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  color: #49ac98;
+}
+
+#page-drive .card .spinner-placeholder {
+  height: 200px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 #page-drive .upload-button {

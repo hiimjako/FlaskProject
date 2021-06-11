@@ -123,11 +123,15 @@ $(document).ready(function () {
 
   $('img[data-src]').each(function (e) {
     let img = $(this);
-    img.attr('src', img.attr('data-src'))
-    img.removeAttr('data-src')
-    img.on('error', function () {
-      handleMissingImage(this)
-    });
+    img
+      .attr('src', img.attr('data-src'))
+      .removeAttr('data-src')
+      .on("load", function () {
+        onImageLoad(this)
+      })
+      .on('error', function () {
+        handleMissingImage(this)
+      });
   })
 });
 
@@ -195,8 +199,29 @@ function loadFile(file) {
  */
 function handleMissingImage(img) {
   img.onerror = null;
-  img.style = "display: none";
-  $(img).siblings(".icon-placeholder").toggleClass("d-none d-flex");
+  $(img)
+    .removeClass("d-flex")
+    .addClass("d-none");
+  $(img).siblings(".icon-placeholder")
+    .removeClass("d-none")
+    .addClass("d-flex");
+  $(img).siblings(".spinner-placeholder")
+    .removeClass("d-flex")
+    .addClass("d-none");
+}
+
+/**
+ * When the image loads it hide the spinner and shows the image
+ *
+ * @param {HTMLImageElement} img
+ */
+function onImageLoad(img) {
+  $(img)
+    .removeClass("d-none")
+    .addClass("d-flex");
+  $(img).siblings(".spinner-placeholder")
+    .removeClass("d-flex")
+    .addClass("d-none");
 }
 
 /**

@@ -66,11 +66,15 @@
     }
 
     .icon-placeholder {
-      width: 100%; /* You can set the dimensions to whatever you want */
+      width: 100%;
       height: $minHeight;
       font-size: 64px;
       align-items: center;
-      color: $primary;
+    }
+
+    .spinner-placeholder {
+      height: $minHeight;
+      align-items: center;
     }
   }
 
