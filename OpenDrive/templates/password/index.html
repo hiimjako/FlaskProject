@@ -1,14 +1,20 @@
 {% extends 'layouts/base_extended.html' %}
+{% import 'partials/_context_menu.html' as context_menu %}
+
+{% set context_menu_items = [
+{"icon": "bi-pencil-square", "label": "update", "href": "item-id/update"},
+]
+%}
 
 {% block js_script %}
 <script>
-$(document).ready(function () {
+  $(document).ready(function () {
 
-  $("#site").val("");
-  $("#username").val("");
+    $("#site").val("");
+    $("#username").val("");
 
-  $(document).on("click", ".delete-row", function () {
-      let id = $(this).attr("data-id");
+    $(document).on("click", ".delete-row", function () {
+      let id = $(this).closest("tr").attr("data-id");
       var pswRow = $(this);
       let csrf_token = $("#csrf_token").val();
       if (!isNaN(id)) {
@@ -26,23 +32,23 @@ $(document).ready(function () {
       }
     });
 
-  $(document).on("click", ".bi-eye-slash", function() {
-    $(this).removeClass("bi-eye-slash").addClass("bi-eye");
-    $(this).closest(".input-group").find("input").attr("type", "password")
-  })
-
-  $(document).on("click", ".bi-eye", function () {
-    $(this).removeClass("bi-eye").addClass("bi-eye-slash");
-    $(this).closest(".input-group").find("input").attr("type", "text")
-  })
-
-  $("#nav-filter").on("keyup", function() {
-    let search = $(this).val().toLocaleLowerCase();
-    $("#password-table tbody tr").filter(function() {
-      $(this).toggle($(this).text().toLocaleLowerCase().indexOf(search) > -1)
+    $(document).on("click", ".bi-eye-slash", function () {
+      $(this).removeClass("bi-eye-slash").addClass("bi-eye");
+      $(this).closest(".input-group").find("input").attr("type", "password")
     })
-  })
-});
+
+    $(document).on("click", ".bi-eye", function () {
+      $(this).removeClass("bi-eye").addClass("bi-eye-slash");
+      $(this).closest(".input-group").find("input").attr("type", "text")
+    })
+
+    $("#nav-filter").on("keyup", function () {
+      let search = $(this).val().toLocaleLowerCase();
+      $("#password-table tbody tr").filter(function () {
+        $(this).toggle($(this).text().toLocaleLowerCase().indexOf(search) > -1)
+      })
+    })
+  });
 </script>
 {% endblock %}
 
@@ -90,10 +96,10 @@ $(document).ready(function () {
         </thead>
         <tbody>
           {% for p in passwords %}
-          <tr>
+          <tr data-id="{{ p.id }}">
             <td class="col-1" scope="row">
               <!-- <form action="{{ url_for('password.delete_password', id=p.id) }}" method="POST"> -->
-              <label for="mySubmit" class="btn"><i class="bi bi-x delete-row" data-id="{{ p.id }}" title="delete"></i></label>
+              <label for="mySubmit" class="btn"><i class="bi bi-x delete-row" title="delete"></i></label>
               <!-- <input id="mySubmit" type="submit" class="d-none" /> -->
               <!-- {{ form.hidden_tag() }} -->
               <!-- </form> -->
@@ -106,8 +112,10 @@ $(document).ready(function () {
             </td>
             <td class="align-middle col-3" data-class="password">
               <div class="input-group">
-                <input type="password" class="form-control bg-transparent no-border text-item" value="{{ p.password | safe }}" aria-label="Username" disabled aria-describedby="password-{{ p.id }}">
-                <span class="input-group-text bg-transparent no-border" id="password-{{ p.id }}"><i class="bi bi-eye" aria-hidden="true"></i></span>
+                <input type="password" class="form-control bg-transparent no-border text-item"
+                  value="{{ p.password | safe }}" aria-label="Username" disabled aria-describedby="password-{{ p.id }}">
+                <span class="input-group-text bg-transparent no-border" id="password-{{ p.id }}"><i class="bi bi-eye"
+                    aria-hidden="true"></i></span>
               </div>
             </td>
           </tr>
@@ -158,7 +166,8 @@ $(document).ready(function () {
       {% for p in passwords %}
       <div class="col-10" title="{{ p.site }}">
         <a href="{{ p.id }}">
-          <input type="text" class="form-control no-border border-primary bg-transparent text-primary" id="site" name="site" value="{{p.site | safe}}" disabled>
+          <input type="text" class="form-control no-border border-primary bg-transparent text-primary" id="site"
+            name="site" value="{{p.site | safe}}" disabled>
         </a>
       </div>
       {% endfor %}
@@ -168,9 +177,10 @@ $(document).ready(function () {
 {% endmacro %}
 
 {% block content %}
-  {% if request.MOBILE %}
-    {{ render_for_mobile(form, passwords) }}
-  {% else %}
-    {{ render_for_desktop(form, passwords) }}
-  {% endif %}
+{% if request.MOBILE %}
+{{ render_for_mobile(form, passwords) }}
+{% else %}
+{{ render_for_desktop(form, passwords) }}
+{% endif %}
+{{ context_menu.render_context_menu("tr", context_menu_items) }}
 {% endblock %}

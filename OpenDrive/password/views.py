@@ -76,3 +76,10 @@ def single_password(id):
     p = Password.query.filter_by(user_id=current_user.id, id=id).first()
     p.password = symmetricDecrypt(p.password, current_user.cookieHash)
     return render_template('password/single.html',  password=p)
+
+
+@password.route('/<int:id>/update', methods=['GET', 'POST'])
+@login_required
+def update_password(id):
+    flash("Feature work in progress :)", 'bg-danger')
+    return redirect(url_for('password.index'))
