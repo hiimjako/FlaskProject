@@ -18,11 +18,9 @@
 {% if "video" in mimeType%}
 <!-- or bi-film -->
 {%set iconMime = "bi-file-earmark-play-fill" %}
-{% endif%}
-{% if "pdf" in mimeType%}
+{% elif "pdf" in mimeType%}
 {%set iconMime = "bi-file-earmark-pdf-fill" %}
-{% endif%}
-{% if "zip" in mimeType%}
+{% elif "zip" in mimeType%}
 {%set iconMime = "bi-file-earmark-zip-fill" %}
 {% endif%}
 
