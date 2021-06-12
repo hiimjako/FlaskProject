@@ -1,0 +1,59 @@
+{% macro render_context_menu(scope = "", fields = []) %}
+<div id="context_menu" class="dropdown position-fixed" style="display: none;">
+    <ul class="dropdown-menu d-block">
+        {% for item in fields %}
+        <li>
+            {% if item.icon is none and item.label is none %}
+            <hr class="dropdown-divider">
+            {% else %}
+            <a class="dropdown-item" id="{{item.label}}" data-href="{{ item.href | safe  }}">
+                <i class="bi {{item.icon}} pe-1"></i>{{item.label.title()}}</a>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{{ context_menu_script(scope) }}
+{% endmacro %}
+
+{% macro context_menu_script(scope) %}
+<script>
+    $(document).ready(function () {
+        const onClickOutside = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#context_menu").hide();
+            $(document).off("click", "body", onClickOutside);
+        };
+
+        // FIXME: a tag normale non funziona
+        $(document).on('click', '#context_menu a', function () {
+            window.location = $(this).attr("href");
+        })
+
+        // Item id è in placeholder per mettere l'id vero dell'oggetto
+        $("{{ scope | safe }}").contextmenu(function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const itemId = $(this).attr("data-id");
+            let contextmenu = $("#context_menu");
+
+            contextmenu.find("a").each(function (index, el) {
+                el = $(el);
+                const href = el.attr("data-href");
+                el.attr("href", href.replace('item-id', itemId));
+            })
+
+            $(document).on("click", "body", onClickOutside);
+            const x = e.clientX + 10;
+            const y = e.clientY + 15;
+            contextmenu.css({
+                display: "block",
+                zIndex: 5000,
+                left: x + "px",
+                top: y + "px",
+            });
+        });
+    });
+</script>
+{% endmacro %}

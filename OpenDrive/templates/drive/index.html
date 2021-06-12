@@ -1,4 +1,12 @@
 {% extends 'layouts/base_extended.html' %}
+{% import 'partials/_context_menu.html' as context_menu %}
+
+{% set context_menu_items = [
+{"icon": "bi-pencil-square", "label": "rename", "href": "file/item-id/rename"},
+{"icon": "bi-cloud-arrow-down","label": "download","href": "file/item-id?as_attachment=True"},
+{"icon": None,"label": None,"href": ""},
+{"icon": "bi-link","label": "share","href": "file/item-id/share"}]
+%}
 
 <!-- i can also use {{ csrf_token() }} for get token -->
 {%macro javascript() %}
@@ -28,7 +36,8 @@
         </div>
       </div>
       <!-- image -->
-      <img data-src="{{ url ~ '?preview=True' }}" alt="missing image" draggable="false" class="card-img-top drive-image d-none hide">
+      <img data-src="{{ url ~ '?preview=True' }}" alt="missing image" draggable="false"
+        class="card-img-top drive-image d-none hide">
       <!-- fallback if not image/not exists -->
       <div class="d-none icon-placeholder text-primary justify-content-center align-middle">
         <i class="bi {{ iconMime }}"></i>
@@ -54,20 +63,6 @@
       <i class="bi bi-x closing-button rounded-circle" data-id={{ id }} title="delete"></i>
     </span>
   </div>
-</div>
-{% endmacro %}
-
-{%macro context_menu() %}
-<div id="context_menu" class="dropdown position-fixed" style="display: none;">
-  <ul class="dropdown-menu d-block">
-    <li><a class="dropdown-item" id="rename"><i class="bi bi-pencil-square pe-1"></i>Rename</a></li>
-    <li><a class="dropdown-item" id="download"><i class="bi bi-cloud-arrow-down pe-1"></i>Download</a>
-    <li>
-      <hr class="dropdown-divider">
-    </li>
-    <li><a class="dropdown-item" id="share"><i class="bi bi-link pe-1"></i>Share</a>
-    </li>
-  </ul>
 </div>
 {% endmacro %}
 
@@ -107,6 +102,6 @@
   {{ upload_button(form) }}
   {{ progressBar() }}
   {{ onDropLayout() }}
-  {{ context_menu() }}
+  {{ context_menu.render_context_menu(".card", context_menu_items) }}
 </div>
 {% endblock %}

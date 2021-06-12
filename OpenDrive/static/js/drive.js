@@ -88,39 +88,6 @@ $(document).ready(function () {
     return new bootstrap.Tooltip(tooltipTriggerEl);
   });
 
-  // Context menu
-  let onClickOutside = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    $("#context_menu").hide();
-    $(document).off("click", "body", onClickOutside);
-  };
-
-  $(".card").contextmenu(function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    const itemId = $(this).attr("data-id");
-    let cardItem = $(this).find(".card-text > a").attr("href");
-    let contextmenu = $("#context_menu");
-    contextmenu.find("#rename").attr("href", `file/${itemId}/rename`);
-    contextmenu.find("#download").attr("href", `file/${itemId}?as_attachment=True`);
-    contextmenu.find("#share").attr("href", `file/${itemId}/share`);
-    $(document).on("click", "body", onClickOutside);
-    const x = e.clientX + 10;
-    const y = e.clientY + 15;
-    contextmenu.css({
-      display: "block",
-      zIndex: 5000,
-      left: x + "px",
-      top: y + "px",
-    });
-  });
-
-  // FIXME: a tag normale non funziona
-  $(document).on('click', '#context_menu a', function () {
-    window.location = $(this).attr("href");
-  })
-
   $('img[data-src]').each(function (e) {
     let img = $(this);
     img
