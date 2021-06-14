@@ -27,12 +27,14 @@ drive = Blueprint('drive', __name__)
 def index():
     form = UploadNewFile()
     if form.validate_on_submit():
-        fileBin = form.file.data
-        file = File(
-            file=fileBin,
-            user_id=current_user.id
-        )
-        file.save(current_user.cookieHash)
+        for file in form.file.data:
+            fileBin = file
+            file = File(
+                file=fileBin,
+                user_id=current_user.id
+            )
+            file.save(current_user.cookieHash)
+
         message = 'Correctly added'
         flash(message, 'bg-primary')
         return {'status': True, 'message': message}
@@ -69,7 +71,7 @@ def serve_file(file_id):
                 if mimetype is not None and mimetype.startswith("image"):
                     fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
                 return send_file(fileBin, mimetype=mimetype)
-            
+
             # Quando lo apro in una nuova tab lo voglio decryptato
             # TODO: far si che quando si apre in una nuova tab ci sia il nome corretto
             fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
@@ -106,7 +108,6 @@ def rename_file(file_id):
                 db.session.commit()
                 flash('Correctly updated', 'bg-primary')
                 return redirect(url_for('drive.index'))
- 
         else:
             for error in form.errors:
                 flash(form.errors[error][0], 'bg-danger')
@@ -114,9 +115,9 @@ def rename_file(file_id):
     file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
     return render_template('drive/rename_file.html', form=form, file=file)
 
+
 @drive.route('/file/<int:file_id>/share', methods=['GET'])
 @login_required
 def share_file(file_id):
     flash("Feature work in progress :)", 'bg-danger')
     return redirect(url_for('drive.index'))
-

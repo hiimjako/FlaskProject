@@ -11606,7 +11606,6 @@ fieldset:disabled .btn {
 }
 
 #page-drive #dropLayout {
-  position: absolute;
   border-style: dashed;
   border-width: 0.8rem;
   left: 10%;

@@ -1,17 +1,14 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired
 from werkzeug.utils import secure_filename
-from wtforms import ValidationError
 from wtforms.fields.core import StringField
+from wtforms.fields.simple import MultipleFileField
 
-from OpenDrive import db
-from OpenDrive.models import User, File
 from wtforms.fields import SubmitField
 from wtforms.validators import InputRequired, Length
 
 
 class UploadNewFile(FlaskForm):
-    file = FileField('New file', validators=[FileRequired()])
+    file = MultipleFileField('New file(s)')
     submit = SubmitField('Upload')
 
 

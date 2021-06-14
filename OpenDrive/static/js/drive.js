@@ -12,8 +12,7 @@ $(document).ready(function () {
   });
 
   $("form input[type='file']").change(function () {
-    var file = this.files[0];
-    loadFile(file);
+    loadFile(this.files);
   });
 
   $(document).on("keyup", "#nav-filter", function () {
@@ -73,7 +72,7 @@ $(document).ready(function () {
       event.preventDefault();
       if (event.target.id === dropZoneElement.replace("#", "")) {
         if (event.dataTransfer.files.length > 0) {
-          loadFile(event.dataTransfer.files[0]);
+          loadFile(event.dataTransfer.files);
         }
         $("#dropLayout").css("visibility", "hidden");
       }
@@ -105,17 +104,19 @@ $(document).ready(function () {
 /**
  * Uploads file with progress bar
  *
- * @param {File} file
+ * @param {Array<File>} files
  */
-function loadFile(file) {
+function loadFile(files) {
   if (isUploading) return;
 
-  var ajaxData = new FormData($("form").get(0));
-  ajaxData.append($("form input[type='file']").attr("name"), file);
+  var ajaxData = new FormData();
+  [...files].forEach(file => {
+    ajaxData.append($("form input[type='file']").attr("name"), file);
+  });
 
   $.ajax({
     headers: {
-      "x-csrf-token": csrf_token,
+      "x-csrf-token": $("#csrf_token").val()
     },
     url: $("form").attr("action"),
     type: $("form").attr("method"),
