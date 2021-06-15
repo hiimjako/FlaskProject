@@ -22,4 +22,15 @@
       }
     }
   }
+
+  #nav-filter {
+    border-radius: 0%;
+    outline: 0;
+    border-width: 0 0 2px;
+    border-color: $secondary;
+
+    &:focus {
+      border-color: $primary;
+    }
+  }
 }

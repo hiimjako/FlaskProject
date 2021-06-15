@@ -1,4 +1,3 @@
-
 {% macro default_nav(current_user) %}
 
 {% endmacro %}
@@ -12,42 +11,43 @@
 <!-- NAV BAR -->
 
 {% macro account_section(current_user) %}
-  {# Logged user #}
-  {% if current_user.is_authenticated %}
-  <ul class="navbar-nav mb-2 mb-lg-0">
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAccount" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="bi bi-person aligned-to-text"></i>
-        Account
-      </a>
-      <ul class="dropdown-menu" aria-labelledby="navbarDropdownAccount">
-        <li><a class="dropdown-item disabled" href="#"><b>Hi, {{ current_user.full_name() }}</b></a></li>
-        <li>
-          <hr class="dropdown-divider">
-        </li>
-        {% if current_user.is_admin() %}
-          <li><a class="dropdown-item" href="{{ url_for('admin.index') }}">Admin panel</a></li>
-        {% endif %}
-        <li><a class="dropdown-item" href="{{ url_for('account.manage') }}">Settings</a></li>
-      </ul>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{{ url_for('account.logout') }}">
-        <i class="bi bi-box-arrow-in-left aligned-to-text"></i>
-        Logout
-      </a>
-    </li>
-  </ul>
-  {% else %}
-  {# Not logged user #}
-  <ul class="navbar-nav mb-2 mb-lg-0">
-    <li class="nav-item">
-      <a class="nav-link" href="{{ url_for('account.login') }}">
-        <span>Log in</span> <i class="bi bi-box-arrow-in-right aligned-to-text" ></i>
-      </a>
-    </li>
-  </ul>
-  {% endif %}
+{# Logged user #}
+{% if current_user.is_authenticated %}
+<ul class="navbar-nav mb-2 mb-lg-0">
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAccount" data-bs-toggle="dropdown"
+      aria-expanded="false">
+      <i class="bi bi-person aligned-to-text"></i>
+      Account
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdownAccount">
+      <li><a class="dropdown-item disabled" href="#"><b>Hi, {{ current_user.full_name() }}</b></a></li>
+      <li>
+        <hr class="dropdown-divider">
+      </li>
+      {% if current_user.is_admin() %}
+      <li><a class="dropdown-item" href="{{ url_for('admin.index') }}">Admin panel</a></li>
+      {% endif %}
+      <li><a class="dropdown-item" href="{{ url_for('account.manage') }}">Settings</a></li>
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{{ url_for('account.logout') }}">
+      <i class="bi bi-box-arrow-in-left aligned-to-text"></i>
+      Logout
+    </a>
+  </li>
+</ul>
+{% else %}
+{# Not logged user #}
+<ul class="navbar-nav mb-2 mb-lg-0">
+  <li class="nav-item">
+    <a class="nav-link" href="{{ url_for('account.login') }}">
+      <span>Log in</span> <i class="bi bi-box-arrow-in-right aligned-to-text"></i>
+    </a>
+  </li>
+</ul>
+{% endif %}
 {% endmacro %}
 
 {% macro render_nav_with_search(current_user) %}
@@ -56,23 +56,27 @@
     <a class="navbar-brand" href="/">
       <img src="/static/image/favicon.ico" alt="" width="30" height="24" alt="missing logo">
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <!-- Set class="nav-link active" for active item -->
-          <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'drive.index' %}active{% endif %}" href="{{ url_for('drive.index') }}">Files</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'password.index' %}active{% endif %}" href="{{ url_for('password.index') }}">Password</a>
-          </li>
-          <li class="nav-item align-middle">
-            <input class="form-control bg-transparent no-border  border-primary text-light" id="nav-filter" type="text" aria-label="Search" placeholder="Search...">
-          </li>
-        </ul>
-        {{ account_section(current_user) }}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <!-- Set class="nav-link active" for active item -->
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'drive.index' %}active{% endif %}"
+            href="{{ url_for('drive.index') }}">Files</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'password.index' %}active{% endif %}"
+            href="{{ url_for('password.index') }}">Password</a>
+        </li>
+        <li class="nav-item align-middle">
+          <input class="form-control bg-transparent shadow-none text-light" id="nav-filter" type="text"
+            aria-label="Search" placeholder="Search...">
+        </li>
+      </ul>
+      {{ account_section(current_user) }}
     </div>
   </div>
 </nav>
@@ -84,17 +88,20 @@
     <a class="navbar-brand" href="/">
       <img src="/static/image/favicon.ico" alt="" width="30" height="24" alt="missing logo">
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <!-- Set class="nav-link active" for active item -->
         <li class="nav-item">
-          <a class="nav-link {% if request.endpoint == 'drive.index' %}active{% endif %}" href="{{ url_for('drive.index') }}">Files</a>
+          <a class="nav-link {% if request.endpoint == 'drive.index' %}active{% endif %}"
+            href="{{ url_for('drive.index') }}">Files</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% if request.endpoint == 'password.index' %}active{% endif %}" href="{{ url_for('password.index') }}">Password</a>
+          <a class="nav-link {% if request.endpoint == 'password.index' %}active{% endif %}"
+            href="{{ url_for('password.index') }}">Password</a>
         </li>
       </ul>
       {{ account_section(current_user) }}

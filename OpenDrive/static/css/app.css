@@ -11505,6 +11505,17 @@ fieldset:disabled .btn {
   transition: 0s;
 }
 
+.component-navbar #nav-filter {
+  border-radius: 0%;
+  outline: 0;
+  border-width: 0 0 2px;
+  border-color: #202020;
+}
+
+.component-navbar #nav-filter:focus {
+  border-color: #49ac98;
+}
+
 #page-drive img.drive-image {
   width: 100%;
   /* You can set the dimensions to whatever you want */
