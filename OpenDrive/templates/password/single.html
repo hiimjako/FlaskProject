@@ -10,13 +10,14 @@
       if (!isNaN(id)) {
         let request = $.ajax({
           headers: {
-            "x-csrf-token": csrf_token,
+            "x-csrf-token": "{{ csrf_token() }}",
           },
           url: `delete/${id}`,
           method: "POST",
         }).done(function (res) {
           if (res.status === true) {
             pswRow.closest('tr').remove();
+            window.location = "{{ url_for('password.index') }}"
           }
         });
       }
