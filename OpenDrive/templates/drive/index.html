@@ -25,8 +25,8 @@
 {% endif%}
 
 <div class="col p-2 searchable-card">
-  <div class="card shadow-lg h-100" data-id={{ id }}>
-    <a href="{{ url }}" target="_blank">
+  <div class="card shadow-lg h-100" data-id={{ id | safe }}>
+    <a href="{{ url | safe  }}" target="_blank">
       <!-- spinner before load -->
       <div class="d-flex justify-content-center spinner-placeholder">
         <div class="spinner-border text-primary" role="status">
@@ -34,11 +34,11 @@
         </div>
       </div>
       <!-- image -->
-      <img data-src="{{ url ~ '?preview=True' }}" alt="missing image" draggable="false"
+      <img data-src="{{ url ~ '?preview=True' | safe  }}" alt="missing image" draggable="false"
         class="card-img-top drive-image d-none hide">
       <!-- fallback if not image/not exists -->
       <div class="d-none icon-placeholder text-primary justify-content-center align-middle">
-        <i class="bi {{ iconMime }}"></i>
+        <i class="bi {{ iconMime | safe  }}"></i>
       </div>
     </a>
     <div class="card-body">
@@ -51,14 +51,14 @@
       <div class="row">
         <div class="col">
           <div class="card-text float-end">
-            <a href="{{ url ~ '?as_attachment=True'}}" class="px-1"><i class="bi bi-cloud-arrow-down"></i></a>
-            <i class="bi bi-link px-1" data-id={{ id }}></i>
+            <a href="{{ url ~ '?as_attachment=True' | safe }}" class="px-1"><i class="bi bi-cloud-arrow-down"></i></a>
+            <i class="bi bi-link px-1" data-id={{ id | safe }}></i>
           </div>
         </div>
       </div>
     </div>
     <span>
-      <i class="bi bi-x closing-button rounded-circle" data-id={{ id }} title="delete"></i>
+      <i class="bi bi-x closing-button rounded-circle" data-id={{ id | safe }} title="delete"></i>
     </span>
   </div>
 </div>
