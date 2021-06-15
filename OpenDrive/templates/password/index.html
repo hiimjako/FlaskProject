@@ -104,17 +104,17 @@
               <!-- {{ form.hidden_tag() }} -->
               <!-- </form> -->
             </td>
-            <td class="align-middle col-4" data-class="site" title="{{ p.site | safe }}">
-              {{ p.site | safe }}
+            <td class="align-middle col-4" data-class="site" title="{{ p.site | safe | forceescape}}">
+              {{ p.site | safe | forceescape}}
             </td>
-            <td class="align-middle col-3" data-class="username" title="{{ p.username | safe }}">
-              {{ p.username | safe }}
+            <td class="align-middle col-3" data-class="username" title="{{ p.username | safe | forceescape }}">
+              {{ p.username | safe | forceescape}}
             </td>
             <td class="align-middle col-3" data-class="password">
               <div class="input-group">
                 <input type="password" class="form-control bg-transparent no-border text-item"
-                  value="{{ p.password | safe }}" aria-label="Username" disabled
-                  aria-describedby="password-{{ p.id | safe }}">
+                  value="{{ p.password | safe | forceescape }}" aria-label="Username" disabled
+                  aria-describedby="password-{{ p.id | safe | forceescape}}">
                 <span class="input-group-text bg-transparent no-border" id="password-{{ p.id | safe  }}"><i
                     class="bi bi-eye" aria-hidden="true"></i></span>
               </div>
@@ -165,10 +165,10 @@
     </div>
     <div class="row justify-content-center">
       {% for p in passwords %}
-      <div class="col-10" title="{{ p.site | safe }}">
-        <a href="{{ p.id | safe }}">
+      <div class="col-10" title="{{ p.site | safe | forceescape }}">
+        <a href="{{ p.id | safe | forceescape}}">
           <input type="text" class="form-control no-border border-primary bg-transparent text-primary" id="site"
-            name="site" value="{{p.site | safe}}" disabled>
+            name="site" value="{{p.site | safe | forceescape}}" disabled>
         </a>
       </div>
       {% endfor %}

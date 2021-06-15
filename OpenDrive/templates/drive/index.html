@@ -45,7 +45,7 @@
       <div class="row">
         <div class="col">
           <h5 class="card-title truncate-line" draggable="false" data-bs-toggle="tooltip" data-bs-placement="bottom"
-            title="{{ title | safe }}">{{ title | safe }}</h5>
+            title="{{ title | safe | forceescape }}">{{ title | safe | forceescape }}</h5>
         </div>
       </div>
       <div class="row">
