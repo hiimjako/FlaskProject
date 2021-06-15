@@ -10,8 +10,8 @@
                 <form action="" method="POST">
                     <div class="mb-3">
                         <label for={{ form.filename.id }} class="form-label">{{ form.filename.label }}</label>
-                        <h6 style="font-size: medium;">(current is <b class="text-primary">{{ file.filename | safe }}</b
-                                class="text-primary">)</h6>
+                        <h6 style="font-size: medium;">(current is <b class="text-primary">{{ file.filename | safe |
+                                forceescape }}</b class="text-primary">)</h6>
                         {{ form.filename(class="form-control text-secondary") }}
                     </div>
                     {{ form.submit(class="btn btn-primary") }}
