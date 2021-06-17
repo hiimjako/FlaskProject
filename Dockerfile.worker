@@ -8,7 +8,6 @@ COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 ENV PYTHONIOENCODING=UTF-8
-RUN pip3 install sqlalchemy_utils flask_dance flask_caching python-gitlab
 
 COPY . /app
 
