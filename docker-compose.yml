@@ -96,7 +96,7 @@ volumes:
     driver_opts:
       type: "none"
       o: "bind"
-      device: "./nginx/opendrive.conf"
+      device: "./nginx/conf"
 
 networks:
   default:
