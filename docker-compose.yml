@@ -70,18 +70,21 @@ volumes:
   flask-db-data:
     name: flask-db-data
   opendrive-static:
+    name: opendrive-static
     driver: local
     driver_opts:
       type: "none"
       o: "bind"
       device: "./OpenDrive/static"
   opendrive-certs-conf:
+    name: opendrive-certs-conf
     driver: local
     driver_opts:
       type: "none"
       o: "bind"
       device: "./nginx/cert/conf"
   opendrive-certs-www:
+    name: opendrive-certs-www
     driver: local
     driver_opts:
       type: "none"
