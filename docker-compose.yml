@@ -27,8 +27,6 @@ services:
     volumes:
       - opendrive-certs/conf:/etc/letsencrypt
       - opendrive-certs/www:/var/www/certbot
-    depends_on:
-      - nginx
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   flask-db:
