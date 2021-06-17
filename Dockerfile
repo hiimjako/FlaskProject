@@ -7,7 +7,7 @@ RUN apt-get -y install gcc build-essential libpq-dev
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
-
+RUN pip install gunicorn
 ENV PYTHONIOENCODING=UTF-8
 
 RUN mkdir "/uploads" 
