@@ -21,22 +21,6 @@ services:
       - flask-redis
     restart: unless-stopped
 
-  nginx:
-    image: nginx:1.15-alpine
-    container_name: nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./OpenDrive/static:/var/www/html/static
-      - opendrive-certs/conf:/etc/letsencrypt
-      - opendrive-certs/www:/var/www/certbot
-      - ./nginx:/etc/nginx/conf.d
-    depends_on:
-      - flask-app
-    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
-
   certbot:
     image: certbot/certbot
     container_name: certbot
