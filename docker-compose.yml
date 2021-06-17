@@ -91,6 +91,7 @@ volumes:
       o: "bind"
       device: "./nginx/cert/www"
   opendrive-nginx:
+    name: opendrive-nginx
     driver: local
     driver_opts:
       type: "none"
