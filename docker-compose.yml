@@ -80,13 +80,13 @@ volumes:
     driver_opts:
       type: "none"
       o: "bind"
-      device: "./nginx/cert"
+      device: "./nginx/cert/conf"
     opendrive-certs-www:
     driver: local
     driver_opts:
       type: "none"
       o: "bind"
-      device: "./nginx/cert"
+      device: "./nginx/cert/www"
   opendrive-nginx:
     driver: local
     driver_opts:
