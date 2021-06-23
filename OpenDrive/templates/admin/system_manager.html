@@ -32,17 +32,20 @@
         <tbody>
           {% for u in users %}
           <tr>
-            <td class="align-middle col-4" scope="row" data-class="first_name" title="{{ u.first_name }}">
+            <td class="align-middle col-2" scope="row" data-class="first_name" title="{{ u.first_name }}">
               {{ u.first_name | safe }}
             </td>
-            <td class="align-middle col-3" data-class="last_name" title="{{ u.last_name }}">
+            <td class="align-middle col-2" data-class="last_name" title="{{ u.last_name }}">
               {{ u.last_name | safe }}
             </td>
-            <td class="align-middle col-3" data-class="email" title="{{ u.email }}">
+            <td class="align-middle col-2" data-class="email" title="{{ u.email }}">
               {{ u.email | safe }}
             </td>
-            <td class="align-middle col-3" data-class="role" title="{{ u.role.name }}">
-              {{ u.role.name | safe }}
+            <td class="align-middle col-2" data-class="nFiles" title="{{ u.nFiles }}">
+              {{ u.nFiles | safe }}
+            </td>
+            <td class="align-middle col-2" data-class="nPassword" title="{{ u.nPassword }}">
+              {{ u.nPassword | safe }}
             </td>
           </tr>
           {% endfor %}

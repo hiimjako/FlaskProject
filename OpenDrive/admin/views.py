@@ -17,7 +17,8 @@ from OpenDrive.admin.forms import (
     NewUserForm,
 )
 from OpenDrive.decorators import admin_required
-from OpenDrive.models import Role, User
+from OpenDrive.models import Role, User, File, Password
+from sqlalchemy import func, distinct
 
 admin = Blueprint('admin', __name__)
 
@@ -75,8 +76,14 @@ def user_info(user_id):
 @admin_required
 def hardware_usage():
     users = []
-    return render_template(
-        'admin/system_manager.html', users=users)
+    # , isouter=True)\
+    users = db.session.query(User.last_name, User.first_name, User.email, func.count(distinct(File.id)).label("nFiles"), func.count(distinct(Password.id)).label("nPassword"))\
+        .join(File)\
+        .join(Password)\
+        .filter(File.id is not None)\
+        .filter(Password.id is not None)\
+        .group_by(User.id).all()
+    return render_template('admin/system_manager.html', users=users)
 
 
 @admin.route('/user/<int:user_id>/change-email', methods=['GET', 'POST'])
