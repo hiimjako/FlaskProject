@@ -84,7 +84,7 @@ def join_from_invite(user_id, token):
     a password.
     """
     if current_user is not None and current_user.is_authenticated:
-        flash('You are already logged in.', 'error')
+        flash('You are already logged in.', 'bg-danger')
         return redirect(url_for('main.index'))
 
     new_user = User.query.get(user_id)
@@ -92,7 +92,7 @@ def join_from_invite(user_id, token):
         return redirect(404)
 
     if new_user.password_hash is not None:
-        flash('You have already joined.', 'error')
+        flash('You have already joined.', 'bg-danger')
         return redirect(url_for('main.index'))
 
     if new_user.is_valid_token(token):
