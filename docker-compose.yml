@@ -79,6 +79,9 @@ services:
       - flask-network
     volumes:
       - "./:/app"
+    depends_on:
+      - flask-db
+      - flask-redis
 
   flask-redis:
     container_name: flask-redis

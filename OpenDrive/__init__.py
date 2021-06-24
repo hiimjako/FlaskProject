@@ -2,13 +2,22 @@ import os
 
 from flask import Flask
 from flask_login import LoginManager
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from flask_wtf import CSRFProtect
 from flask_mobility import Mobility
+from redis import Redis
+from rq import Connection, Queue, Worker
 from OpenDrive.db import db, migrate, rq
-
 from config import config as Config
+from OpenDrive.models import AnonymousUser, User, Role
+
+# blueprints
+from .utils import register_template_utils
+from .main import main as main_blueprint
+from .account import account as account_blueprint
+from .admin import admin as admin_blueprint
+from .drive import drive as drive_blueprint
+from .password import password as password_blueprint
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -17,11 +26,15 @@ csrf = CSRFProtect()
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'account.login'
-
+login_manager.anonymous_user = AnonymousUser
+@login_manager.user_loader
+def load_user(user_id):
+    """Retrives the user from the id saved into cookie"""
+    return User.query.get(int(user_id))
 
 def create_app(config):
-    app = Flask(__name__,
-                static_url_path='/static')
+    """Creates the main flask app"""
+    app = Flask(__name__, static_url_path='/static')
 
     config_name = config
     if not isinstance(config, str):
@@ -39,23 +52,49 @@ def create_app(config):
     rq.init_app(app)
     rq.redis_url = Config[config_name].REDIS_URL
 
+    create_cli(app)
+
     # Register Jinja template functions
-    from .utils import register_template_utils
     register_template_utils(app)
 
-    from .main import main as main_blueprint
+    # Blueprints
     app.register_blueprint(main_blueprint)
-
-    from .account import account as account_blueprint
     app.register_blueprint(account_blueprint, url_prefix='/account')
-
-    from .admin import admin as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
-
-    from .drive import drive as drive_blueprint
     app.register_blueprint(drive_blueprint, url_prefix='/drive')
-
-    from .password import password as password_blueprint
     app.register_blueprint(password_blueprint, url_prefix='/password')
 
     return app
+
+def create_cli(app):
+    """Custom commands for flask cli"""
+    if app:
+        @app.cli.command("setup_dev")
+        # @click.argument('name')
+        def setup_dev():
+            Role.insert_roles()
+            admin_query = Role.query.filter_by(name='Administrator')
+            if admin_query.first() is not None:
+                if User.query.filter_by(email=app.config["ADMIN_EMAIL"]).first() is None:
+                    user = User(
+                        first_name='Admin',
+                        last_name='Account',
+                        password=app.config["ADMIN_PASSWORD"],
+                        email=app.config["ADMIN_EMAIL"])
+                    db.session.add(user)
+                    db.session.commit()
+                    print('Added administrator {}'.format(user.full_name()))
+
+        @app.cli.command("run_worker")
+        def run_worker():
+            """Initializes a slim rq task queue."""
+            listenQueue = ['default', 'cryptography']
+            conn = Redis(
+                host=app.config["RQ_DEFAULT_HOST"],
+                port=app.config["RQ_DEFAULT_PORT"],
+                db=app.config["RQ_DEFAULT_DB"],
+                password=app.config["RQ_DEFAULT_PASSWORD"])
+
+            with Connection(conn):
+                worker = Worker(map(Queue, listenQueue))
+                worker.work()

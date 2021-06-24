@@ -42,7 +42,7 @@
               {{ u.email | safe }}
             </td>
             <td class="align-middle col-2" data-class="nFiles" title="{{ u.nFiles }}">
-              {{ u.nFiles | safe }}
+              {{ u.nFiles | safe }} ({{ bytesToHuman(u.size) }})
             </td>
             <td class="align-middle col-2" data-class="nPassword" title="{{ u.nPassword }}">
               {{ u.nPassword | safe }}

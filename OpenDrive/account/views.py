@@ -25,16 +25,17 @@ account = Blueprint('account', __name__)
 
 @account.route('/login', methods=['GET', 'POST'])
 def login():
+    """Route that manages the user login"""
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.password_hash is not None and \
                 user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
-            encryptedPass = symmetricEncrypt(form.password.data)
+            encrypted_pass = symmetricEncrypt(form.password.data)
             flash('You are now logged in. Welcome back!', 'bg-primary')
             response = make_response(redirect(request.args.get('next') or url_for('main.index')))
-            response.set_cookie('hash', encryptedPass, secure=current_app.config["SESSION_COOKIE_SECURE"], httponly=True)  # , samesite="Strict")
+            response.set_cookie('hash', encrypted_pass, secure=current_app.config["SESSION_COOKIE_SECURE"], httponly=True)  # , samesite="Strict")
             return response
         else:
             flash('Invalid email or password.', 'bg-danger')
@@ -44,6 +45,7 @@ def login():
 @account.route('/logout')
 @login_required
 def logout():
+    """Route that manages the user logout"""
     logout_user()
     flash('You have been logged out.', 'bg-danger')
     response = make_response(redirect(url_for('main.index')))
@@ -55,12 +57,14 @@ def logout():
 @account.route('/manage/info', methods=['GET', 'POST'])
 @login_required
 def manage():
+    """Route that renders the user informations"""
     return render_template('account/manage.html', user=current_user, form=None)
 
 
 @account.route('/manage/new-email', methods=['GET', 'POST'])
 @login_required
 def change_email():
+    """Route that manages the email change for the user"""
     form = ChangeUserEmailForm()
     if form.validate_on_submit():
         current_user.email = form.email.data

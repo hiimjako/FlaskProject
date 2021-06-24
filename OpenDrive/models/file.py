@@ -24,9 +24,11 @@ def test():
 class File(db.Model):
     __tablename__ = 'files'
     id = db.Column(db.Integer, primary_key=True)
-    filename = db.Column(db.String(255), index=True)
+    filename = db.Column(db.String(255), index=True, nullable=False)
     # extension = db.Column(Enum(extensionEnum))
-    path = db.Column(db.String(512), unique=True)
+    path = db.Column(db.String(512), unique=True, nullable=False)
+    # bytes
+    size = db.Column(db.Integer, default=0, nullable=False)
     insert_at = db.Column(db.DateTime(timezone=False),
                           server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=False), onupdate=func.now())
@@ -43,6 +45,7 @@ class File(db.Model):
 
         try:
             file.save(self.path)
+            self.size = os.stat(self.path).st_size
         except:
             print("file non caricato")
 
