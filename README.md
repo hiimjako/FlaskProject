@@ -8,8 +8,8 @@ This is the internet, web and cloud exam project, developed in flask
 - docker-compose -f docker-compose-dev.yml up 
 
 - docker exec -it flask-app /bin/bash
-  - python manage.py db upgrade
-  - python manage.py setup_dev
+  - flask db upgrade
+  - flask setup_dev
 - Open http://127.0.0.1:5000/
   - Log in with ADMIN_EMAIL and ADMIN_PASSWORD
 

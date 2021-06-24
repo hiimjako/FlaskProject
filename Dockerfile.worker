@@ -11,5 +11,5 @@ ENV PYTHONIOENCODING=UTF-8
 
 COPY . /app
 
-ENTRYPOINT ["python3", "-u" ,"manage.py", "run_worker"]
+ENTRYPOINT ["flask", "run_worker"]
 
