@@ -28,7 +28,7 @@ class File(db.Model):
     # extension = db.Column(Enum(extensionEnum))
     path = db.Column(db.String(512), unique=True, nullable=False)
     # bytes
-    size = db.Column(db.Integer, default=0, server_default="true", nullable=False)
+    size = db.Column(db.Integer, default=0, nullable=False)
     insert_at = db.Column(db.DateTime(timezone=False),
                           server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=False), onupdate=func.now())

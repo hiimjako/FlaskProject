@@ -84,7 +84,6 @@ def hardware_usage():
         .filter(File.id is not None)\
         .filter(Password.id is not None)\
         .group_by(User.id).all()
-
     return render_template('admin/system_manager.html', users=users, bytesToHuman=bytesToHuman)
 
 
