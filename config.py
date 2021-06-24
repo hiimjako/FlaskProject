@@ -57,8 +57,7 @@ class ProductionConfig(Config):
 
     @classmethod
     def init_app(cls, app):
-        print("THIS APP IS IN DEBUG MODE. \
-                YOU SHOULD NOT SEE THIS IN PRODUCTION.")
+        print("PRODUCTION")
 
 
 class DevelopmentConfig(Config):
