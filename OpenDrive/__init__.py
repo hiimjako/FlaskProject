@@ -1,4 +1,5 @@
 import os
+import click
 
 from flask import Flask
 from flask_login import LoginManager
@@ -70,7 +71,6 @@ def create_cli(app):
     """Custom commands for flask cli"""
     if app:
         @app.cli.command("setup_dev")
-        # @click.argument('name')
         def setup_dev():
             Role.insert_roles()
             admin_query = Role.query.filter_by(name='Administrator')
@@ -86,8 +86,16 @@ def create_cli(app):
                     print('Added administrator {}'.format(user.full_name()))
 
         @app.cli.command("run_worker")
-        def run_worker():
+        @click.argument('config')
+        def run_worker(config):
             """Initializes a slim rq task queue."""
+
+            if not isinstance(config, str):
+                config = "development"
+
+            app.config.from_object(Config[config])
+            app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
             listenQueue = ['default', 'cryptography']
             conn = Redis(
                 host=app.config["RQ_DEFAULT_HOST"],
