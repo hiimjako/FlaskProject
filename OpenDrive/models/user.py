@@ -83,7 +83,24 @@ class User(UserMixin, db.Model):
         self.password_hash = generate_password_hash(password)
 
     def verify_password(self, password):
+        """Check password"""
         return check_password_hash(self.password_hash, password)
+
+    def generate_confirmation_token(self, expiration=604800):
+        """Generate a confirmation token for invite"""
+        token = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return token.dumps({'id': self.id})
+
+    def is_valid_token(self, token):
+        """Generate a confirmation token for invite"""
+        s_t = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s_t.loads(token)
+        except (BadSignature, SignatureExpired):
+            return False
+        if data.get('id') != self.id:
+            return False
+        return True
 
     def __repr__(self):
         return '<User \'%s\'>' % self.full_name()

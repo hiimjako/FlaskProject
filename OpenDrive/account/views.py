@@ -1,3 +1,4 @@
+from OpenDrive.queue import send_email
 from flask import (
     Blueprint,
     flash,
@@ -16,8 +17,8 @@ from flask_login import (
 )
 
 from OpenDrive import db, rq
-from OpenDrive.account.forms import (LoginForm, ChangeUserEmailForm)
-from OpenDrive.utils import symmetricEncrypt
+from OpenDrive.account.forms import (CreatePasswordForm, LoginForm, ChangeUserEmailForm)
+from OpenDrive.utils import render_errors, symmetricEncrypt
 from OpenDrive.models import User
 
 account = Blueprint('account', __name__)
@@ -72,11 +73,55 @@ def change_email():
         db.session.commit()
         flash(f'Email successfully changed to {current_user.email}.', 'bg-primary')
     else:
-        for error in form.errors:
-            flash(form.errors[error][0], 'bg-danger')
+        render_errors(form.errors)
 
     return render_template('account/manage.html', user=current_user, form=form)
 
+@account.route('/join-from-invite/<int:user_id>/<token>', methods=['GET', 'POST'])
+def join_from_invite(user_id, token):
+    """
+    Confirm new user's account with provided token and prompt them to set
+    a password.
+    """
+    if current_user is not None and current_user.is_authenticated:
+        flash('You are already logged in.', 'error')
+        return redirect(url_for('main.index'))
+
+    new_user = User.query.get(user_id)
+    if new_user is None:
+        return redirect(404)
+
+    if new_user.password_hash is not None:
+        flash('You have already joined.', 'error')
+        return redirect(url_for('main.index'))
+
+    if new_user.is_valid_token(token):
+        form = CreatePasswordForm()
+        if form.validate_on_submit():
+            new_user.password = form.password.data
+            db.session.add(new_user)
+            db.session.commit()
+            flash('Your password has been set, if it\'s needed to '
+                  'check your settings go to "account", "settings" ', 'bg-primary')
+            return redirect(url_for('account.login'))
+        return render_template('account/join_invite.html', form=form)
+    else:
+        flash('The confirmation link is invalid or has expired. Another '
+              'invite email with a new link has been sent to you.', 'bg-danger')
+        token = new_user.generate_confirmation_token()
+        invite_link = url_for(
+            'account.join_from_invite',
+            user_id=user_id,
+            token=token,
+            _external=True)
+        rq.get_queue("email").enqueue(
+            send_email, 
+            recipient=new_user.email,
+            subject='You Are Invited To Join',
+            template='email/invite',
+            user=new_user,
+            invite_link=invite_link,)
+    return redirect(url_for('main.index'))
 
 # @account.before_app_request
 # def before_request():

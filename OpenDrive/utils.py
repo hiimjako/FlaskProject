@@ -1,4 +1,5 @@
 from flask import url_for, current_app as app
+from flask.helpers import flash
 from wtforms.fields import Field
 from wtforms.widgets import HiddenInput
 from wtforms.compat import text_type
@@ -106,3 +107,8 @@ def symmetricEncryptFile(path: str,  key=None):
 
     with open(path, "wb") as file:
         file.write(encrypted_data)
+
+def render_errors(form_errors):
+    """Renders all form errors"""
+    for error in form_errors:
+        flash(form_errors[error][0], 'bg-danger')

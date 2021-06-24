@@ -6,14 +6,14 @@
     <figure>
         <blockquote class="blockquote">
             <p>
-            {% if icon is not none %}
+                {% if icon is not none %}
                 <i class="bi {{ icon }} me-2"></i>
-            {% endif %}
-            {{ title }}
+                {% endif %}
+                {{ title }}
             </p>
         </blockquote>
         <figcaption class="blockquote-footer text-primary">
-            {{ description }} 
+            {{ description }}
         </figcaption>
     </figure>
 </a>
@@ -28,6 +28,8 @@
             description='View and manage user accounts', icon='bi-people-fill') }}
             {{ dashboard_option('Add New User', 'admin.new_user',
             description='Create a new user account', icon='bi-person-plus-fill') }}
+            {{ dashboard_option('Invite user', 'admin.invite_user',
+            description='Invite user sending them an email', icon='bi-envelope-fill') }}
             {{ dashboard_option('Show usage', 'admin.hardware_usage',
             description='Show how many files and password are stored', icon='bi-gear-wide-connected') }}
         </div>

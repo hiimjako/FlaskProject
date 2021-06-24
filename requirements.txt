@@ -1,5 +1,7 @@
 alembic==1.6.5
+astroid==2.5.6
 autopep8==1.5.7
+blinker==1.4
 cffi==1.14.5
 click==8.0.1
 colorama==0.4.4
@@ -11,6 +13,7 @@ email-validator==1.1.3
 Flask==2.0.1
 Flask-Assets==2.0
 Flask-Login==0.5.0
+Flask-Mail==0.9.1
 Flask-Migrate==3.0.1
 Flask-Mobility==1.1.0
 Flask-RQ==0.2
@@ -23,15 +26,19 @@ greenlet==1.1.0
 hurry==1.1
 hurry.filesize==0.9
 idna==3.2
+isort==5.9.1
 itsdangerous==2.0.1
 Jinja2==3.0.1
+lazy-object-proxy==1.6.0
 Mako==1.1.4
 MarkupSafe==2.0.1
+mccabe==0.6.1
 psycopg2==2.9.1
 pycodestyle==2.7.0
 pycparser==2.20
+pylint==2.8.3
 python-dateutil==2.8.1
-python-dotenv==0.17.1
+python-dotenv==0.18.0
 python-editor==1.0.4
 python-magic==0.4.24
 redis==3.5.3
@@ -42,4 +49,5 @@ SQLAlchemy==1.4.18
 toml==0.10.2
 webassets==2.0
 Werkzeug==2.0.1
+wrapt==1.12.1
 WTForms==2.3.3

@@ -1,3 +1,5 @@
+from OpenDrive.utils import render_errors
+from OpenDrive.queue import send_email
 from flask import (
     Blueprint,
     abort,
@@ -10,16 +12,17 @@ from flask import (
 from flask_login import current_user, login_required
 # from flask_rq2  import get_queue
 
-from OpenDrive import db
+from sqlalchemy import func, distinct
+from hurry.filesize import size as bytesToHuman
+from OpenDrive import db, rq
 from OpenDrive.admin.forms import (
     ChangeAccountTypeForm,
     ChangeUserEmailForm,
+    InviteUserForm,
     NewUserForm,
 )
 from OpenDrive.decorators import admin_required
 from OpenDrive.models import Role, User, File, Password
-from sqlalchemy import func, distinct
-from hurry.filesize import size as bytesToHuman
 
 admin = Blueprint('admin', __name__)
 
@@ -36,6 +39,7 @@ def index():
 @login_required
 @admin_required
 def new_user():
+    """Create a new user"""
     form = NewUserForm()
     if form.validate_on_submit():
         user = User(
@@ -55,6 +59,7 @@ def new_user():
 @login_required
 @admin_required
 def registered_users():
+    """Get registered user"""
     users = User.query.order_by(User.role_id.desc(), User.last_name).all()
     roles = Role.query.all()
     return render_template(
@@ -66,6 +71,7 @@ def registered_users():
 @login_required
 @admin_required
 def user_info(user_id):
+    """Get specific user info"""
     user = User.query.filter_by(id=user_id).first()
     if user is None:
         abort(404)
@@ -76,6 +82,7 @@ def user_info(user_id):
 @login_required
 @admin_required
 def hardware_usage():
+    """Retrives the space utilization for each user"""
     users = []
     # , isouter=True)\
     users = db.session.query(User.last_name, User.first_name, User.email, func.sum(distinct(File.size)).label("size"), func.count(distinct(File.id)).label("nFiles"), func.count(distinct(Password.id)).label("nPassword"))\
@@ -91,6 +98,7 @@ def hardware_usage():
 @login_required
 @admin_required
 def change_user_email(user_id):
+    """Route for change account email"""
     user = User.query.filter_by(id=user_id).first()
     if user is None:
         abort(404)
@@ -101,16 +109,16 @@ def change_user_email(user_id):
         db.session.commit()
         flash(f'Email for user {user.full_name()} successfully changed to {user.email}.', 'bg-primary')
     else:
-        for error in form.errors:
-            flash(form.errors[error][0], 'bg-danger')
+        render_errors(form.errors)
 
     return render_template('admin/manage_user.html', user=user, form=form)
 
 
-@ admin.route('/user/<int:user_id>/change-account-type', methods=['GET', 'POST'])
-@ login_required
-@ admin_required
+@admin.route('/user/<int:user_id>/change-account-type', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def change_account_type(user_id):
+    """Route that allow admin to change a user role"""
     if current_user.id == user_id:
         flash('You cannot change the type of your own account.', 'bg-danger')
         return redirect(url_for('admin.user_info', user_id=user_id))
@@ -123,25 +131,26 @@ def change_account_type(user_id):
         user.role = form.role.data
         db.session.add(user)
         db.session.commit()
-        flash('Role for user {} successfully changed to {}.'.format(
-            user.full_name(), user.role.name), 'bg-primary')
+        flash('Role for user {} successfully changed to {}.'.format(user.full_name(), user.role.name), 'bg-primary')
     return render_template('admin/manage_user.html', user=user, form=form)
 
 
-@ admin.route('/user/<int:user_id>/delete')
-@ login_required
-@ admin_required
+@admin.route('/user/<int:user_id>/delete')
+@login_required
+@admin_required
 def delete_user_request(user_id):
+    """Delete User"""
     user = User.query.filter_by(id=user_id).first()
     if user is None:
         abort(404)
     return render_template('admin/manage_user.html', user=user)
 
 
-@ admin.route('/user/<int:user_id>/_delete')
-@ login_required
-@ admin_required
+@admin.route('/user/<int:user_id>/_delete')
+@login_required
+@admin_required
 def delete_user(user_id):
+    """Delete User"""
     if current_user.id == user_id:
         flash('You cannot delete your own account.', 'bg-danger')
     else:
@@ -151,6 +160,41 @@ def delete_user(user_id):
         flash('Successfully deleted user %s.' % user.full_name(), 'success')
     return redirect(url_for('admin.registered_users'))
 
+
+@admin.route('/invite', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def invite_user():
+    """Invite user"""
+
+    form = InviteUserForm()
+    if form.validate_on_submit():
+        user = User(
+            role=form.role.data,
+            first_name=form.first_name.data,
+            last_name=form.last_name.data,
+            email=form.email.data)
+        db.session.add(user)
+        db.session.commit()
+        token = user.generate_confirmation_token()
+        invite_link = url_for(
+            'account.join_from_invite',
+            user_id=user.id,
+            token=token,
+            _external=True)
+
+        rq.get_queue("email").enqueue(
+            send_email, 
+            recipient=user.email,
+            subject='You Are Invited To Join',
+            template='email/invite',
+            user=user,
+            invite_link=invite_link,)
+        flash(f'User {user.full_name()} successfully invited', 'bg-primary')
+    else:
+        render_errors(form.errors)
+    
+    return render_template('admin/invite_user.html', form=form)
 
 # @admin.route('/_update_editor_contents', methods=['POST'])
 # @login_required

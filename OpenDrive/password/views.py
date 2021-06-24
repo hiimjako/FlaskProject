@@ -12,7 +12,7 @@ from OpenDrive.password.forms import (
 from OpenDrive import db
 from OpenDrive.models import Password
 from flask_login import (current_user, login_required)
-from OpenDrive.utils import symmetricDecrypt
+from OpenDrive.utils import render_errors, symmetricDecrypt
 from OpenDrive.decorators import get_hash_cookie_required
 
 
@@ -34,8 +34,7 @@ def index():
         password.save(current_user.cookieHash)
         flash('Correctly password added', 'bg-primary')
     else:
-        for error in form.errors:
-            flash(form.errors[error][0], 'bg-danger')
+        render_errors(form.errors)
 
     passwords = Password.query.filter_by(user_id=current_user.id).all()
     for p in passwords:

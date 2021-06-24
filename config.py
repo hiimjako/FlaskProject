@@ -33,6 +33,12 @@ class Config:
     RQ_DEFAULT_DB = environ.get("RQ_DEFAULT_DB")
     REDIS_URL = f'redis://:{RQ_DEFAULT_PASSWORD}@{RQ_DEFAULT_HOST}:{RQ_DEFAULT_PORT}/{RQ_DEFAULT_DB}'
 
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = 'opendrive.noreply@gmail.com'
+    MAIL_PASSWORD = environ.get("MAIL_PASSWORD", default="secret")
+
     SECRET_KEY = environ.get("SECRET_KEY")
     ADMIN_EMAIL = "moretti919@gmail.com"
     ADMIN_PASSWORD = "admin"

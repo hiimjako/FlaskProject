@@ -3,6 +3,7 @@ import click
 
 from flask import Flask
 from flask_login import LoginManager
+from flask_mail import Mail
 from flask_wtf import CSRFProtect
 from flask_mobility import Mobility
 from redis import Redis
@@ -23,6 +24,7 @@ from .password import password as password_blueprint
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 csrf = CSRFProtect()
+mail = Mail()
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -46,6 +48,7 @@ def create_app(config):
     Config[config_name].init_app(app)
 
     db.init_app(app)
+    mail.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
     csrf.init_app(app)
@@ -96,7 +99,7 @@ def create_cli(app):
             app.config.from_object(Config[config])
             app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-            listenQueue = ['default', 'cryptography']
+            listenQueue = ['default', 'cryptography', 'email']
             conn = Redis(
                 host=app.config["RQ_DEFAULT_HOST"],
                 port=app.config["RQ_DEFAULT_PORT"],
