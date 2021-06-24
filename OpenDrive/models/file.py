@@ -59,6 +59,12 @@ class File(db.Model):
         # )
         symmetricEncryptFile(self.path, key)
         return db.session.commit()
+    
+    def hard_delete(self):
+        """Deletes record and the file in HDD"""
+        os.remove(self.path)
+        db.session.delete(self)
+        return db.session.commit()
 
     def __repr__(self):
         return f'<File \'{self.filename}\'>'

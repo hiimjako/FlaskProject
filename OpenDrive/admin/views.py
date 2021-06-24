@@ -155,9 +155,13 @@ def delete_user(user_id):
         flash('You cannot delete your own account.', 'bg-danger')
     else:
         user = User.query.filter_by(id=user_id).first()
+        Password.query.filter_by(user_id=user_id).delete()
+        files = File.query.filter_by(user_id=user_id)
+        for file in files:
+            file.hard_delete()
         db.session.delete(user)
         db.session.commit()
-        flash('Successfully deleted user %s.' % user.full_name(), 'success')
+        flash('Successfully deleted user %s.' % user.full_name(), 'bg-primary')
     return redirect(url_for('admin.registered_users'))
 
 

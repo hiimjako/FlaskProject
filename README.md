@@ -28,7 +28,8 @@ If there are some trubles with "psycopg2" remove it from requirements.txt or use
 - add file size to db, for limit the amount of file to upload per user
 - System manager
 - Name to pdf while download in new page
-- Invite user via email
+- Folder system
+- Backup button
 - Change password, with rq queue to recrypt all files
 - Add rq thats handles file inputs
 - Add folders in drive
