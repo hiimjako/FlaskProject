@@ -83,15 +83,22 @@ def user_info(user_id):
 @admin_required
 def hardware_usage():
     """Retrives the space utilization for each user"""
-    users = []
-    # , isouter=True)\
-    users = db.session.query(User.last_name, User.first_name, User.email, func.sum(distinct(File.size)).label("size"), func.count(distinct(File.id)).label("nFiles"), func.count(distinct(Password.id)).label("nPassword"))\
-        .join(File)\
-        .join(Password)\
-        .filter(File.id is not None)\
-        .filter(Password.id is not None)\
-        .group_by(User.id).all()
-    return render_template('admin/system_manager.html', users=users, bytesToHuman=bytesToHuman)
+    users = db.session.query(User.last_name, User.first_name, User.email,\
+        func.count(distinct(File.id)).label("nFiles"),\
+        func.count(distinct(Password.id)).label("nPassword"))\
+        .join(File, isouter=True)\
+        .join(Password, isouter=True)\
+        .group_by(User.id)\
+        .order_by(User.id)\
+        .all()
+
+    sizes = db.session.query(User.id, func.sum(File.size).label("size"))\
+        .join(File, isouter=True)\
+        .group_by(User.id)\
+        .order_by(User.id)\
+        .all()
+
+    return render_template('admin/system_manager.html', users=users, sizes=sizes, bytesToHuman=bytesToHuman)
 
 
 @admin.route('/user/<int:user_id>/change-email', methods=['GET', 'POST'])
