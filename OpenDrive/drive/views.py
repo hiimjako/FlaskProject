@@ -45,7 +45,8 @@ def index():
 
     # Getting all user files
     # No need to be decrypted
-    files = File.query.filter(and_(File.user_id==current_user.id, File.folder.op('~')(r"^\/\w?$"))).order_by(File.folder.desc()).all()
+    files = File.query.filter(and_(File.user_id==current_user.id, File.folder.op('~')(r"^\/\w?$")))\
+        .order_by(File.folder.desc()).all()
     return render_template('drive/index.html', form=form, files=files, folder=folder_path)
 
 @drive.route('/folder/<path:folder_path>', methods=['GET', 'POST'])
@@ -71,11 +72,11 @@ def folder(folder_path):
 
     # Getting all user files
     # No need to be decrypted
-    files = File.query.filter(and_(File.user_id==current_user.id, File.folder == folder_path))\
+    # files = File.query.filter(and_(File.user_id==current_user.id, File.folder == folder_path))\
+    #     .order_by(File.folder.desc()).all()
+    files = File.query.filter(and_(File.user_id==current_user.id, File.folder.op('~')(rf"^{folder_path}\/?\w?$")))\
         .order_by(File.folder.desc()).all()
-    folders = File.query.filter(and_(File.user_id==current_user.id, File.folder.op('~')(rf"^{folder_path}\/?\w?$")))\
-        .order_by(File.folder.desc()).all()
-    files = folders + files
+    # files = folders + files
     return render_template('drive/index.html', form=form, files=files, folder=folder_path)
 
 @drive.route('/file/<int:file_id>', methods=['GET', 'DELETE'])
