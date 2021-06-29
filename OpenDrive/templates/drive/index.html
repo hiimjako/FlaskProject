@@ -116,12 +116,17 @@
 <div id="page-drive">
   <div class="container position-relative g-8">
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
-      {% for file in files %}
-      {% if folder == file.folder %}
-      {{ card(file.id, file['filename'], file.getMimeType(), file.getImageUrl()) }}
-      {% elif file.folder.startswith(folder) %}
-      {{ folder_card(file.getFolderName(), file.getFolderUrl()) }}
+      {% set inserted_folders = [] %}
+      {% for folder in folders %}
+      {% set folder_name = folder.getFolderName(folder_path)%}
+      {% if folder_name not in inserted_folders %}
+      {{ folder_card(folder_name, folder.getFolderUrl(folder_path)) }}
+      {{ inserted_folders.append(folder_name)|default("", True) }}
       {% endif %}
+      {% endfor %}
+
+      {% for file in files %}
+      {{ card(file.id, file['filename'], file.getMimeType(), file.getImageUrl()) }}
       {% endfor %}
     </div>
   </div>

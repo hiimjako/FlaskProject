@@ -2,6 +2,7 @@ import posixpath
 import uuid
 import mimetypes
 import os
+import re
 
 from sqlalchemy.sql import func
 from flask import current_app
@@ -67,11 +68,15 @@ class File(db.Model):
     def getImageUrl(self):
         return "/drive/" + posixpath.join('file', str(self.id))
 
-    def getFolderUrl(self):
-        return  "/drive/" + posixpath.join('folder', str(self.folder)[1:])
+    def getFolderUrl(self, path = None):
+        return  "/drive/" + posixpath.join('folder' + path, self.getFolderName(path))
 
-    def getFolderName(self):
-        return os.path.basename(self.folder)
+    def getFolderName(self, path = None):
+        if path is None:
+            return os.path.basename(self.folder)
+        if path != "/":
+            return re.search(r"^\/(\w)$", self.folder.replace(path, "", 1)).group(1)
+        return re.search(r"^\/(\w)", self.folder).group(1)
 
     def getMimeType(self):
         return mimetypes.MimeTypes().guess_type(self.filename)[0] or "application/octet-stream"

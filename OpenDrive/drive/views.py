@@ -18,6 +18,7 @@ from flask_login import (current_user, login_required)
 from OpenDrive.decorators import get_hash_cookie_required
 from OpenDrive.utils import symmetricDecryptFile
 import io
+from sqlalchemy import func, distinct
 
 drive = Blueprint('drive', __name__)
 
@@ -45,9 +46,12 @@ def index():
 
     # Getting all user files
     # No need to be decrypted
-    files = File.query.filter(and_(File.user_id==current_user.id, File.folder.op('~')(r"^\/\w?$")))\
+    files = File.query.filter(and_(File.user_id==current_user.id, File.folder == folder_path))\
         .order_by(File.folder.desc()).all()
-    return render_template('drive/index.html', form=form, files=files, folder=folder_path)
+
+    folders = File.query.filter(and_(File.user_id==current_user.id, File.folder.op('~')(r"^\/\w")))\
+        .order_by(File.folder.desc()).distinct(File.folder).all()
+    return render_template('drive/index.html', form=form, files=files, folders=folders, folder_path=folder_path)
 
 @drive.route('/folder/<path:folder_path>', methods=['GET', 'POST'])
 @login_required
@@ -71,13 +75,13 @@ def folder(folder_path):
         # return redirect(url_for('drive.index'))
 
     # Getting all user files
-    # No need to be decrypted
-    # files = File.query.filter(and_(File.user_id==current_user.id, File.folder == folder_path))\
-    #     .order_by(File.folder.desc()).all()
-    files = File.query.filter(and_(File.user_id==current_user.id, File.folder.op('~')(rf"^{folder_path}\/?\w?$")))\
+    files = File.query.filter(and_(File.user_id==current_user.id, File.folder == folder_path))\
         .order_by(File.folder.desc()).all()
-    # files = folders + files
-    return render_template('drive/index.html', form=form, files=files, folder=folder_path)
+
+    folders = File.query.filter(and_(File.user_id==current_user.id, File.folder.op('~')(rf"^{folder_path}\/?\w")))\
+        .order_by(File.folder.desc()).distinct(File.folder).all()
+
+    return render_template('drive/index.html', form=form, files=files, folders=folders, folder_path=folder_path)
 
 @drive.route('/file/<int:file_id>', methods=['GET', 'DELETE'])
 @login_required
