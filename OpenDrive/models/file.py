@@ -32,11 +32,7 @@ class File(db.Model):
         if not os.path.exists(base_path):
             os.makedirs(base_path)
         self.path = os.path.join(base_path, str(uuid.uuid4()))
-        self.folder = folder or "/"
-        if self.folder[0] != "/":
-            self.folder = "/" + self.folder
-        if self.folder[len(self.folder)-1] != "/":
-            self.folder = self.folder + "/"
+        self.update_folder_secure(folder)
         try:
             file.save(self.path)
             self.size = os.stat(self.path).st_size
@@ -73,7 +69,7 @@ class File(db.Model):
         return "/drive/" + posixpath.join('file', str(self.id))
 
     def getFolderUrl(self, path = None):
-        return  "/drive/" + posixpath.join('folder' + path, self.getFolderName(path))
+        return  "/drive/" + posixpath.join(path, self.getFolderName(path))
 
     def getFolderName(self, path = None):
         if path is None:
@@ -82,3 +78,15 @@ class File(db.Model):
 
     def getMimeType(self):
         return mimetypes.MimeTypes().guess_type(self.filename)[0] or "application/octet-stream"
+
+    def update_folder_secure(self, folder):
+        self.folder = folder or "/"
+        if self.folder[0] != "/":
+            self.folder  = "/" + self.folder
+        if not self.folder.startswith("/h"):
+            self.folder  = "/h" + self.folder
+        if self.folder [len(self.folder )-1] != "/":
+            self.folder  = self.folder  + "/"
+    
+    def get_printable_folder(self):
+        return self.folder.replace("/h", "", 1)

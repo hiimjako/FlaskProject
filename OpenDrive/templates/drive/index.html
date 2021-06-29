@@ -1,11 +1,12 @@
 {% extends 'layouts/base_extended.html' %}
 {% import 'partials/_context_menu.html' as context_menu %}
 
-{% set context_menu_items = [
-{"icon": "bi-pencil-square", "label": "rename", "href": "file/item-id/rename"},
-{"icon": "bi-cloud-arrow-down","label": "download","href": "file/item-id?as_attachment=True"},
+{% set context_menu_items_card = [
+{"icon": "bi-folder-plus","label": "Move to folder","href": url_for("drive.folder_file", file_id=-1)},
+{"icon": "bi-pencil-square", "label": "rename", "href": url_for("drive.rename_file", file_id=-1)},
+{"icon": "bi-cloud-arrow-down","label": "download","href": url_for("drive.serve_file", file_id=-1, as_attachment=True)},
 {"icon": None,"label": None,"href": ""},
-{"icon": "bi-link","label": "share","href": "file/item-id/share"}]
+{"icon": "bi-link","label": "share","href": url_for("drive.share_file", file_id=-1)}]
 %}
 
 <!-- i can also use {{ csrf_token() }} for get token -->
@@ -25,7 +26,7 @@
 {% endif%}
 
 <div class="col p-2 searchable-card">
-  <div class="card shadow-lg h-100" data-id={{ id | safe }}>
+  <div class="card file shadow-lg h-100" data-id={{ id | safe }}>
     <a href="{{ url | safe  }}" target="_blank">
       <!-- spinner before load -->
       <div class="d-flex justify-content-center spinner-placeholder">
@@ -113,26 +114,24 @@
 
 {% block content %}
 {{ javascript() }}
-<div id="page-drive">
-  <div class="container position-relative g-8">
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
-      {% set inserted_folders = [] %}
-      {% for folder in folders %}
-      {% set folder_name = folder.getFolderName(folder_path)%}
-      {% if folder_name not in inserted_folders %}
-      {{ folder_card(folder_name, folder.getFolderUrl(folder_path)) }}
-      {{ inserted_folders.append(folder_name)|default("", True) }}
-      {% endif %}
-      {% endfor %}
+<div id="page-drive" class="container position-relative g-8 h-75 w-100">
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+    {% set inserted_folders = [] %}
+    {% for folder in folders %}
+    {% set folder_name = folder.getFolderName(folder_path)%}
+    {% if folder_name not in inserted_folders %}
+    {{ folder_card(folder_name, folder.getFolderUrl(folder_path)) }}
+    {{ inserted_folders.append(folder_name)|default("", True) }}
+    {% endif %}
+    {% endfor %}
 
-      {% for file in files %}
-      {{ card(file.id, file['filename'], file.getMimeType(), file.getImageUrl()) }}
-      {% endfor %}
-    </div>
+    {% for file in files %}
+    {{ card(file.id, file['filename'], file.getMimeType(), file.getImageUrl()) }}
+    {% endfor %}
   </div>
   {{ upload_button(form) }}
   {{ progressBar() }}
   {{ onDropLayout() }}
-  {{ context_menu.render_context_menu(".card", context_menu_items) }}
+  {{ context_menu.render_context_menu(scope=".card.file", fields=context_menu_items_card) }}
 </div>
 {% endblock %}

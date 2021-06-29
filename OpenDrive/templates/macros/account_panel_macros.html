@@ -2,9 +2,9 @@
 <div class="row mb-3">
   <h2>
     {% if route: %}
-      <a class="nounderline" href="{{ url_for(route) }}">
-        <i class="bi bi-arrow-left"></i>
-      </a>
+    <a class="nounderline" href="{{ url_for(route, **kwargs) }}">
+      <i class="bi bi-arrow-left"></i>
+    </a>
     {% endif %}
     {{ name }}
   </h2>

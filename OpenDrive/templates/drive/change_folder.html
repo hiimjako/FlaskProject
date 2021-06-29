@@ -9,10 +9,11 @@
             <div class="col-12 col-md-6 col-lg-4">
                 <form action="" method="POST">
                     <div class="mb-3">
-                        <label for={{ form.filename.id }} class="form-label">{{ form.filename.label }}</label>
-                        <h6 style="font-size: medium;">(current is <b class="text-primary">{{ file.filename | safe |
+                        <label for={{ form.folder.id }} class="form-label">{{ form.folder.label }}</label>
+                        <h6 style="font-size: medium;">(current is <b class="text-primary">{{
+                                file.get_printable_folder() | safe |
                                 forceescape }}</b class="text-primary">)</h6>
-                        {{ form.filename(class="form-control text-secondary") }}
+                        {{ form.folder(class="form-control text-secondary") }}
                     </div>
                     {{ form.submit(class="btn btn-primary") }}
                     {{ form.hidden_tag() }}

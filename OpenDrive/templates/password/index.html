@@ -183,5 +183,5 @@
 {% else %}
 {{ render_for_desktop(form, passwords) }}
 {% endif %}
-{{ context_menu.render_context_menu("tr", context_menu_items) }}
+{{ context_menu.render_context_menu(scope="tr", fields=context_menu_items) }}
 {% endblock %}
