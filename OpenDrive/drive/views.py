@@ -1,13 +1,15 @@
 from flask import Blueprint, render_template, redirect, request, flash
 
 import os
+from sqlalchemy.sql.elements import and_, or_
 
 from werkzeug.utils import secure_filename
 from flask.helpers import send_file, url_for
 
 from OpenDrive.drive.forms import (
     UploadNewFile,
-    RenameFile
+    RenameFile,
+    changeFolder
 )
 
 from OpenDrive import db
@@ -15,22 +17,27 @@ from OpenDrive.models import File
 from flask_login import (current_user, login_required)
 
 from OpenDrive.decorators import get_hash_cookie_required
-from OpenDrive.utils import symmetricDecryptFile
+from OpenDrive.utils import render_errors, symmetricDecryptFile
 import io
+from sqlalchemy import func, distinct
+from urllib.parse import unquote
 
 drive = Blueprint('drive', __name__)
 
+HOME_FOLDER = "/h/"
 
-@drive.route('/', methods=['GET', 'POST'])
+@drive.route('/<path:folder_path>', methods=['GET', 'POST'])
 @login_required
 @get_hash_cookie_required
-def index():
+def index(folder_path):
     form = UploadNewFile()
+    folder_path = f"/{unquote(folder_path)}/" or HOME_FOLDER
     if form.validate_on_submit():
         for file in form.file.data:
-            fileBin = file
+            file_bin = file
             file = File(
-                file=fileBin,
+                folder=folder_path,
+                file=file_bin,
                 user_id=current_user.id
             )
             file.save(current_user.cookieHash)
@@ -41,10 +48,16 @@ def index():
         # return redirect(url_for('drive.index'))
 
     # Getting all user files
-    # No need to be decrypted
-    files = File.query.filter_by(user_id=current_user.id).all()
-    return render_template('drive/index.html', form=form, files=files)
+    files = File.query.filter(and_(File.user_id==current_user.id, File.folder == folder_path))\
+        .order_by(File.folder.desc()).all()
 
+    folders = File.query.filter(and_(File.user_id==current_user.id, File.folder.op('~')(rf"^{folder_path}\/?\w")))\
+        .order_by(File.folder.desc()).distinct(File.folder).all()
+
+    if len(files) == 0 and len(folders) == 0:
+        return redirect(url_for('drive.index', folder_path="/h"))
+
+    return render_template('drive/index.html', form=form, files=files, folders=folders, folder_path=folder_path)
 
 @drive.route('/file/<int:file_id>', methods=['GET', 'DELETE'])
 @login_required
@@ -58,24 +71,24 @@ def serve_file(file_id):
             as_attachment = request.args.get('as_attachment')
             preview = request.args.get('preview')
 
-            fileBin = path
+            file_bin = path
             if as_attachment == 'True':
                 # Quando scarico il file lo voglio sempre dectyptato
-                fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
-                return send_file(fileBin, mimetype=mimetype, attachment_filename=file.filename, as_attachment=True)
+                file_bin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
+                return send_file(file_bin, mimetype=mimetype, attachment_filename=file.filename, as_attachment=True)
 
             if preview == 'True':
                 # per le anteprime decrypto solo le immagini, per mostrarle in anteprima
                 # gli altri file non sono utili
-                fileBin = io.BytesIO(bytes())
+                file_bin = io.BytesIO(bytes())
                 if mimetype is not None and mimetype.startswith("image"):
-                    fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
-                return send_file(fileBin, mimetype=mimetype)
+                    file_bin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
+                return send_file(file_bin, mimetype=mimetype)
 
             # Quando lo apro in una nuova tab lo voglio decryptato
             # TODO: far si che quando si apre in una nuova tab ci sia il nome corretto
-            fileBin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
-            return send_file(fileBin, mimetype=mimetype)
+            file_bin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
+            return send_file(file_bin, mimetype=mimetype)
         else:
             flash(f'Error: file {file.filename.strip()} not found. Ask to admin', 'bg-danger')
 
@@ -107,17 +120,34 @@ def rename_file(file_id):
                 db.session.add(file)
                 db.session.commit()
                 flash('Correctly updated', 'bg-primary')
-                return redirect(url_for('drive.index'))
+                return redirect(url_for('drive.index', folder_path="/h"))
         else:
-            for error in form.errors:
-                flash(form.errors[error][0], 'bg-danger')
+            render_errors(form.errors)
 
     file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
     return render_template('drive/rename_file.html', form=form, file=file)
 
+@drive.route('/file/<int:file_id>/folder', methods=['GET', 'POST'])
+@login_required
+def folder_file(file_id):
+    form = changeFolder()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
+            if file:
+                file.update_folder_secure(form.folder.data)
+                db.session.add(file)
+                db.session.commit()
+                flash('Correctly updated', 'bg-primary')
+                return redirect(url_for('drive.index', folder_path="/h"))
+        else:
+            render_errors(form.errors)
+
+    file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
+    return render_template('drive/change_folder.html', form=form, file=file)
 
 @drive.route('/file/<int:file_id>/share', methods=['GET'])
 @login_required
 def share_file(file_id):
     flash("Feature work in progress :)", 'bg-danger')
-    return redirect(url_for('drive.index'))
+    return redirect(url_for('drive.index', folder_path="/h"))

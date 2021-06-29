@@ -13,6 +13,9 @@ class UploadNewFile(FlaskForm):
 
 
 class RenameFile(FlaskForm):
-    filename = StringField('New filename', validators=[
-                           InputRequired(), Length(1, 255)])
+    filename = StringField('New filename', validators=[InputRequired(), Length(1, 255)])
+    submit = SubmitField('Change')
+
+class changeFolder(FlaskForm):
+    folder = StringField('New folder', validators=[InputRequired(), Length(1, 255)])
     submit = SubmitField('Change')

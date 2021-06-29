@@ -65,7 +65,7 @@
         <!-- Set class="nav-link active" for active item -->
         <li class="nav-item">
           <a class="nav-link {% if request.endpoint == 'drive.index' %}active{% endif %}"
-            href="{{ url_for('drive.index') }}">Files</a>
+            href="{{ url_for('drive.index', folder_path='/h') }}">Files</a>
         </li>
         <li class="nav-item">
           <a class="nav-link {% if request.endpoint == 'password.index' %}active{% endif %}"
@@ -97,7 +97,7 @@
         <!-- Set class="nav-link active" for active item -->
         <li class="nav-item">
           <a class="nav-link {% if request.endpoint == 'drive.index' %}active{% endif %}"
-            href="{{ url_for('drive.index') }}">Files</a>
+            href="{{ url_for('drive.index', folder_path='/h') }}">Files</a>
         </li>
         <li class="nav-item">
           <a class="nav-link {% if request.endpoint == 'password.index' %}active{% endif %}"

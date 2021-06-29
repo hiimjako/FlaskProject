@@ -9,7 +9,8 @@
 {% macro navigation_tab(route, name) %}
 {% set href = url_for(route, user_id=user.id) %}
 <li class="nav-item">
-    <a class="{% if request.endpoint == route %} active text-secondary {% else %} text-primary {% endif %} nav-link" href="{{ href }}">
+    <a class="{% if request.endpoint == route %} active text-secondary {% else %} text-primary {% endif %} nav-link"
+        href="{{ href }}">
         {{ name }}
     </a>
 </li>
@@ -45,7 +46,7 @@
 {% block content %}
 <div class="ui stackable grid container">
     <div class="sixteen wide tablet twelve wide computer centered column">
-        {{ panel_macro.panel_header('Back to drive', 'drive.index') }}
+        {{ panel_macro.panel_header('Back to drive', 'drive.index', folder_path="/h") }}
         <ul class="nav nav-pills mb-3">
             {% for route, name in endpoints %}
             {{ navigation_tab(route, name) }}

@@ -1,65 +1,53 @@
-from flask import current_app
-from werkzeug.utils import secure_filename
-import urllib.parse
 import posixpath
-
-from sqlalchemy.sql import func
-
-import os
-import datetime
-
-from OpenDrive.db import db, rq
-from OpenDrive.jobs.cryptography import add as queue
-from OpenDrive.utils import symmetricEncryptFile
-
-import enum
 import uuid
 import mimetypes
+import os
+import re
 
-
-def test():
-    print('funzione passata')
-
+from sqlalchemy.sql import func
+from flask import current_app
+from OpenDrive.db import db
+from OpenDrive.utils import symmetricEncryptFile
 
 class File(db.Model):
+    """File model"""
     __tablename__ = 'files'
+
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(255), index=True, nullable=False)
     # extension = db.Column(Enum(extensionEnum))
     path = db.Column(db.String(512), unique=True, nullable=False)
+    folder = db.Column(db.String(512), nullable=False)
     # bytes
     size = db.Column(db.Integer, default=0, nullable=False)
-    insert_at = db.Column(db.DateTime(timezone=False),
-                          server_default=func.now())
+    insert_at = db.Column(db.DateTime(timezone=False), server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=False), onupdate=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
 
-    def __init__(self, file, user_id):
+    def __init__(self, file, folder, user_id):
         # self.filename = secure_filename(file.filename)
         self.filename = os.path.splitext(file.filename)[0] + os.path.splitext(file.filename)[1].lower()
 
-        basePath = current_app.config['UPLOAD_PATH']
-        if not os.path.exists(basePath):
-            os.makedirs(basePath)
-        self.path = os.path.join(basePath, str(uuid.uuid4()))
-
+        base_path = current_app.config['UPLOAD_PATH']
+        if not os.path.exists(base_path):
+            os.makedirs(base_path)
+        self.path = os.path.join(base_path, str(uuid.uuid4()))
+        self.update_folder_secure(folder)
         try:
             file.save(self.path)
             self.size = os.stat(self.path).st_size
-        except:
+        except Exception:
+            # FIXME: da mettere token sbagliato
+            # Oppure os error
             print("file non caricato")
 
         self.user_id = user_id
 
     def save(self, key: None):
         db.session.add(self)
-        # rq.get_queue('cryptography').enqueue(
-        #     test,
-        #     arg1='ciao'
-        # )
         symmetricEncryptFile(self.path, key)
         return db.session.commit()
-    
+   
     def hard_delete(self):
         """Deletes record and the file in HDD"""
         os.remove(self.path)
@@ -78,7 +66,27 @@ class File(db.Model):
         return path
 
     def getImageUrl(self):
-        return posixpath.join('file', str(self.id))
+        return "/drive/" + posixpath.join('file', str(self.id))
+
+    def getFolderUrl(self, path = None):
+        return  "/drive/" + posixpath.join(path, self.getFolderName(path))
+
+    def getFolderName(self, path = None):
+        if path is None:
+            return os.path.basename(self.folder)
+        return re.search(r"^(.*?)(?=\/)",  self.folder.replace(path, "", 1)).group(1)
 
     def getMimeType(self):
         return mimetypes.MimeTypes().guess_type(self.filename)[0] or "application/octet-stream"
+
+    def update_folder_secure(self, folder):
+        self.folder = folder or "/"
+        if self.folder[0] != "/":
+            self.folder  = "/" + self.folder
+        if not self.folder.startswith("/h"):
+            self.folder  = "/h" + self.folder
+        if self.folder [len(self.folder )-1] != "/":
+            self.folder  = self.folder  + "/"
+    
+    def get_printable_folder(self):
+        return self.folder.replace("/h", "", 1)

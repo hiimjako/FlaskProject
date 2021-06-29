@@ -1,5 +1,5 @@
-{% macro render_context_menu(scope = "", fields = []) %}
-<div id="context_menu" class="dropdown position-fixed" style="display: none;">
+{% macro render_context_menu(id = "context_menu", scope = "", fields = []) %}
+<div id="{{ id | safe | forceescape }}" class="dropdown position-fixed" style="display: none;">
     <ul class="dropdown-menu d-block">
         {% for item in fields %}
         <li>
@@ -13,35 +13,34 @@
         {% endfor %}
     </ul>
 </div>
-{{ context_menu_script(scope) }}
+{{ context_menu_script(id, scope) }}
 {% endmacro %}
 
-{% macro context_menu_script(scope) %}
+{% macro context_menu_script(id, scope) %}
 <script>
     $(document).ready(function () {
         const onClickOutside = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            $("#context_menu").hide();
+            $("#{{ id | safe | forceescape}}").hide();
             $(document).off("click", "body", onClickOutside);
         };
 
         // FIXME: a tag normale non funziona
-        $(document).on('click', '#context_menu a', function () {
+        $(document).on('click', '#{{ id | safe | forceescape}} a', function () {
             window.location = $(this).attr("href");
         })
 
         // Item id è in placeholder per mettere l'id vero dell'oggetto
-        $("{{ scope | safe }}").contextmenu(function (e) {
+        $("{{ scope | safe | forceescape}}").contextmenu(function (e) {
             e.preventDefault();
             e.stopPropagation();
             const itemId = $(this).attr("data-id");
-            let contextmenu = $("#context_menu");
-
+            let contextmenu = $("#{{ id | safe | forceescape}}");
             contextmenu.find("a").each(function (index, el) {
                 el = $(el);
                 const href = el.attr("data-href");
-                el.attr("href", href.replace('item-id', itemId));
+                el.attr("href", href.replace('item-id', itemId).replace('-1', itemId));
             })
 
             $(document).on("click", "body", onClickOutside);

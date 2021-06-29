@@ -8,5 +8,5 @@ main = Blueprint('main', __name__)
 @main.route('/')
 def index():
     # FIXME: main page?
-    return redirect(url_for('drive.index'))
+    return redirect(url_for('drive.index', folder_path="/h"))
     # return render_template('main/index.html')
