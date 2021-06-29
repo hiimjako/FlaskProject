@@ -33,6 +33,10 @@ class File(db.Model):
             os.makedirs(base_path)
         self.path = os.path.join(base_path, str(uuid.uuid4()))
         self.folder = folder or "/"
+        if self.folder[0] != "/":
+            self.folder = "/" + self.folder
+        if self.folder[len(self.folder)-1] != "/":
+            self.folder = self.folder + "/"
         try:
             file.save(self.path)
             self.size = os.stat(self.path).st_size
@@ -74,9 +78,7 @@ class File(db.Model):
     def getFolderName(self, path = None):
         if path is None:
             return os.path.basename(self.folder)
-        if path != "/":
-            return re.search(r"^\/(\w)$", self.folder.replace(path, "", 1)).group(1)
-        return re.search(r"^\/(\w)", self.folder).group(1)
+        return re.search(r"^(.*?)(?=\/)",  self.folder.replace(path, "", 1)).group(1)
 
     def getMimeType(self):
         return mimetypes.MimeTypes().guess_type(self.filename)[0] or "application/octet-stream"

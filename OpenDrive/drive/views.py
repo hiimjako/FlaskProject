@@ -58,7 +58,7 @@ def index():
 @get_hash_cookie_required
 def folder(folder_path):
     form = UploadNewFile()
-    folder_path = f"/{folder_path}"
+    folder_path = f"/{folder_path}/"
     if form.validate_on_submit():
         for file in form.file.data:
             file_bin = file
