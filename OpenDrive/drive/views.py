@@ -136,10 +136,11 @@ def folder_file(file_id):
             file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
             if file:
                 file.update_folder_secure(form.folder.data)
+                redirect_path = file.folder
                 db.session.add(file)
                 db.session.commit()
                 flash('Correctly updated', 'bg-primary')
-                return redirect(url_for('drive.index', folder_path="/h"))
+                return redirect(url_for('drive.index', folder_path=redirect_path))
         else:
             render_errors(form.errors)
 
