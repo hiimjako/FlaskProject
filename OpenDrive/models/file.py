@@ -87,6 +87,7 @@ class File(db.Model):
             self.folder  = "/h" + self.folder
         if self.folder [len(self.folder )-1] != "/":
             self.folder  = self.folder  + "/"
+        self.folder = self.folder.lower()
     
     def get_printable_folder(self):
         return self.folder.replace("/h", "", 1)
