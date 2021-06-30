@@ -114,24 +114,27 @@
 
 {% block content %}
 {{ javascript() }}
-<div id="page-drive" class="container position-relative g-8 h-75 w-100">
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
-    {% set inserted_folders = [] %}
-    {% for folder in folders %}
-    {% set folder_name = folder.getFolderName(folder_path)%}
-    {% if folder_name not in inserted_folders %}
-    {{ folder_card(folder_name, folder.getFolderUrl(folder_path)) }}
-    {{ inserted_folders.append(folder_name)|default("", True) }}
+<div id="page-drive" >
+  <div class="container position-relative g-8 h-75 w-100">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+      {% set inserted_folders = [] %}
+      {% for folder in folders %}
+      {% set folder_name = folder.getFolderName(folder_path)%}
+      {% if folder_name not in inserted_folders %}
+      {{ folder_card(folder_name, folder.getFolderUrl(folder_path)) }}
+      {{ inserted_folders.append(folder_name)|default("", True) }}
+      {% endif %}
+      {% endfor %}
+    </div>
+    {% if inserted_folders | length > 0 %}
+    <hr>
     {% endif %}
-    {% endfor %}
-  </div>
-  {% if inserted_folders | length > 0 %}
-  <hr>
-  {% endif %}
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
-    {% for file in files %}
-    {{ card(file.id, file['filename'], file.getMimeType(), file.getImageUrl()) }}
-    {% endfor %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+      {% for file in files %}
+      {{ card(file.id, file['filename'], file.getMimeType(), file.getImageUrl()) }}
+      {% endfor %}
+    </div>
+
   </div>
   {{ upload_button(form) }}
   {{ progressBar() }}
