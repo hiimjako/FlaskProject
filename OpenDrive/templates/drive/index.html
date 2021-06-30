@@ -124,7 +124,11 @@
     {{ inserted_folders.append(folder_name)|default("", True) }}
     {% endif %}
     {% endfor %}
-
+  </div>
+  {% if inserted_folders | length > 0 %}
+  <hr>
+  {% endif %}
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
     {% for file in files %}
     {{ card(file.id, file['filename'], file.getMimeType(), file.getImageUrl()) }}
     {% endfor %}
