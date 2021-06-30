@@ -54,8 +54,8 @@ def index(folder_path):
     folders = File.query.filter(and_(File.user_id==current_user.id, File.folder.op('~')(rf"^{folder_path}\/?\w")))\
         .order_by(File.folder.desc()).distinct(File.folder).all()
 
-    if len(files) == 0 and len(folders) == 0 and folder_path != "/h/":
-        return redirect(url_for('drive.index', folder_path="/h"))
+    if len(files) == 0 and len(folders) == 0 and folder_path != HOME_FOLDER:
+        return redirect(url_for('drive.index', folder_path="h"))
 
     return render_template('drive/index.html', form=form, files=files, folders=folders, folder_path=folder_path)
 
@@ -120,7 +120,7 @@ def rename_file(file_id):
                 db.session.add(file)
                 db.session.commit()
                 flash('Correctly updated', 'bg-primary')
-                return redirect(url_for('drive.index', folder_path="/h"))
+                return redirect(url_for('drive.index', folder_path="h"))
         else:
             render_errors(form.errors)
 
@@ -151,4 +151,4 @@ def folder_file(file_id):
 @login_required
 def share_file(file_id):
     flash("Feature work in progress :)", 'bg-danger')
-    return redirect(url_for('drive.index', folder_path="/h"))
+    return redirect(url_for('drive.index', folder_path="h"))
