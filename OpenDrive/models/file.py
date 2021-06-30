@@ -7,7 +7,7 @@ import re
 from sqlalchemy.sql import func
 from flask import current_app
 from OpenDrive.db import db
-from OpenDrive.utils import symmetricEncryptFile
+from OpenDrive.utils import format_path, symmetricEncryptFile
 
 class File(db.Model):
     """File model"""
@@ -80,14 +80,7 @@ class File(db.Model):
         return mimetypes.MimeTypes().guess_type(self.filename)[0] or "application/octet-stream"
 
     def update_folder_secure(self, folder):
-        self.folder = folder or "/"
-        if self.folder[0] != "/":
-            self.folder  = "/" + self.folder
-        if not self.folder.startswith("/h"):
-            self.folder  = "/h" + self.folder
-        if self.folder [len(self.folder )-1] != "/":
-            self.folder  = self.folder  + "/"
-        self.folder = self.folder.lower()
+        self.folder = format_path(folder)
     
     def get_printable_folder(self):
         return self.folder.replace("/h", "", 1)

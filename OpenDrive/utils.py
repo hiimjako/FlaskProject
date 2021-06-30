@@ -112,3 +112,15 @@ def render_errors(form_errors):
     """Renders all form errors"""
     for error in form_errors:
         flash(form_errors[error][0], 'bg-danger')
+
+def format_path(path):
+    if not isinstance(path, str):
+        path = "/"
+    if path[0] != "/":
+        path  = "/" + path
+    if not path.startswith("/h"):
+        path  = "/h" + path
+    if path [len(path )-1] != "/":
+        path  = path  + "/"
+    path = path.lower()
+    return path

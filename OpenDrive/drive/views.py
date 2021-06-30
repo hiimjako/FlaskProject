@@ -17,7 +17,7 @@ from OpenDrive.models import File
 from flask_login import (current_user, login_required)
 
 from OpenDrive.decorators import get_hash_cookie_required
-from OpenDrive.utils import render_errors, symmetricDecryptFile
+from OpenDrive.utils import format_path, render_errors, symmetricDecryptFile
 import io
 from sqlalchemy import func, distinct
 from urllib.parse import unquote
@@ -31,7 +31,7 @@ HOME_FOLDER = "/h/"
 @get_hash_cookie_required
 def index(folder_path):
     form = UploadNewFile()
-    folder_path = f"/{unquote(folder_path)}/" or HOME_FOLDER
+    folder_path = format_path(unquote(folder_path)) or HOME_FOLDER
     if form.validate_on_submit():
         for file in form.file.data:
             file_bin = file
