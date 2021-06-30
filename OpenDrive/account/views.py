@@ -1,3 +1,4 @@
+from datetime import timedelta
 from OpenDrive.queue import send_email
 from flask import (
     Blueprint,
@@ -32,11 +33,20 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.password_hash is not None and \
                 user.verify_password(form.password.data):
-            login_user(user, form.remember_me.data)
+            duration = timedelta(weeks=1)
+            expires = None
+            login_user(user, form.remember_me.data, duration)
             encrypted_pass = symmetricEncrypt(form.password.data)
-            flash('You are now logged in. Welcome back!', 'bg-primary')
             response = make_response(redirect(request.args.get('next') or url_for('main.index')))
-            response.set_cookie('hash', encrypted_pass, secure=current_app.config["SESSION_COOKIE_SECURE"], httponly=True)  # , samesite="Strict")
+            if form.remember_me.data:
+                expires = (duration.microseconds + (duration.seconds + duration.days * 24 * 3600) * 10**6) / 10.0**6
+            response.set_cookie('hash',
+                            encrypted_pass,
+                            secure=current_app.config["SESSION_COOKIE_SECURE"],
+                            httponly=True,
+                            max_age=expires)
+            # , samesite="Strict")
+            flash('You are now logged in. Welcome back!', 'bg-primary')
             return response
         else:
             flash('Invalid email or password.', 'bg-danger')
