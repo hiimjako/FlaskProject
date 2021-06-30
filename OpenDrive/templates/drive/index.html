@@ -116,6 +116,19 @@
 {{ javascript() }}
 <div id="page-drive"  class="h-75 w-100">
   <div class="container position-relative g-8 h-100 w-100">
+    {% if folder_path != "/h/" %}
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        {% for b in folder_path[3:-1].split("/") %}
+          {% if not loop.last %}
+            <li class="breadcrumb-item"><a href="{{ url_for('drive.index', folder_path='h/' + b) }}">{{ b }}</a></li>
+          {% else %}
+            <li class="breadcrumb-item active" aria-current="page">{{ b }}</li>
+          {% endif %}
+        {% endfor %}
+      </ol>
+    </nav>
+    {% endif %}
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
       {% set inserted_folders = [] %}
       {% for folder in folders %}
