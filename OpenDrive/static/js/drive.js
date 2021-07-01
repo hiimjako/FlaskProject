@@ -43,41 +43,94 @@ $(document).ready(function () {
   });
 
   const dropZoneElement = "#dropLayout";
-  const viewDropZone = "#page-drive .container";
+  const dropZoneFolder = ".folder-card";
+  const viewDropZone = "#page-drive .row";
+  var selectedItem = null;
+
+  $(".file-card .card > a").on("drag", (event) => {
+    event.preventDefault();  
+    event.stopPropagation();
+    selectedItem = $(event.target).closest("[data-id]").attr("data-id");
+  });
+
   $(viewDropZone).on("drop dragover", (e) => {
     e.preventDefault();
     e.stopPropagation();
-    $("#dropLayout").css("visibility", "visible");
+    let card = $(dropZoneFolder); 
+
+    card.each((cardIndex, el) => {
+      if (card.get(cardIndex).contains(e.target)) {
+        card.eq(cardIndex).addClass("border border-primary")
+      }
+    })
+
+    if ($(e.target).hasClass("file-row") || $(e.target).hasClass("file-card")) {
+      $("#dropLayout").css("visibility", "visible");
+    }
   });
 
-  $("#page-drive").on("drop", (e) => {
-    e.preventDefault();
+  $("#page-drive").on("drop", (event) => {
+    event.preventDefault();  
+    event.stopPropagation();
   });
 
-  $(dropZoneElement).on("dragover", (e) => {
+  $(dropZoneElement).on("dragover", (event) => {
     // necessario per far si che non mi
     // apra il file in un altra tab
-    e.preventDefault();
+    event.preventDefault();  
+    event.stopPropagation();
   });
 
   ["dragleave", "dragend"].forEach((type) => {
-    $(dropZoneElement).on(type, (e) => {
+    $(dropZoneElement).on(type, (event) => {
+      event.preventDefault();  
+      event.stopPropagation();
       $("#dropLayout").css("visibility", "hidden");
+    });
+
+    $(dropZoneFolder).on(type, (e) => {
+      e.preventDefault();  
+      e.stopPropagation();
+      let card = $(e.target); 
+      if (card.hasClass("folder-card")) {
+        card.removeClass("border border-primary")
+      }
     });
   });
 
-  document.addEventListener(
-    "drop",
-    function (event) {
-      event.preventDefault();
-      if (event.target.id === dropZoneElement.replace("#", "")) {
-        if (event.dataTransfer.files.length > 0) {
-          loadFile(event.dataTransfer.files);
-        }
-        $("#dropLayout").css("visibility", "hidden");
+  $(dropZoneElement).on("drop", function (event) {
+    event.preventDefault();  
+    event.stopPropagation();
+    if (event.originalEvent.dataTransfer.files.length > 0) {
+      loadFile(event.originalEvent.dataTransfer.files);
+    }
+    $("#dropLayout").css("visibility", "hidden");
+  });
+  
+  $(dropZoneFolder).on("drop", function (event) {
+      event.preventDefault();  
+      event.stopPropagation();
+      let folderCard = $(event.target).closest(".folder-card").eq(0);
+      folderCard.removeClass("border border-primary")
+      let folder=  folderCard.attr("data-folder");
+
+      if (folder && selectedItem !== null) {
+        let csrf_token = $("#csrf_token").val();
+          let request = $.ajax({
+            headers: {
+              "x-csrf-token": csrf_token,
+            },
+            url: `/drive/file/${selectedItem}/folder`,
+            data: {
+              folder: folder
+            },
+            method: "POST",
+          }).done(function (res) {
+            location.reload()
+          });
       }
-    },
-    false
+      selectedItem = null;
+    }
   );
 
   var tooltipTriggerList = [].slice.call(

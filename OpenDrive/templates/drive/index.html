@@ -25,7 +25,7 @@
 {%set iconMime = "bi-file-earmark-zip-fill" %}
 {% endif%}
 
-<div class="col p-2 searchable-card">
+<div class="col p-2 searchable-card file-card">
   <div class="card file shadow-lg h-100" data-id={{ id | safe }}>
     <a href="{{ url | safe  }}" target="_blank">
       <!-- spinner before load -->
@@ -65,9 +65,9 @@
 </div>
 {% endmacro %}
 
-{%macro folder_card(title='No title', url="/") %}
-<div class="col p-2 searchable-card">
-  <div class="card shadow-lg h-100" data-id={{ id | safe }}>
+{%macro folder_card(title='No title', url="/", folder_path="/") %}
+<div class="col p-2 searchable-card folder-card" data-folder={{ folder_path ~ title | safe}}>
+  <div class="card shadow-lg h-100">
     <a href="{{ url | safe  }}">
       <!-- spinner before load -->
       <div class="d-flex icon-placeholder text-primary justify-content-center align-middle">
@@ -129,12 +129,12 @@
       </ol>
     </nav>
     {% endif %}
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 folder-row">
       {% set inserted_folders = [] %}
       {% for folder in folders %}
       {% set folder_name = folder.getFolderName(folder_path)%}
       {% if folder_name not in inserted_folders %}
-      {{ folder_card(folder_name, folder.getFolderUrl(folder_path)) }}
+      {{ folder_card(folder_name, folder.getFolderUrl(folder_path), folder_path) }}
       {{ inserted_folders.append(folder_name)|default("", True) }}
       {% endif %}
       {% endfor %}
@@ -142,7 +142,7 @@
     {% if inserted_folders | length > 0 %}
     <hr>
     {% endif %}
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 file-row">
       {% for file in files %}
       {{ card(file.id, file['filename'], file.getMimeType(), file.getImageUrl()) }}
       {% endfor %}
