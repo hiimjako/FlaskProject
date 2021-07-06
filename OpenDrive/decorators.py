@@ -8,6 +8,7 @@ from OpenDrive.utils import symmetricDecrypt
 
 
 def permission_required(permission):
+    '''Check if the current user has the requested permissions'''
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
@@ -24,8 +25,8 @@ def admin_required(f):
     return permission_required(Permission.ADMINISTER)(f)
 
 
-# adds a cookieHash param to current_user
 def get_hash_cookie_required(f):
+    '''adds a cookieHash param to current_user'''
     @wraps(f)
     def decorated_function(*args, **kwargs):
         cookieHash = request.cookies.get('hash')

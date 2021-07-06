@@ -48,7 +48,7 @@ $(document).ready(function () {
   var selectedItem = null;
 
   $(".file-card .card > a").on("drag", (event) => {
-    event.preventDefault();  
+    event.preventDefault();
     event.stopPropagation();
     selectedItem = $(event.target).closest("[data-id]").attr("data-id");
   });
@@ -56,7 +56,7 @@ $(document).ready(function () {
   $(viewDropZone).on("drop dragover", (e) => {
     e.preventDefault();
     e.stopPropagation();
-    let card = $(dropZoneFolder); 
+    let card = $(dropZoneFolder);
 
     card.each((cardIndex, el) => {
       if (card.get(cardIndex).contains(e.target)) {
@@ -70,28 +70,28 @@ $(document).ready(function () {
   });
 
   $("#page-drive").on("drop", (event) => {
-    event.preventDefault();  
+    event.preventDefault();
     event.stopPropagation();
   });
 
   $(dropZoneElement).on("dragover", (event) => {
     // necessario per far si che non mi
     // apra il file in un altra tab
-    event.preventDefault();  
+    event.preventDefault();
     event.stopPropagation();
   });
 
   ["dragleave", "dragend"].forEach((type) => {
     $(dropZoneElement).on(type, (event) => {
-      event.preventDefault();  
+      event.preventDefault();
       event.stopPropagation();
       $("#dropLayout").css("visibility", "hidden");
     });
 
     $(dropZoneFolder).on(type, (e) => {
-      e.preventDefault();  
+      e.preventDefault();
       e.stopPropagation();
-      let card = $(e.target); 
+      let card = $(e.target);
       if (card.hasClass("folder-card")) {
         card.removeClass("border border-primary")
       }
@@ -99,38 +99,37 @@ $(document).ready(function () {
   });
 
   $(dropZoneElement).on("drop", function (event) {
-    event.preventDefault();  
+    event.preventDefault();
     event.stopPropagation();
     if (event.originalEvent.dataTransfer.files.length > 0) {
       loadFile(event.originalEvent.dataTransfer.files);
     }
     $("#dropLayout").css("visibility", "hidden");
   });
-  
-  $(dropZoneFolder).on("drop", function (event) {
-      event.preventDefault();  
-      event.stopPropagation();
-      let folderCard = $(event.target).closest(".folder-card").eq(0);
-      folderCard.removeClass("border border-primary")
-      let folder=  folderCard.attr("data-folder");
 
-      if (folder && selectedItem !== null) {
-        let csrf_token = $("#csrf_token").val();
-          let request = $.ajax({
-            headers: {
-              "x-csrf-token": csrf_token,
-            },
-            url: `/drive/file/${selectedItem}/folder`,
-            data: {
-              folder: folder
-            },
-            method: "POST",
-          }).done(function (res) {
-            location.reload()
-          });
-      }
-      selectedItem = null;
+  $(dropZoneFolder).on("drop", function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    let folderCard = $(event.target).closest(".folder-card").eq(0);
+    folderCard.removeClass("border border-primary")
+    let folder = folderCard.attr("data-folder");
+    if (folder && selectedItem !== null) {
+      let csrf_token = $("#csrf_token").val();
+      let request = $.ajax({
+        headers: {
+          "x-csrf-token": csrf_token,
+        },
+        url: `/drive/file/${selectedItem}/folder?api=1`,
+        data: {
+          folder: folder
+        },
+        method: "POST",
+      }).done(function (res) {
+        location.reload()
+      });
     }
+    selectedItem = null;
+  }
   );
 
   var tooltipTriggerList = [].slice.call(

@@ -139,7 +139,10 @@ def folder_file(file_id):
                 redirect_path = file.folder
                 db.session.add(file)
                 db.session.commit()
-                flash('Correctly updated', 'bg-primary')
+                message = 'Correctly updated'
+                if request.args.get('api') == "1":
+                    return {'status': True, 'message': message}
+                flash(message, 'bg-primary')
                 return redirect(url_for('drive.index', folder_path=redirect_path))
         else:
             render_errors(form.errors)
