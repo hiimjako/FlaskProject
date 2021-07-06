@@ -1,9 +1,7 @@
 from os import environ, path
-import sys
 
 basedir = path.abspath(path.dirname(__file__))
 
-# Try better handling
 if path.exists(".env"):
     for line in open(".env"):
         var = line.strip().split("=")
@@ -12,6 +10,7 @@ if path.exists(".env"):
 
 
 class Config:
+    '''Base env configuration for OpenDrive'''
     DEBUG = False
     TESTING = False
     SESSION_COOKIE_SECURE = False
@@ -51,6 +50,7 @@ class Config:
 
 
 class ProductionConfig(Config):
+    '''Production env configuration for OpenDrive'''
     FLASK_ENV = "production"
     SESSION_COOKIE_SECURE = True
     # SQLALCHEMY_DATABASE_URI = "mysql://user@localhost/foo"
@@ -61,6 +61,7 @@ class ProductionConfig(Config):
 
 
 class DevelopmentConfig(Config):
+    '''Development env configuration for OpenDrive'''
     FLASK_ENV = "development"
     POSTGRES_URL = "127.0.0.1"
     RQ_DEFAULT_HOST = "127.0.0.1"
@@ -75,6 +76,7 @@ class DevelopmentConfig(Config):
 
 
 class TestingConfig(Config):
+    '''Testing env configuration for OpenDrive'''
     TESTING = True
 
     @classmethod

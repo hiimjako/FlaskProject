@@ -1,25 +1,26 @@
 import os
-import click
+import re
 
+import click
 from flask import Flask
 from flask_login import LoginManager
 from flask_mail import Mail
-from flask_wtf import CSRFProtect
 from flask_mobility import Mobility
+from flask_wtf import CSRFProtect
 from redis import Redis
 from rq import Connection, Queue, Worker
-from OpenDrive.db import db, migrate, rq
-from config import config as Config
-from OpenDrive.models import AnonymousUser, User, Role
 
-# blueprints
-from .utils import register_template_utils
-from .main import main as main_blueprint
+from config import config as Config
+from OpenDrive.db import db, migrate, rq
+from OpenDrive.models import AnonymousUser, Role, User
+
 from .account import account as account_blueprint
 from .admin import admin as admin_blueprint
 from .drive import drive as drive_blueprint
+from .main import main as main_blueprint
 from .password import password as password_blueprint
-
+# blueprints
+from .utils import register_template_utils
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 

@@ -1,26 +1,16 @@
-from flask import Blueprint, render_template, redirect, request, flash
-
-import os
-from sqlalchemy.sql.elements import and_, or_
-
-from werkzeug.utils import secure_filename
-from flask.helpers import send_file, url_for
-
-from OpenDrive.drive.forms import (
-    UploadNewFile,
-    RenameFile,
-    changeFolder
-)
-
-from OpenDrive import db
-from OpenDrive.models import File
-from flask_login import (current_user, login_required)
-
-from OpenDrive.decorators import get_hash_cookie_required
-from OpenDrive.utils import format_path, render_errors, symmetricDecryptFile
 import io
-from sqlalchemy import func, distinct
+import os
 from urllib.parse import unquote
+
+from flask import Blueprint, flash, redirect, render_template, request
+from flask.helpers import send_file, url_for
+from flask_login import current_user, login_required
+from OpenDrive import db
+from OpenDrive.decorators import get_hash_cookie_required
+from OpenDrive.drive.forms import RenameFile, UploadNewFile, changeFolder
+from OpenDrive.models import File
+from OpenDrive.utils import format_path, render_errors, symmetricDecryptFile
+from sqlalchemy.sql.elements import and_
 
 drive = Blueprint('drive', __name__)
 
@@ -40,7 +30,7 @@ def index(folder_path):
                 file=file_bin,
                 user_id=current_user.id
             )
-            file.save(current_user.cookieHash)
+            file.save(current_user.cookie_hash)
 
         message = 'Correctly added'
         flash(message, 'bg-primary')
@@ -74,7 +64,7 @@ def serve_file(file_id):
             file_bin = path
             if as_attachment == 'True':
                 # Quando scarico il file lo voglio sempre dectyptato
-                file_bin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
+                file_bin = io.BytesIO(symmetricDecryptFile(path, current_user.cookie_hash))
                 return send_file(file_bin, mimetype=mimetype, attachment_filename=file.filename, as_attachment=True)
 
             if preview == 'True':
@@ -82,12 +72,12 @@ def serve_file(file_id):
                 # gli altri file non sono utili
                 file_bin = io.BytesIO(bytes())
                 if mimetype is not None and mimetype.startswith("image"):
-                    file_bin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
+                    file_bin = io.BytesIO(symmetricDecryptFile(path, current_user.cookie_hash))
                 return send_file(file_bin, mimetype=mimetype)
 
             # Quando lo apro in una nuova tab lo voglio decryptato
             # TODO: far si che quando si apre in una nuova tab ci sia il nome corretto
-            file_bin = io.BytesIO(symmetricDecryptFile(path, current_user.cookieHash))
+            file_bin = io.BytesIO(symmetricDecryptFile(path, current_user.cookie_hash))
             return send_file(file_bin, mimetype=mimetype)
         else:
             flash(f'Error: file {file.filename.strip()} not found. Ask to admin', 'bg-danger')
