@@ -11642,6 +11642,10 @@ fieldset:disabled .btn {
   color: #49ac98;
 }
 
+#page-drive .file-row {
+  min-height: 20vh;
+}
+
 #page-password .delete-row {
   cursor: pointer;
   font-size: 32px;
