@@ -57,16 +57,19 @@ $(document).ready(function () {
     e.preventDefault();
     e.stopPropagation();
     let card = $(dropZoneFolder);
-
+    // FIXME: non so se è il modo migliore, ma funziona
+    const isNewFile = [...e.originalEvent.dataTransfer.items].every(x => x?.kind === "file")
     card.each((cardIndex, el) => {
-      if (card.get(cardIndex).contains(e.target)) {
+      if (card.get(cardIndex).contains(e.target) && !isNewFile) {
         card.eq(cardIndex).addClass("border border-primary")
       }
     })
 
-    if ($(e.target).hasClass("file-row") || $(e.target).hasClass("file-card")) {
+    // if ($(e.target).hasClass("file-row") || $(e.target).hasClass("file-card")) {
+    if (isNewFile) {
       $("#dropLayout").css("visibility", "visible");
     }
+    // }
   });
 
   $("#page-drive").on("drop", (event) => {
