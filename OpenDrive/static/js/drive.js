@@ -61,7 +61,9 @@ $(document).ready(function () {
     const isNewFile = [...e.originalEvent.dataTransfer.items].every(x => x?.kind === "file")
     card.each((cardIndex, el) => {
       if (card.get(cardIndex).contains(e.target) && !isNewFile) {
+        $(dropZoneFolder+".border.border-primary").removeClass("border border-primary")
         card.eq(cardIndex).addClass("border border-primary")
+        return false;
       }
     })
 

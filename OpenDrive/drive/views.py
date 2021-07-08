@@ -66,7 +66,7 @@ def serve_file(file_id):
     if request.method == 'GET':
         file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
         path = file.getFilePath()
-        if path:
+        if path and os.path.exists(path):
             mimetype = file.getMimeType()
             as_attachment = request.args.get('as_attachment')
             preview = request.args.get('preview')
