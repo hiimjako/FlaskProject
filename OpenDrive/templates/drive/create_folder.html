@@ -1,0 +1,24 @@
+{% extends 'layouts/base.html' %}
+{% import 'macros/account_panel_macros.html' as panel_macro %}
+
+{% block content %}
+<div class="ui stackable grid container">
+    <div class="sixteen wide tablet twelve wide computer centered column">
+        {{ panel_macro.panel_header('Back to drive', 'drive.index', folder_path=folder_path) }}
+        <div class="row mt-3">
+            <div class="col-12 col-md-6 col-lg-4">
+                <form action="" method="POST">
+                    <div class="mb-3">
+                        <label for={{ form.folder.id }} class="form-label">{{ form.folder.label }}</label>
+                        <h6 style="font-size: medium;">Current path: <b class="text-primary">{{
+                                folder_path | safe | forceescape }}</b></h6>
+                        {{ form.folder(class="form-control text-secondary") }}
+                    </div>
+                    {{ form.submit(class="btn btn-primary") }}
+                    {{ form.hidden_tag() }}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

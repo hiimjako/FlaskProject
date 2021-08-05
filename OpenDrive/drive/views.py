@@ -9,7 +9,8 @@ from flask.helpers import send_file, url_for
 from OpenDrive.drive.forms import (
     UploadNewFile,
     RenameFile,
-    changeFolder
+    changeFolder,
+    createFolder
 )
 
 from OpenDrive import db
@@ -48,14 +49,15 @@ def index(folder_path):
         # return redirect(url_for('drive.index'))
 
     # Getting all user files
-    files = File.query.filter(and_(File.user_id==current_user.id, File.folder == folder_path))\
+    files = File.query.filter(and_(File.user_id==current_user.id, File.folder == folder_path,\
+        File.path != None, File.filename != None))\
         .order_by(File.folder.desc()).all()
 
     folders = File.query.filter(and_(File.user_id==current_user.id, File.folder.op('~')(rf"^{folder_path}\/?\w")))\
         .order_by(File.folder.desc()).distinct(File.folder).all()
 
-    if len(files) == 0 and len(folders) == 0 and folder_path != HOME_FOLDER:
-        return redirect(url_for('drive.index', folder_path="h"))
+    # if (len(files) == 0 or len(folders) == 0) and folder_path != HOME_FOLDER:
+    #     return redirect(url_for('drive.index', folder_path="h"))
 
     return render_template('drive/index.html', form=form, files=files, folders=folders, folder_path=folder_path)
 
@@ -149,6 +151,39 @@ def folder_file(file_id):
 
     file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
     return render_template('drive/change_folder.html', form=form, file=file)
+
+
+@drive.route('/folder/<path:folder_path>', methods=['GET', 'POST'])
+@login_required
+def create_folder(folder_path):
+    folder_path = format_path(unquote(folder_path)) or HOME_FOLDER
+    form = createFolder()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            path = folder_path + form.folder.data
+            alreadyExists = len(File.query.filter(and_(File.user_id==current_user.id, File.folder.op('~')(rf"^{path}\/?\w")))\
+                .distinct(File.folder).all()) > 0
+            if not alreadyExists:
+                file = File(
+                    folder=path,
+                    file=None,
+                    user_id=current_user.id
+                )
+                file.save(None)
+                redirect_path = file.folder
+                message = 'Folder created'
+                if request.args.get('api') == "1":
+                    return {'status': True, 'message': message}
+                flash(message, 'bg-primary')
+                return redirect(url_for('drive.index', folder_path=redirect_path))
+            else:
+                flash("Folder already exists!", 'bg-danger')
+                return redirect(url_for('drive.index', folder_path="h"))
+        else:
+            render_errors(form.errors)
+
+    return render_template('drive/create_folder.html', form=form, folder_path=folder_path)
+
 
 @drive.route('/file/<int:file_id>/share', methods=['GET'])
 @login_required

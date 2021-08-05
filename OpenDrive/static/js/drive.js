@@ -3,7 +3,7 @@ var isUploading = false;
 $(document).ready(function () {
   // <!-- {# include "drive/drive.js" | safe #} -->
 
-  if ($(".card").length <= 0) {
+  if ($(".card").length <= 0 && window.location.href.endsWith("/h")) {
     showDropLayout();
   }
 

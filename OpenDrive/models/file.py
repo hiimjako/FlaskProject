@@ -14,38 +14,40 @@ class File(db.Model):
     __tablename__ = 'files'
 
     id = db.Column(db.Integer, primary_key=True)
-    filename = db.Column(db.String(255), index=True, nullable=False)
+    filename = db.Column(db.String(255), index=True)
     # extension = db.Column(Enum(extensionEnum))
-    path = db.Column(db.String(512), unique=True, nullable=False)
-    folder = db.Column(db.String(512), nullable=False)
+    path = db.Column(db.String(512), unique=True)
+    folder = db.Column(db.String(512))
     # bytes
-    size = db.Column(db.Integer, default=0, nullable=False)
+    size = db.Column(db.Integer, default=0)
     insert_at = db.Column(db.DateTime(timezone=False), server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=False), onupdate=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
 
     def __init__(self, file, folder, user_id):
         # self.filename = secure_filename(file.filename)
-        self.filename = os.path.splitext(file.filename)[0] + os.path.splitext(file.filename)[1].lower()
+        if file:
+            self.filename = os.path.splitext(file.filename)[0] + os.path.splitext(file.filename)[1].lower()
+            base_path = current_app.config['UPLOAD_PATH']
+            if not os.path.exists(base_path):
+                os.makedirs(base_path)
+            self.path = os.path.join(base_path, str(uuid.uuid4()))
 
-        base_path = current_app.config['UPLOAD_PATH']
-        if not os.path.exists(base_path):
-            os.makedirs(base_path)
-        self.path = os.path.join(base_path, str(uuid.uuid4()))
+            try:
+                file.save(self.path)
+                self.size = os.stat(self.path).st_size
+            except Exception:
+                # FIXME: da mettere token sbagliato
+                # Oppure os error
+                print("file non caricato")
+                
         self.update_folder_secure(folder)
-        try:
-            file.save(self.path)
-            self.size = os.stat(self.path).st_size
-        except Exception:
-            # FIXME: da mettere token sbagliato
-            # Oppure os error
-            print("file non caricato")
-
         self.user_id = user_id
 
     def save(self, key: None):
         db.session.add(self)
-        symmetricEncryptFile(self.path, key)
+        if self.path:
+            symmetricEncryptFile(self.path, key)
         return db.session.commit()
    
     def hard_delete(self):

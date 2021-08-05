@@ -19,3 +19,7 @@ class RenameFile(FlaskForm):
 class changeFolder(FlaskForm):
     folder = StringField('New folder', validators=[InputRequired(), Length(1, 255)])
     submit = SubmitField('Change')
+
+class createFolder(FlaskForm):
+    folder = StringField('New folder', validators=[InputRequired(), Length(1, 255)])
+    submit = SubmitField('Change')

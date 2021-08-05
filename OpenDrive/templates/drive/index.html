@@ -2,7 +2,9 @@
 {% import 'partials/_context_menu.html' as context_menu %}
 
 {% set context_menu_items_card = [
+{"icon": "bi-folder-plus","label": "Create folder","href": url_for("drive.create_folder", file_id=-1, folder_path=folder_path)},
 {"icon": "bi-folder-plus","label": "Move to folder","href": url_for("drive.folder_file", file_id=-1)},
+{"icon": None,"label": None,"href": ""},
 {"icon": "bi-pencil-square", "label": "rename", "href": url_for("drive.rename_file", file_id=-1)},
 {"icon": "bi-cloud-arrow-down","label": "download","href": url_for("drive.serve_file", file_id=-1, as_attachment=True)},
 {"icon": None,"label": None,"href": ""},
@@ -118,7 +120,7 @@
   <div class="container position-relative g-8 h-100 w-100">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        {% for b in folder_path[1:-1].split("/") %}
+        {% for b in folder_path[2:-1].split("/") %}
         {% set label = b if not loop.first else "home" %}
         {% if not loop.last %}
         <li class="breadcrumb-item"><a href="{{ url_for('drive.index', folder_path='h/' + b) }}">{{ label }}</a></li>
