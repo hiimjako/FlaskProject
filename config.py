@@ -52,7 +52,7 @@ class Config:
 
 class ProductionConfig(Config):
     FLASK_ENV = "production"
-    SESSION_COOKIE_SECURE = True
+    # SESSION_COOKIE_SECURE = True
     # SQLALCHEMY_DATABASE_URI = "mysql://user@localhost/foo"
 
     @classmethod
