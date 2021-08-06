@@ -156,6 +156,7 @@ def folder_file(file_id):
 @drive.route('/folder/<path:folder_path>', methods=['GET', 'POST'])
 @login_required
 def create_folder(folder_path):
+    """Api to create a new empty folder"""
     folder_path = format_path(unquote(folder_path)) or HOME_FOLDER
     form = createFolder()
     if request.method == 'POST':
@@ -181,7 +182,29 @@ def create_folder(folder_path):
                 return redirect(url_for('drive.index', folder_path="h"))
         else:
             render_errors(form.errors)
+        
+    return render_template('drive/create_folder.html', form=form, folder_path=folder_path)
 
+@drive.route('/<path:folder_path>/folder/', methods=['GET', 'DELETE'])
+@login_required
+def delete_folder(folder_path):
+    """Api to delete a new empty folder or delete"""
+    folder_path = format_path(unquote(folder_path)) or HOME_FOLDER
+    form = createFolder()
+    if request.method == 'GET':
+        files = File.query.filter(and_(File.user_id==current_user.id, File.folder == folder_path))\
+            .order_by(File.folder.desc()).all()
+
+        for file in files:
+            file.hard_delete()
+
+        message = 'Folder deleted'
+        if request.args.get('api') == "1":
+            return {'status': True, 'message': message}
+        flash(message, 'bg-primary')
+        # FIXME: prendere path in modo decente
+        return redirect(url_for('drive.index', folder_path=os.path.dirname( os.path.dirname(os.path.dirname(folder_path)) + "/")))
+        
     return render_template('drive/create_folder.html', form=form, folder_path=folder_path)
 
 

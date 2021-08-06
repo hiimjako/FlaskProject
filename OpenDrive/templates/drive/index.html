@@ -2,13 +2,18 @@
 {% import 'partials/_context_menu.html' as context_menu %}
 
 {% set context_menu_items_card = [
-{"icon": "bi-folder-plus","label": "Create folder","href": url_for("drive.create_folder", file_id=-1, folder_path=folder_path)},
+{"icon": "bi-folder-plus","label": "Create folder","href": url_for("drive.create_folder", file_id=-1,
+folder_path=folder_path)},
 {"icon": "bi-folder-plus","label": "Move to folder","href": url_for("drive.folder_file", file_id=-1)},
 {"icon": None,"label": None,"href": ""},
 {"icon": "bi-pencil-square", "label": "rename", "href": url_for("drive.rename_file", file_id=-1)},
 {"icon": "bi-cloud-arrow-down","label": "download","href": url_for("drive.serve_file", file_id=-1, as_attachment=True)},
 {"icon": None,"label": None,"href": ""},
 {"icon": "bi-link","label": "share","href": url_for("drive.share_file", file_id=-1)}]
+%}
+
+{% set context_menu_items_folder_card = [
+{"icon": "bi-folder-x","label": "Delete folder","href": url_for("drive.delete_folder", folder_path='item-id')}]
 %}
 
 <!-- i can also use {{ csrf_token() }} for get token -->
@@ -27,8 +32,8 @@
 {%set iconMime = "bi-file-earmark-zip-fill" %}
 {% endif%}
 
-<div class="col p-2 searchable-card file-card">
-  <div class="card file shadow-lg h-100" data-id={{ id | safe }}>
+<div class="col p-2 searchable-card file-card" data-id={{ id | safe }}>
+  <div class="card file shadow-lg h-100">
     <a href="{{ url | safe  }}" target="_blank">
       <!-- spinner before load -->
       <div class="d-flex justify-content-center spinner-placeholder">
@@ -68,7 +73,8 @@
 {% endmacro %}
 
 {%macro folder_card(title='No title', url="/", folder_path="/") %}
-<div class="col p-2 searchable-card folder-card" data-folder={{ folder_path ~ title | safe}}>
+<div class="col p-2 searchable-card folder-card" data-folder={{ folder_path ~ title | safe}} data-id={{ folder_path ~
+  title | safe }}>
   <div class="card shadow-lg h-100">
     <a href="{{ url | safe  }}">
       <!-- spinner before load -->
@@ -153,6 +159,8 @@
   {{ upload_button(form) }}
   {{ progressBar() }}
   {{ onDropLayout() }}
-  {{ context_menu.render_context_menu(scope=".card.file", fields=context_menu_items_card) }}
+  {{ context_menu.render_context_menu(scope=".file-card", fields=context_menu_items_card) }}
+  {{ context_menu.render_context_menu(id="context_menu_2",scope=".folder-card", fields=context_menu_items_folder_card, )
+  }}
 </div>
 {% endblock %}
