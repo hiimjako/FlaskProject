@@ -116,7 +116,7 @@ def change_user_email(user_id):
         db.session.commit()
         flash(f'Email for user {user.full_name()} successfully changed to {user.email}.', 'bg-primary')
     else:
-        render_errors(form.errors)
+        render_errors(form.errors) # pylint: disable=maybe-no-member
 
     return render_template('admin/manage_user.html', user=user, form=form)
 
@@ -203,8 +203,7 @@ def invite_user():
             invite_link=invite_link,)
         flash(f'User {user.full_name()} successfully invited', 'bg-primary')
     else:
-        render_errors(form.errors)
-    
+        render_errors(form.errors) # pylint: disable=maybe-no-member
     return render_template('admin/invite_user.html', form=form)
 
 # @admin.route('/_update_editor_contents', methods=['POST'])

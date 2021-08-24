@@ -124,7 +124,7 @@ def rename_file(file_id):
                 flash('Correctly updated', 'bg-primary')
                 return redirect(url_for('drive.index', folder_path="h"))
         else:
-            render_errors(form.errors)
+            render_errors(form.errors) # pylint: disable=maybe-no-member
 
     file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
     return render_template('drive/rename_file.html', form=form, file=file)
@@ -147,7 +147,7 @@ def folder_file(file_id):
                 flash(message, 'bg-primary')
                 return redirect(url_for('drive.index', folder_path=redirect_path))
         else:
-            render_errors(form.errors)
+            render_errors(form.errors) # pylint: disable=maybe-no-member
 
     file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
     return render_template('drive/change_folder.html', form=form, file=file)
@@ -180,7 +180,7 @@ def create_folder(folder_path):
                 flash("Folder already exists!", 'bg-danger')
                 return redirect(url_for('drive.index', folder_path="h"))
         else:
-            render_errors(form.errors)
+            render_errors(form.errors) # pylint: disable=maybe-no-member
 
     return render_template('drive/create_folder.html', form=form, folder_path=folder_path)
 

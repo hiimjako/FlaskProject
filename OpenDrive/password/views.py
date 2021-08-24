@@ -34,7 +34,7 @@ def index():
         password.save(current_user.cookie_hash)
         flash('Correctly password added', 'bg-primary')
     else:
-        render_errors(form.errors)
+        render_errors(form.errors) # pylint: disable=maybe-no-member
 
     passwords = Password.query.filter_by(user_id=current_user.id).all()
     for p in passwords:
