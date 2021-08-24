@@ -4,7 +4,7 @@ from flask import abort, request, flash, redirect, url_for
 from flask_login import current_user
 
 from OpenDrive.models import Permission
-from OpenDrive.utils import symmetricDecrypt
+from OpenDrive.utils import symmetric_decrypt
 
 
 def permission_required(permission):
@@ -33,7 +33,7 @@ def get_hash_cookie_required(f):
         if not cookieHash:
             flash('An error occured, try to login again', 'bg-danger')
             return redirect(url_for('account.logout'))
-        token = symmetricDecrypt(cookieHash)
+        token = symmetric_decrypt(cookieHash)
         if not current_user.verify_password(token):
             flash('Invalid cookie, relog to refresh', 'bg-danger')
             return redirect(url_for('account.logout'))

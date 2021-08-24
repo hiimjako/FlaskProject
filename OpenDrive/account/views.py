@@ -19,7 +19,7 @@ from flask_login import (
 
 from OpenDrive import db, rq
 from OpenDrive.account.forms import (CreatePasswordForm, LoginForm, ChangeUserEmailForm)
-from OpenDrive.utils import render_errors, symmetricEncrypt
+from OpenDrive.utils import render_errors, symmetric_encrypt
 from OpenDrive.models import User
 
 account = Blueprint('account', __name__)
@@ -36,7 +36,7 @@ def login():
             duration = timedelta(weeks=1)
             expires = None
             login_user(user, form.remember_me.data, duration)
-            encrypted_pass = symmetricEncrypt(form.password.data)
+            encrypted_pass = symmetric_encrypt(form.password.data)
             response = make_response(redirect(request.args.get('next') or url_for('main.index')))
             if form.remember_me.data:
                 expires = (duration.microseconds + (duration.seconds + duration.days * 24 * 3600) * 10**6) / 10.0**6

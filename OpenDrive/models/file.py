@@ -7,7 +7,7 @@ import re
 from sqlalchemy.sql import func
 from flask import current_app
 from OpenDrive.db import db
-from OpenDrive.utils import format_path, symmetricEncryptFile
+from OpenDrive.utils import format_path, symmetric_encrypt_file
 
 class File(db.Model):
     """File model"""
@@ -47,7 +47,7 @@ class File(db.Model):
     def save(self, key: None):
         db.session.add(self)
         if self.path:
-            symmetricEncryptFile(self.path, key)
+            symmetric_encrypt_file(self.path, key)
         return db.session.commit()
    
     def hard_delete(self):

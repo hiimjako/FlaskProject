@@ -6,7 +6,7 @@ import os
 import datetime
 
 from OpenDrive.db import db
-from OpenDrive.utils import symmetricEncrypt
+from OpenDrive.utils import symmetric_encrypt
 
 
 class Password(db.Model):
@@ -27,7 +27,7 @@ class Password(db.Model):
         self.user_id = user_id
 
     def save(self, key: None):
-        self.password = symmetricEncrypt(self.password, key)
+        self.password = symmetric_encrypt(self.password, key)
         db.session.add(self)
         return db.session.commit()
 

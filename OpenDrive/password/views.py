@@ -12,7 +12,7 @@ from OpenDrive.password.forms import (
 from OpenDrive import db
 from OpenDrive.models import Password
 from flask_login import (current_user, login_required)
-from OpenDrive.utils import render_errors, symmetricDecrypt
+from OpenDrive.utils import render_errors, symmetric_decrypt
 from OpenDrive.decorators import get_hash_cookie_required
 
 
@@ -38,7 +38,7 @@ def index():
 
     passwords = Password.query.filter_by(user_id=current_user.id).all()
     for p in passwords:
-        p.password = symmetricDecrypt(p.password, current_user.cookieHash)
+        p.password = symmetric_decrypt(p.password, current_user.cookieHash)
     return render_template('password/index.html', form=form, passwords=passwords)
 
 
@@ -73,7 +73,7 @@ def delete_password(id):
 @get_hash_cookie_required
 def single_password(id):
     p = Password.query.filter_by(user_id=current_user.id, id=id).first()
-    p.password = symmetricDecrypt(p.password, current_user.cookieHash)
+    p.password = symmetric_decrypt(p.password, current_user.cookieHash)
     return render_template('password/single.html',  password=p)
 
 

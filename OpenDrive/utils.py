@@ -1,11 +1,11 @@
-from flask import url_for, current_app as app
-from flask.helpers import flash
-from wtforms.fields import Field
-from wtforms.widgets import HiddenInput
-from wtforms.compat import text_type
-from cryptography.fernet import Fernet, InvalidToken
+"""Utils file, with common function"""
 import base64
 import hashlib
+
+from cryptography.fernet import Fernet, InvalidToken
+from flask import current_app as app
+from flask import url_for
+from flask.helpers import flash
 
 
 def register_template_utils(app):
@@ -24,84 +24,89 @@ def register_template_utils(app):
 
 
 def index_for_role(role):
+    """Page index based on role"""
     return url_for(role.index)
 
 
-def symmetricDecrypt(psw: str, key=None):
+def symmetric_decrypt(psw: str, key=None):
+    """symmetric Decryption"""
     if key is None:
         try:
             key = app.config['ENCRTYPTION_KEY']
-        except:
+        except Exception:
             with app.app_context():
                 key = app.config['ENCRTYPTION_KEY']
 
-    keyHex = hashlib.md5(str.encode(key)).hexdigest()
-    key = base64.urlsafe_b64encode(keyHex.encode())
-    f = Fernet(key)
+    key_hex = hashlib.md5(str.encode(key)).hexdigest()
+    key = base64.urlsafe_b64encode(key_hex.encode())
+    fernet_key = Fernet(key)
     try:
-        decrypted_data = f.decrypt(str.encode(psw))
+        decrypted_data = fernet_key.decrypt(str.encode(psw))
     except InvalidToken:
         return "Invalid key"
     return decrypted_data.decode("utf-8")
 
 
-def symmetricEncrypt(psw: str,  key=None):
+def symmetric_encrypt(psw: str,  key=None):
+    """symmetric Encrypt"""
     if key is None:
         try:
             key = app.config['ENCRTYPTION_KEY']
-        except:
+        except Exception:
             with app.app_context():
                 key = app.config['ENCRTYPTION_KEY']
 
-    keyHex = hashlib.md5(str.encode(key)).hexdigest()
-    key = base64.urlsafe_b64encode(keyHex.encode())
-    f = Fernet(key)
+    key_hex = hashlib.md5(str.encode(key)).hexdigest()
+    key = base64.urlsafe_b64encode(key_hex.encode())
+    fernet_key = Fernet(key)
     try:
-        encrypted_data = f.encrypt(str.encode(psw))
+        encrypted_data = fernet_key.encrypt(str.encode(psw))
     except InvalidToken:
         return "Invalid key"
     return encrypted_data.decode("utf-8")
 
 
-def symmetricDecryptFile(path: str, key=None):
+def symmetric_decrypt_file(path: str, key=None):
+    """symmetric Decrypt File for files"""
     if key is None:
         try:
             key = app.config['ENCRTYPTION_KEY']
-        except:
+        except Exception:
             with app.app_context():
                 key = app.config['ENCRTYPTION_KEY']
 
-    keyHex = hashlib.md5(str.encode(key)).hexdigest()
-    key = base64.urlsafe_b64encode(keyHex.encode())
-    f = Fernet(key)
+    key_hex = hashlib.md5(str.encode(key)).hexdigest()
+    key = base64.urlsafe_b64encode(key_hex.encode())
+    fernet_key = Fernet(key)
 
     with open(path, "rb") as file:
         encrypted_data = file.read()
     try:
-        decrypted_data = f.decrypt(encrypted_data)
+        decrypted_data = fernet_key.decrypt(encrypted_data)
     except InvalidToken:
         return bytes()
 
     return decrypted_data
 
 
-def symmetricEncryptFile(path: str,  key=None):
+def symmetric_encrypt_file(path: str,  key=None):
+    """symmetric Ecrypt File for files"""
     if key is None:
         try:
             key = app.config['ENCRTYPTION_KEY']
-        except:
+        except Exception:
             with app.app_context():
                 key = app.config['ENCRTYPTION_KEY']
 
-    keyHex = hashlib.md5(str.encode(key)).hexdigest()
-    key = base64.urlsafe_b64encode(keyHex.encode())
-    f = Fernet(key)
+    key_hex = hashlib.md5(str.encode(key)).hexdigest()
+    key = base64.urlsafe_b64encode(key_hex.encode())
+    fernet_key = Fernet(key)
 
     with open(path, "rb") as file:
         file_data = file.read()
 
     try:
-        encrypted_data = f.encrypt(file_data)
+        encrypted_data = fernet_key.encrypt(file_data)
     except InvalidToken:
         return bytes()
 
@@ -109,18 +114,20 @@ def symmetricEncryptFile(path: str,  key=None):
         file.write(encrypted_data)
 
 def render_errors(form_errors):
-    """Renders all form errors"""
+    """Renders all form errors as flashes"""
     for error in form_errors:
-        flash(form_errors[error][0], 'bg-danger')
+        err = form_errors[error]
+        if len(err) > 0:
+            flash(form_errors[error][0], 'bg-danger')
 
 def format_path(path):
     if not isinstance(path, str):
         path = "/"
-    if path[0] != "/":
+    if not path.startswith("/"):
         path  = "/" + path
     if  (not path.startswith("/h") and len(path) == 2) or (not path.startswith("/h/") and len(path) > 2):
         path  = "/h" + path
-    if path [len(path )-1] != "/":
+    if path[len(path )-1] != "/":
         path  = path  + "/"
     path = path.lower()
     return path
