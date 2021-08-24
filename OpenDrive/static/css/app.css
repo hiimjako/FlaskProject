@@ -11685,6 +11685,10 @@ fieldset:disabled .btn {
   color: #49ac98;
 }
 
+#page-password #submit {
+  background-color: #49ac98;
+}
+
 html {
   font-size: 1.2rem;
   height: 100% !important;
