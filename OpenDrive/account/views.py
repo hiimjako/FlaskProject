@@ -1,26 +1,14 @@
+"""Views for account section"""
 from datetime import timedelta
-from OpenDrive.queue import send_email
-from flask import (
-    Blueprint,
-    flash,
-    redirect,
-    render_template,
-    request,
-    url_for,
-    current_app,
-    make_response
-)
-from flask_login import (
-    current_user,
-    login_required,
-    login_user,
-    logout_user,
-)
 
+from flask import (Blueprint, current_app, flash, make_response, redirect,
+                   render_template, request, url_for)
+from flask_login import current_user, login_required, login_user, logout_user
 from OpenDrive import db, rq
-from OpenDrive.account.forms import (CreatePasswordForm, LoginForm, ChangeUserEmailForm)
-from OpenDrive.utils import render_errors, symmetric_encrypt
+from OpenDrive.account.forms import (ChangeUserEmailForm, CreatePasswordForm, LoginForm)
 from OpenDrive.models import User
+from OpenDrive.queue import send_email
+from OpenDrive.utils import render_errors, symmetric_encrypt
 
 account = Blueprint('account', __name__)
 
@@ -83,7 +71,7 @@ def change_email():
         db.session.commit()
         flash(f'Email successfully changed to {current_user.email}.', 'bg-primary')
     else:
-        render_errors(form.errors)
+        render_errors(form.errors) # pylint: disable=maybe-no-member
 
     return render_template('account/manage.html', user=current_user, form=form)
 
@@ -114,6 +102,8 @@ def join_from_invite(user_id, token):
             flash('Your password has been set, if it\'s needed to '
                   'check your settings go to "account", "settings" ', 'bg-primary')
             return redirect(url_for('account.login'))
+        else:
+            render_errors(form.errors) # pylint: disable=maybe-no-member
         return render_template('account/join_invite.html', form=form)
     else:
         flash('The confirmation link is invalid or has expired. Another '

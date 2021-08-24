@@ -1,3 +1,4 @@
+"""Forms for account section"""
 from flask import url_for
 from flask_wtf import FlaskForm
 from wtforms import ValidationError
