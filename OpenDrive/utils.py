@@ -121,6 +121,7 @@ def render_errors(form_errors):
             flash(form_errors[error][0], 'bg-danger')
 
 def format_path(path):
+    """Function that standardize a path for the application"""
     if not isinstance(path, str):
         path = "/"
     if not path.startswith("/"):
