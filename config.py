@@ -36,7 +36,7 @@ class Config:
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
-    MAIL_USERNAME = 'opendrive.noreply@gmail.com'
+    MAIL_USERNAME = environ.get("MAIL_USERNAME", default="opendrive.noreply@gmail.com")
     MAIL_PASSWORD = environ.get("MAIL_PASSWORD", default="secret")
 
     SECRET_KEY = environ.get("SECRET_KEY")
