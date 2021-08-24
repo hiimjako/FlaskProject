@@ -2,9 +2,6 @@ from flask import current_app
 
 from sqlalchemy.sql import func
 
-import os
-import datetime
-
 from OpenDrive.db import db
 from OpenDrive.utils import symmetric_encrypt
 
