@@ -41,7 +41,7 @@ def index(folder_path):
                 file=file_bin,
                 user_id=current_user.id
             )
-            file.save(current_user.cookieHash)
+            file.save(current_user.cookie_hash)
 
         message = 'Correctly added'
         flash(message, 'bg-primary')
@@ -76,7 +76,7 @@ def serve_file(file_id):
             file_bin = path
             if as_attachment == 'True':
                 # Quando scarico il file lo voglio sempre dectyptato
-                file_bin = io.BytesIO(symmetric_decrypt_file(path, current_user.cookieHash))
+                file_bin = io.BytesIO(symmetric_decrypt_file(path, current_user.cookie_hash))
                 return send_file(file_bin, mimetype=mimetype, attachment_filename=file.filename, as_attachment=True)
 
             if preview == 'True':
@@ -84,12 +84,12 @@ def serve_file(file_id):
                 # gli altri file non sono utili
                 file_bin = io.BytesIO(bytes())
                 if mimetype is not None and mimetype.startswith("image"):
-                    file_bin = io.BytesIO(symmetric_decrypt_file(path, current_user.cookieHash))
+                    file_bin = io.BytesIO(symmetric_decrypt_file(path, current_user.cookie_hash))
                 return send_file(file_bin, mimetype=mimetype)
 
             # Quando lo apro in una nuova tab lo voglio decryptato
             # TODO: far si che quando si apre in una nuova tab ci sia il nome corretto
-            file_bin = io.BytesIO(symmetric_decrypt_file(path, current_user.cookieHash))
+            file_bin = io.BytesIO(symmetric_decrypt_file(path, current_user.cookie_hash))
             return send_file(file_bin, mimetype=mimetype)
         else:
             flash(f'Error: file {file.filename.strip()} not found. Ask to admin', 'bg-danger')

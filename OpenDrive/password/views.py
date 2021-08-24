@@ -31,14 +31,14 @@ def index():
             password=form.password.data,
             user_id=current_user.id
         )
-        password.save(current_user.cookieHash)
+        password.save(current_user.cookie_hash)
         flash('Correctly password added', 'bg-primary')
     else:
         render_errors(form.errors)
 
     passwords = Password.query.filter_by(user_id=current_user.id).all()
     for p in passwords:
-        p.password = symmetric_decrypt(p.password, current_user.cookieHash)
+        p.password = symmetric_decrypt(p.password, current_user.cookie_hash)
     return render_template('password/index.html', form=form, passwords=passwords)
 
 
@@ -73,7 +73,7 @@ def delete_password(id):
 @get_hash_cookie_required
 def single_password(id):
     p = Password.query.filter_by(user_id=current_user.id, id=id).first()
-    p.password = symmetric_decrypt(p.password, current_user.cookieHash)
+    p.password = symmetric_decrypt(p.password, current_user.cookie_hash)
     return render_template('password/single.html',  password=p)
 
 
