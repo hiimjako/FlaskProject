@@ -1,3 +1,4 @@
+"""init for OpenDrive project"""
 import os
 import click
 
@@ -8,8 +9,8 @@ from flask_wtf import CSRFProtect
 from flask_mobility import Mobility
 from redis import Redis
 from rq import Connection, Queue, Worker
-from OpenDrive.db import db, migrate, rq
 from config import config as Config
+from OpenDrive.db import db, migrate, rq
 from OpenDrive.models import AnonymousUser, User, Role
 
 # blueprints
@@ -99,7 +100,7 @@ def create_cli(app):
             app.config.from_object(Config[config])
             app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-            listenQueue = ['default', 'cryptography', 'email']
+            listen_queue = ['default', 'cryptography', 'email']
             conn = Redis(
                 host=app.config["RQ_DEFAULT_HOST"],
                 port=app.config["RQ_DEFAULT_PORT"],
@@ -107,5 +108,5 @@ def create_cli(app):
                 password=app.config["RQ_DEFAULT_PASSWORD"])
 
             with Connection(conn):
-                worker = Worker(map(Queue, listenQueue))
+                worker = Worker(map(Queue, listen_queue))
                 worker.work()
