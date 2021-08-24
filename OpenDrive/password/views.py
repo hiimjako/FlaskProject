@@ -79,6 +79,21 @@ def single_password(id):
 
 @password.route('/<int:id>/update', methods=['GET', 'POST'])
 @login_required
+@get_hash_cookie_required
 def update_password(id):
-    flash("Feature work in progress :)", 'bg-danger')
-    return redirect(url_for('password.index'))
+    form = CreateNewPassword()
+    psw = Password.query.filter_by(id=id, user_id=current_user.id).first()
+    if form.validate_on_submit():
+        psw.site=form.site.data
+        psw.username=form.username.data
+        psw.password=form.password.data
+        psw.user_id=current_user.id
+        psw.save(current_user.cookie_hash)
+        flash('Correctly password updated', 'bg-primary')
+        db.session.add(psw)
+        db.session.commit()
+        return redirect(url_for('password.index'))
+    else:
+        render_errors(form.errors) # pylint: disable=maybe-no-member
+
+    return render_template('password/update_password.html', form=form, password=psw)
