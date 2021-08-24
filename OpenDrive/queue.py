@@ -1,3 +1,4 @@
+"""Function for rq (redis queue)"""
 import os
 
 from flask import render_template
