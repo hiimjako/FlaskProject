@@ -52,7 +52,8 @@ class File(db.Model):
    
     def hard_delete(self):
         """Deletes record and the file in HDD"""
-        os.remove(self.path)
+        if self.path:
+            os.remove(self.path)
         db.session.delete(self)
         return db.session.commit()
 
