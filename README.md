@@ -4,6 +4,9 @@ This is the internet, web and cloud exam project, developed in flask
 
 # How to run this project
 
+- Copy .env.sample into .env
+- Fill the missing fields (like: passwords)
+  - MAIL_USERNAME and MAIL_PASSWORD are the credential to send the invitation link to join the application, it should be a gmail account, leave empty and it will use the default ones
 - Add ADMIN_EMAIL and ADMIN_PASSWORD to .env
 - docker-compose -f docker-compose-dev.yml up
 

@@ -37,11 +37,11 @@ class Config:
     MAIL_PORT = 587
     MAIL_USE_TLS = True
     MAIL_USERNAME = environ.get("MAIL_USERNAME", default="opendrive.noreply@gmail.com")
-    MAIL_PASSWORD = environ.get("MAIL_PASSWORD", default="secret")
+    MAIL_PASSWORD = environ.get("MAIL_PASSWORD", default="ccvrbslplzykdjbm")
 
-    SECRET_KEY = environ.get("SECRET_KEY")
-    ADMIN_EMAIL = "moretti919@gmail.com"
-    ADMIN_PASSWORD = "admin"
+    SECRET_KEY = environ.get("SECRET_KEY", default="secret_key_pass")
+    ADMIN_EMAIL = environ.get("ADMIN_EMAIL")
+    ADMIN_PASSWORD = environ.get("ADMIN_PASSWORD")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_URL}:{POSTGRES_PORT}/{POSTGRES_DB}"
 
