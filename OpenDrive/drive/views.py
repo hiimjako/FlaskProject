@@ -67,7 +67,7 @@ def index(folder_path):
 def serve_file(file_id):
     if request.method == 'GET':
         file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
-        path = file.getFilePath()
+        path = file.getFilePath() if file else None
         if path and os.path.exists(path):
             mimetype = file.getMimeType()
             as_attachment = request.args.get('as_attachment')
@@ -92,7 +92,9 @@ def serve_file(file_id):
             file_bin = io.BytesIO(symmetric_decrypt_file(path, current_user.cookie_hash))
             return send_file(file_bin, mimetype=mimetype)
         else:
-            flash(f'Error: file {file.filename.strip()} not found. Ask to admin', 'bg-danger')
+            filename = file.filename.strip() if file else ''
+            flash(f'Error: file {filename} not found. Ask to admin', 'bg-danger')
+            return redirect(url_for('drive.index', folder_path="h"))
 
     if request.method == 'DELETE':
         file = File.query.filter_by(id=file_id, user_id=current_user.id).first()
