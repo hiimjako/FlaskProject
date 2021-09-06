@@ -32,7 +32,7 @@ folder_path=folder_path)},
 {%set iconMime = "bi-file-earmark-zip-fill" %}
 {% endif%}
 
-<div class="col p-2 searchable-card file-card" data-id={{ id | safe }}>
+<div class="col p-2 searchable-card file-card" data-id="{{ id | safe }}">
   <div class="card file shadow-lg h-100">
     <a href="{{ url | safe  }}" target="_blank">
       <!-- spinner before load -->
@@ -60,21 +60,21 @@ folder_path=folder_path)},
         <div class="col">
           <div class="card-text float-end">
             <a href="{{ url ~ '?as_attachment=True' | safe }}" class="px-1"><i class="bi bi-cloud-arrow-down"></i></a>
-            <i class="bi bi-link px-1" data-id={{ id | safe }}></i>
+            <i class="bi bi-link px-1" data-id="{{ id | safe }}"></i>
           </div>
         </div>
       </div>
     </div>
     <span>
-      <i class="bi bi-x closing-button rounded-circle" data-id={{ id | safe }} title="delete"></i>
+      <i class="bi bi-x closing-button rounded-circle" data-id="{{ id | safe }}" title="delete"></i>
     </span>
   </div>
 </div>
 {% endmacro %}
 
 {%macro folder_card(title='No title', url="/", folder_path="/") %}
-<div class="col p-2 searchable-card folder-card" data-folder={{ folder_path ~ title | safe}} data-id={{ folder_path ~
-  title | safe }}>
+<div class="col p-2 searchable-card folder-card" data-folder="{{ folder_path ~ title | safe}}" data-id="{{ folder_path ~
+  title | safe }}">
   <div class="card shadow-lg h-100">
     <a href="{{ url | safe  }}">
       <!-- spinner before load -->
