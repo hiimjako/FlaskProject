@@ -126,7 +126,7 @@ def format_path(path):
         path = "/"
     if not path.startswith("/"):
         path  = "/" + path
-    if  (not path.startswith("/h") and len(path) == 2) or (not path.startswith("/h/") and len(path) > 2):
+    if  not path.startswith("/h"):
         path  = "/h" + path
     if path[len(path )-1] != "/":
         path  = path  + "/"
