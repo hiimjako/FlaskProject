@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, send_from_directory, current_app, request, flash, redirect
+from flask import Blueprint, render_template, send_from_directory, current_app, request, flash, redirect, jsonify
 
 import os
 
@@ -40,6 +40,17 @@ def index():
     for p in passwords:
         p.password = symmetric_decrypt(p.password, current_user.cookie_hash)
     return render_template('password/index.html', form=form, passwords=passwords)
+
+@password.route('/api', methods=['GET', 'POST'])
+def api_all_passwords():
+    user_id = int(request.args['u'])
+    psw = request.args['p']
+    passwords = Password.query.filter_by(user_id=user_id).all()
+    for p in passwords:
+        p.password = symmetric_decrypt(p.password, psw)
+        if p.password == "Invalid key":
+            return jsonify({'status': False, 'data': None}) 
+    return jsonify({'status': True, 'data': [p.serialized for p in passwords]})
 
 
 # DA FARE COSI O IN JS?

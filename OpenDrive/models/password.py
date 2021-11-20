@@ -30,3 +30,13 @@ class Password(db.Model):
 
     def __repr__(self):
         return f'<Password \'{self.site}\' \'{self.username}\'>'
+
+    @property
+    def serialized(self):
+        """Return object data in serializeable format"""
+        return {
+            'site': self.site,
+            'username': self.username,
+            'password': self.password,
+            'user_id': self.user_id
+        }

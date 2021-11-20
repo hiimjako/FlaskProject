@@ -123,6 +123,14 @@ def join_from_invite(user_id, token):
             invite_link=invite_link,)
     return redirect(url_for('main.index'))
 
+@account.route('/api/id', methods=['GET'])
+def get_id_by_email_no_login():
+    email = request.args['email']
+    user = User.query.filter_by(email=email).first()
+    if user is not None:
+        return {'status': True, 'data': user.id}
+    return {'status': False, 'data': None}
+
 # @account.before_app_request
 # def before_request():
 #     """Force user to confirm email before accessing login-required routes."""
